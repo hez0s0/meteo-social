@@ -1,0 +1,14 @@
+.vdas-cellTableEvenRowBg {
+   background-color: #ffffff;
+}
+
+.vdas-cellTableOddRowBg {
+   background-color: #F7EBD2;
+}
+
+.cellTableSelectedRow {
+   background: #628cd5;
+}
+.cellTableSelectedRowCell {
+   border: none;
+}

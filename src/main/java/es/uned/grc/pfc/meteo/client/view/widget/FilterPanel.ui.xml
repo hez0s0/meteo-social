@@ -1,0 +1,20 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+   xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+   xmlns:c="urn:import:com.google.gwt.user.cellview.client" 
+   xmlns:meteo-suggest="urn:import:es.uned.grc.pfc.meteo.client.view.widget.suggest"
+   ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+   ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator" 
+   ui:generateLocales="default">
+   
+  <g:HTMLPanel>
+    <table width="100%">
+      <tr>
+         <td>
+            <g:Label ui:field="noneLabel" visible="false" /> <!--  unused in this particular implementation -->
+            <meteo-suggest:BulletList ui:field="bulletList"/>
+         </td>
+      </tr>
+    </table>
+  </g:HTMLPanel>
+</ui:UiBinder>

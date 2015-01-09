@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+        http://java.sun.com/xml/ns/persistence
+        http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+    <persistence-unit name="meteoPU" transaction-type="JTA">
+	   <provider>org.hibernate.ejb.HibernatePersistence</provider>
+	   <class>es.uned.grc.pfc.meteo.server.model.Observation</class>
+	   <class>es.uned.grc.pfc.meteo.server.model.Parameter</class>
+	   <class>es.uned.grc.pfc.meteo.server.model.Station</class>
+	   <class>es.uned.grc.pfc.meteo.server.model.StationModel</class>
+	   <class>es.uned.grc.pfc.meteo.server.model.Variable</class>
+	   <exclude-unlisted-classes>false</exclude-unlisted-classes>
+       <jta-data-source>java:jboss/datasources/meteo-social-ds</jta-data-source>
+       <properties>
+         <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+		 <property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.CMTTransactionFactory"/>
+         <property name="hibernate.hbm2ddl.auto" value="update" />
+         <property name="hibernate.show_sql" value="true" />
+         <property name="hibernate.format_sql" value="false" />
+         <property name="hibernate.id.new_generator_mappings" value="false" />
+         <property name="hibernate.connection.release_mode" value="after_transaction" />
+       </properties>
+   </persistence-unit>
+</persistence>

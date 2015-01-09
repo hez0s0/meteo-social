@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="meteo-social" default="all" basedir=".">   
+   <property file="build.properties"/>
+   
+   <!-- set defaults -->
+   <property name="source.version" value="1.7"/>
+   <property name="target.version" value="1.7"/>
+   <property name="source.encoding" value="UTF-8"/>
+   <property name="compiler.debug" value="false"/>
+   <property name="compiler.optimize" value="true"/>
+   <property name="compiler.args.extended" value=""/>
+   <property name="gwt.args" value=""></property>
+   <property name="gwt.suffix" value="Rel"></property>
+   <property name="gwtc.memory" value="1024M"></property>
+  
+   <!-- Define the properties used by the build -->
+   <property name="src.home" value="${basedir}/src/main"/>
+   <property name="jar.home" value="${basedir}/lib"/>
+   <property name="web.home" value="${src.home}/webapp"/>
+   
+   <property name="dist.home" value="${basedir}/target"/>
+   <property name="work.home" value="${dist.home}/work"/>
+   <property name="war.home" value="${dist.home}/war"/>
+   
+   <property name="app.home" value="${basedir}/application.xml"/>
+
+   <property name="app.name" value="meteo-social"/>   
+   <property name="ear.name" value="${app.name}.ear"/>
+   
+   <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+   
+   <target name="all" depends="clean,prepare,compile,gwt-compile,dist,deploy" description="Clean work dirs, then compile and create a WAR">
+      <echo> Building completed </echo>
+   </target>
+   
+   <!-- Define the CLASSPATH -->
+   <path id="compile.classpath"> 
+      <fileset dir="${gwt.sdk.home}">
+         <include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="${jar.home}">
+         <include name="**/*.jar"/>
+      </fileset>
+   </path>
+   
+   <!-- get the number of cores for multithread gwt compiles -->
+   <target name="get-cores">
+     <script language="javascript"> <![CDATA[
+      project.setNewProperty ("processorCores",java.lang.Integer.toString (java.lang.Runtime.getRuntime ().availableProcessors ()));
+      ]]></script>
+     <!--<echo message="using ${processorCores} cores"/>-->
+   </target>
+  
+   <target name="clean" description="Delete old work and dist directories">
+      <delete dir="${dist.home}"/>
+   </target>
+   
+   <!-- in case there are .class and other files within the WEB-INF/classes folder, they get cleared: eclipse or other tools might cause this -->
+   <target name="gwtc-clean">
+      <delete dir="${work.home}/WEB-INF/classes/es" />
+      <delete dir="${work.home}/WEB-INF/classes/es" />
+      <delete dir="${work.home}/WEB-INF/deploy" />
+      <delete file="${work.home}/WEB-INF/jetty-env.xml" />
+      <delete file="${work.home}/WEB-INF/jetty-web.xml" />
+      <delete file="${work.home}/WEB-INF/jboss-ejb3.xml" />
+      <delete file="${work.home}/WEB-INF/jboss-web.xml" />
+      <delete dir="${work.home}/meteo/" />
+   </target>
+   
+   <target name="prepare" description="Create working dirs and copy static files to work dir">
+      <mkdir dir="${dist.home}"/>
+	  <mkdir dir="${war.home}"/>
+      <mkdir dir="${work.home}/WEB-INF/classes"/>
+      <!-- Copy static HTML and JSP files to work dir -->
+      <copy todir="${work.home}">
+         <fileset dir="${web.home}"/>
+      </copy>
+	  <antcall target="gwtc-clean"/>
+   </target>
+   
+   <!-- compile the Java classes -->
+   <target name="compile" description="compile the Java classes of the project">
+     <javac fork="true"
+       target="${target.version}" source="${source.version}" encoding="${source.encoding}"
+       destdir="${work.home}/WEB-INF/classes" classpathref="compile.classpath"
+       compiler="modern"  optimize="${compiler.optimize}" debug="${compiler.debug}"  includeAntRuntime="false">
+       <src path="${src.home}"/>
+       <compilerarg line="${compiler.args.extended}"/>
+     </javac>
+   </target>
+
+   <!--GWT compile to JavaScript (production mode)-->
+   <target name="gwt-compile" depends="get-cores">
+     <echo message="using args: ${gwt.args}"/>
+     <echo message="using cores: ${processorCores}"/>
+     <echo message="using mem per core: ${gwtc.memory}"/> 
+     <java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+       <classpath>
+         <path refid="compile.classpath"/>
+         <dirset dir="${src.home}">
+ 	       <exclude name="**/com/google/**/*.java" />
+         </dirset>
+       </classpath>
+       <!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
+       <jvmarg value="-Xmx${gwtc.memory}"/>
+       <jvmarg value="-server"/>
+       <!-- <jvmarg value="-verbose"/> -->
+       <arg line="-localWorkers"/>
+       <arg line="${processorCores}"/>
+       <arg line="-war"/>
+       <arg value="${work.home}" />
+       <!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
+       <arg line="${gwt.args}"/>
+       <arg line="es.uned.grc.pfc.meteo.Meteo${gwt.suffix}"/>
+     </java>
+   </target>
+  
+   <target name="dist" description="Create WAR file for binary distribution">
+      <delete>
+	     <fileset dir="${work.home}/WEB-INF/lib">
+            <include name="weld*.jar"/>
+            <include name="jetty*.jar"/>
+            <include name="jboss*.jar"/>
+		 </fileset>
+	  </delete>
+	  <war destfile="${war.home}/${app.name}.war">
+         <fileset dir="${work.home}"/>
+         <classes dir="${work.home}/WEB-INF/classes"/>
+      </war>
+	  <antcall target="ear"/>
+   </target>
+ 
+   <target name="ear">
+      <ear destfile="${dist.home}/${ear.name}" appxml="${app.home}" update="true">
+         <fileset dir="${jar.home}">
+		    <exclude name="weld*.jar"/>
+		    <exclude name="jboss*.jar"/>
+		    <exclude name="jetty*.jar"/>
+		    <include name="*.jar"/>
+		 </fileset>
+         <fileset dir="${war.home}" includes="*.war"/>
+      </ear>
+   </target>
+   
+   <target name="deploy">
+      <copy todir="${appserver.deploy.dir}">
+         <fileset dir="${dist.home}">
+            <include name="${ear.name}"/>
+         </fileset>
+      </copy>
+      <copy todir="${appserver.deploy.dir}">
+         <fileset dir="${src.home}/datasource">
+            <include name="*"/>
+         </fileset>
+      </copy>
+	  <delete>
+	     <fileset dir="${appserver.deploy.dir}">
+            <include name="*.failed"/>
+		 </fileset>
+	  </delete>
+   </target>
+</project> 

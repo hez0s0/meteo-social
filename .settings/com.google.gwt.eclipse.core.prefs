@@ -1,0 +1,3 @@
+eclipse.preferences.version=1
+entryPointModules=es.uned.grc.pfc.meteo.meteo|es.uned.grc.pfc.meteo.meteoDev|es.uned.grc.pfc.meteo.meteoRel
+filesCopiedToWebInfLib=gwt-servlet.jar

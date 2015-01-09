@@ -1,0 +1,48 @@
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder' 
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'
+  xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+  ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+  ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+  ui:generateLocales="default">
+  
+  <g:HTMLPanel>
+    <g:MenuBar ui:field="menuBar" styleName="bar" autoOpen="true" animationEnabled="true">
+      <g:MenuItem ui:field="refreshMenuItem" styleName="barItem" width="90%">
+         <img src="images/icons/arrow_refresh.png" alt="Refresh current page"/>
+         <ui:msg meaning="the menu item" description="Refresh menu item">Refresh current view</ui:msg>
+      </g:MenuItem>
+      <g:MenuItem ui:field="configurationMenuItem" styleName="barItem" width="10%">
+         <ui:msg meaning="the menu item" description="Configuracion menu item">Configuration</ui:msg>
+         
+         <g:MenuBar vertical="true" ui:field="configurationSubMenu" styleName="subBar" >
+           <g:MenuItem ui:field="drugCodeDomainMenuItem" styleName="subBarItem">
+              <ui:msg meaning="the menu item" description="Drug code domain management menu item">Manage drug code domains</ui:msg>
+           </g:MenuItem>
+           <g:MenuItem ui:field="workSpaceMenuItem" styleName="subBarItem">
+              <ui:msg meaning="the menu item" description="Workspace management menu item">Manage work spaces</ui:msg>
+           </g:MenuItem>
+           <g:MenuItem ui:field="catalogMenuItem" styleName="subBarItem">
+              <ui:msg meaning="the menu item" description="Catalog management menu item">Manage drug catalogs</ui:msg>
+           </g:MenuItem>
+           <g:MenuItem ui:field="workGroupMenuItem" styleName="subBarItem">
+              <ui:msg meaning="the menu item" description="Workgroup management menu item">Manage workgroups</ui:msg>
+           </g:MenuItem>
+           <g:MenuItem ui:field="tagMenuItem" styleName="subBarItem">
+              <ui:msg meaning="the menu item" description="Tag management menu item">Manage tags</ui:msg>
+           </g:MenuItem>
+           <g:MenuItem ui:field="reportMenuItem" styleName="subBarItem">
+              <ui:msg meaning="the menu item" description="Report management menu item">Manage reports</ui:msg>
+           </g:MenuItem>
+           <g:MenuItemSeparator styleName="subBarSeparator" ui:field="subBarSeparator" />
+           <g:MenuItem ui:field="drugItemTemplateMenuItem" styleName="subBarItem">
+              <ui:msg meaning="the menu item" description="Drug item template management menu item">Manage drug item templates</ui:msg>
+           </g:MenuItem>
+           <g:MenuItem ui:field="indicationTemplateMenuItem" styleName="subBarItem">
+              <ui:msg meaning="the menu item" description="Indication template management menu item">Manage indication templates</ui:msg>
+           </g:MenuItem>
+         </g:MenuBar>
+      </g:MenuItem>
+    </g:MenuBar>
+  </g:HTMLPanel>
+</ui:UiBinder>

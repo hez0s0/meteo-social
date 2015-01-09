@@ -1,0 +1,17 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+  xmlns:ui="urn:ui:com.google.gwt.uibinder"
+  xmlns:g="urn:import:com.google.gwt.user.client.ui"
+  xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+  xmlns:meteo-widget="urn:import:es.uned.grc.pfc.meteo.client.view.widget"
+  xmlns:meteo="urn:import:es.uned.grc.pfc.meteo.client.view.impl"
+  ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+  ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+  ui:generateLocales="default">
+  
+  <g:HTMLPanel styleName="left_box">
+    <meteo-widget:LimitedSimplePager ui:field="pagerTop" />
+    <c:CellTable ui:field="workSpaceTable" pageSize="20" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false" />
+    <meteo-widget:LimitedSimplePager ui:field="pagerBottom" />
+  </g:HTMLPanel>
+</ui:UiBinder>

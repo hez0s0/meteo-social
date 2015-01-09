@@ -1,0 +1,50 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' 
+  xmlns:g='urn:import:com.google.gwt.user.client.ui' 
+  xmlns:meteo-widget="urn:import:es.uned.grc.pfc.meteo.client.view.widget"
+  ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat' 
+  ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+  ui:generateLocales="default">
+
+  <g:HTMLPanel>
+    <g:HTMLPanel ui:field="createWorkSpacePanel" styleName="right_articles">
+      <p>
+        <b>
+          <meteo-widget:ImageLabel ui:field="createWorkSpace" imageUrl="images/icons/page.png">
+            <ui:msg meaning="the workSpace action" description="Title to create a new workSpace">New workspace</ui:msg>
+          </meteo-widget:ImageLabel>
+        </b>
+        <ui:msg description="Detail text to create a new workSpace">Click here to add new workspaces to the list</ui:msg>
+      </p>
+    </g:HTMLPanel>
+    <g:HTMLPanel ui:field="deleteWorkSpacePanel" styleName="right_articles">
+      <p>
+        <b>
+          <meteo-widget:ImageLabel ui:field="deleteWorkSpaceList" imageUrl="images/icons/delete.png">
+            <ui:msg meaning="the workSpace action" description="Title text to delete selected workSpaces in a table">Delete workspaces</ui:msg>
+          </meteo-widget:ImageLabel>
+        </b>
+        <ui:msg description="Detail text to delete selected workSpaces in a table">Select some workspaces in the table and click here to delete selected items</ui:msg>
+      </p>
+    </g:HTMLPanel>
+    <g:HTMLPanel ui:field="exportWorkSpacePanel" styleName="right_articles">
+      <p>
+        <b>
+          <meteo-widget:ImageLabel ui:field="exportWorkSpaceList" imageUrl="images/icons/database_save.png">
+            <ui:msg meaning="the workSpace action" description="Title text to export all workSpaces">Export workspaces</ui:msg>
+          </meteo-widget:ImageLabel>
+        </b>
+        <ui:msg description="Detail text to export all workSpaces">Exports all of the workspaces in the system to an XML file (not only the ones listed or selected)</ui:msg>
+      </p>
+    </g:HTMLPanel>
+    <g:HTMLPanel ui:field="importWorkSpacePanel" styleName="right_articles">
+      <p>
+        <b>
+          <meteo-widget:ImageLabel ui:field="importWorkSpaceList" imageUrl="images/icons/database_connect.png">
+            <ui:msg meaning="the workSpace action" description="Title text to import workSpaces">Import workspaces</ui:msg>
+          </meteo-widget:ImageLabel>
+        </b>
+        <ui:msg description="Detail text to export all workSpaces">Import workspaces from an XML file into the system</ui:msg>
+      </p>
+    </g:HTMLPanel>
+  </g:HTMLPanel>
+</ui:UiBinder>

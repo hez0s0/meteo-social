@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources>
+  <xa-datasource jndi-name="java:/datasources/meteo-social-ds"   pool-name="meteo-social-ds"  enabled="true" >
+       <xa-datasource-class>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</xa-datasource-class>
+         <xa-datasource-property name="ServerName">localhost</xa-datasource-property>
+         <xa-datasource-property name="PortNumber">1433</xa-datasource-property>
+         <xa-datasource-property name="DatabaseName">meteo</xa-datasource-property>
+         <driver>mysql-connector-java-5.1.33-bin.jar</driver>
+         <security>
+            <user-name>meteo</user-name>
+            <password>meteo</password>
+         </security>
+		 
+    <validation>
+      <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLValidConnectionChecker"></valid-connection-checker>
+      <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLExceptionSorter"></exception-sorter>
+    </validation
+  </xa-datasource>
+</datasources>

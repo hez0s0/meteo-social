@@ -1,0 +1,361 @@
+@font-face {
+    font-family: 'BebasNeueRegular';
+    src: url('fonts/BebasNeue-webfont.eot');
+    src: url('fonts/BebasNeue-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/BebasNeue-webfont.woff') format('woff'),
+         url('fonts/BebasNeue-webfont.ttf') format('truetype'),
+         url('fonts/BebasNeue-webfont.svg#BebasNeueRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+/* CSS reset */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td { 
+   margin:0;
+   padding:0;
+}
+html,body {
+   margin:0;
+   padding:0;
+   height: 100%;
+}
+table {
+   border-collapse:collapse;
+   border-spacing:0;
+}
+fieldset,img { 
+   border:0;
+}
+address,caption,cite,code,dfn,th,var {
+   font-style:normal;
+   font-weight:normal;
+}
+ol,ul {
+   list-style:none;
+}
+caption,th {
+   text-align:left;
+}
+h1,h2,h3,h4,h5,h6 {
+   font-size:100%;
+   font-weight:normal;
+}
+q:before,q:after {
+   content:'';
+}
+abbr,acronym { border:0;
+}
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+   display: block;
+}
+/* General Demo Style */
+body{
+   font-family: Cambria, Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
+   background: #fff url(../images/bg.jpg) repeat top left;
+   font-weight: 400;
+   font-size: 15px;
+   color: #1d3c41;
+   overflow-y: scroll;
+}
+a{
+   color: #333;
+   text-decoration: none;
+}
+.container{
+   width: 100%;
+   height: 100%;
+   position: relative;
+   text-align: center;
+}
+.clr{
+   clear: both;
+}
+.container header{
+   padding: 20px 30px 10px 30px;
+   margin: 0px 20px 10px 20px;
+   position: relative;
+   display: block;
+   text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+    text-align: center;
+}
+.container header h1{
+   font-family: 'BebasNeueRegular', 'Arial Narrow', Arial, sans-serif;
+   font-size: 35px;
+   line-height: 35px;
+   position: relative;
+   font-weight: 400;
+   color: #6C757A;
+   text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+   padding: 0px 0px 5px 0px;
+}
+.container header h1 span{
+   color: #FF9148;
+   text-shadow: 0px 1px 1px rgba(255,255,255,0.8);
+}
+.container header h2{
+   font-size: 16px;
+   font-style: italic;
+   color: #2d6277;
+   text-shadow: 0px 1px 1px rgba(255,255,255,0.8);
+}
+
+
+.container h1{
+   font-family: 'BebasNeueRegular', 'Arial Narrow', Arial, sans-serif;
+   font-size: 35px;
+   line-height: 35px;
+   position: relative;
+   font-weight: 400;
+   color: #6C757A;
+   text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+   padding: 0px 0px 5px 0px;
+}
+.container h1 span{
+   color: #FF9148;
+   text-shadow: 0px 1px 1px rgba(255,255,255,0.8);
+}
+
+/* remove styles and reset the whole thing */
+#container_demo{
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    margin: 0 auto;
+    font-family: "Trebuchet MS","Myriad Pro",Arial,sans-serif;
+}
+
+/** fonts used for the icons **/ 
+@font-face {
+    font-family: 'FontomasCustomRegular';
+    src: url('fonts/fontomas-webfont.eot');
+    src: url('fonts/fontomas-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/fontomas-webfont.woff') format('woff'),
+         url('fonts/fontomas-webfont.ttf') format('truetype'),
+         url('fonts/fontomas-webfont.svg#FontomasCustomRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'FranchiseRegular';
+    src: url('fonts/franchise-bold-webfont.eot');
+    src: url('fonts/franchise-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/franchise-bold-webfont.woff') format('woff'),
+         url('fonts/franchise-bold-webfont.ttf') format('truetype'),
+         url('fonts/franchise-bold-webfont.svg#FranchiseRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+a.hiddenanchor{
+   display: none;
+}
+/** The wrapper that will contain our two forms **/
+#wrapper{
+   width: 60%;
+   right: 0px;
+   min-height: 560px;   
+   margin: 0px auto; 
+   width: 500px;
+   position: relative;  
+/*    left: 33%; */
+/*    top: 5%; */
+}
+/**** Styling the form elements **/
+
+/**** general text styling ****/
+#wrapper a{
+   color: rgb(95, 155, 198);
+   text-decoration: underline;
+}
+
+#wrapper h1{
+   font-size: 48px;
+   color: #FF9148;
+   padding: 2px 0 10px 0;
+   font-family: 'FranchiseRegular','Arial Narrow',Arial,sans-serif;
+   font-weight: bold;
+   text-align: center;
+   padding-bottom: 30px;
+}
+
+#wrapper p{
+   margin-bottom:15px;
+}
+#wrapper p:first-child{
+   margin: 0px;
+}
+#wrapper label{
+   color: #6C757A;
+   position: relative;
+}
+
+/**** advanced input styling ****/
+/* placeholder */
+::-webkit-input-placeholder  { 
+   color: rgb(190, 188, 188); 
+   font-style: italic;
+}
+input:-moz-placeholder,
+textarea:-moz-placeholder{ 
+   color: rgb(190, 188, 188);
+   font-style: italic;
+} 
+input {
+  outline: none;
+}
+
+/* all the input except submit and checkbox */
+#wrapper input:not([type="checkbox"]){
+   width: 92%;
+   margin-top: 4px;
+   padding: 10px 5px 10px 32px;  
+   border: 1px solid rgb(178, 178, 178);
+   -webkit-appearance: textfield;
+   -webkit-box-sizing: content-box;
+     -moz-box-sizing : content-box;
+          box-sizing : content-box;
+   -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+           border-radius: 3px;
+   -webkit-box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.6) inset;
+      -moz-box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.6) inset;
+           box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.6) inset;
+   -webkit-transition: all 0.2s linear;
+      -moz-transition: all 0.2s linear;
+        -o-transition: all 0.2s linear;
+           transition: all 0.2s linear;
+}
+#wrapper input:not([type="checkbox"]):active,
+#wrapper input:not([type="checkbox"]):focus{
+   border: 1px solid rgba(91, 90, 90, 0.7);
+   background: rgba(238, 236, 240, 0.2);  
+   -webkit-box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.9) inset;
+      -moz-box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.9) inset;
+           box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.9) inset;
+} 
+
+/** the magic icon trick ! **/
+[data-icon]:after {
+    content: attr(data-icon);
+    font-family: 'FontomasCustomRegular';
+    color: #6C757A;
+    position: absolute;
+    left: 10px;
+    top: 35px;
+   width: 30px;
+}
+
+/*styling both submit buttons */
+#wrapper p.button input{
+   width: 30%;
+   cursor: pointer;  
+   background: #FF9148;
+   padding: 8px 5px;
+   font-family: 'BebasNeueRegular','Arial Narrow',Arial,sans-serif;
+   color: #fff;
+   font-size: 24px;  
+   border: 1px solid rgb(28, 108, 122);   
+   margin-bottom: 10px; 
+   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+   -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+           border-radius: 3px;   
+   -webkit-box-shadow: 0px 1px 6px 4px rgba(0, 0, 0, 0.07) inset,
+           0px 0px 0px 3px rgb(254, 254, 254),
+           0px 5px 3px 3px rgb(210, 210, 210);
+      -moz-box-shadow:0px 1px 6px 4px rgba(0, 0, 0, 0.07) inset,
+           0px 0px 0px 3px rgb(254, 254, 254),
+           0px 5px 3px 3px rgb(210, 210, 210);
+           box-shadow:0px 1px 6px 4px rgba(0, 0, 0, 0.07) inset,
+           0px 0px 0px 3px rgb(254, 254, 254),
+           0px 5px 3px 3px rgb(210, 210, 210);
+   -webkit-transition: all 0.2s linear;
+      -moz-transition: all 0.2s linear;
+        -o-transition: all 0.2s linear;
+           transition: all 0.2s linear;
+}
+#wrapper p.button input:hover{
+   background: #E0691A;
+}
+#wrapper p.button input:active,
+#wrapper p.button input:focus{
+   background: #A9C0CE;
+   position: relative;
+   top: 1px;
+   border: 1px solid rgb(12, 76, 87);  
+   -webkit-box-shadow: 0px 1px 6px 4px rgba(0, 0, 0, 0.2) inset;
+      -moz-box-shadow: 0px 1px 6px 4px rgba(0, 0, 0, 0.2) inset;
+           box-shadow: 0px 1px 6px 4px rgba(0, 0, 0, 0.2) inset;
+}
+p.login.button{
+   text-align: right;
+   margin: 5px 0;
+}
+
+/** Styling both forms **/
+#login{
+   position: absolute;
+   top: 0px;
+   width: 88%; 
+   padding: 18px 6% 60px 6%;
+   margin: 0 0 35px 0;
+   background: rgb(247, 247, 247);
+   border: 1px solid rgba(147, 184, 189,0.8);
+   -webkit-box-shadow: 0pt 2px 5px rgba(105, 108, 109,  0.7),  0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
+      -moz-box-shadow: 0pt 2px 5px rgba(105, 108, 109,  0.7),  0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
+           box-shadow: 0pt 2px 5px rgba(105, 108, 109,  0.7),  0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
+   -webkit-box-shadow: 5px;
+   -moz-border-radius: 5px;
+       border-radius: 5px;
+}
+#login{
+   z-index: 22;
+}
+
+/* some ugly IE fixes */
+.lt8 #wrapper input{
+   padding: 10px 5px 10px 32px;
+    width: 92%;
+}
+.lt8 #wrapper input[type=checkbox]{
+   width: 10px;
+   padding: 0;
+}
+.lt8 #wrapper h1{
+   color: #066A75;
+}
+.lt8 #register{   
+   display: none;
+}
+.lt8 p.change_link,
+.ie9 p.change_link{
+   position: absolute;
+   height: 90px;
+   background: transparent;
+}
+.error {
+	color: #D8000C;
+	border: 1px solid rgb(178, 178, 178);
+	background-color: #FFBABA;
+   padding: 10px 5px 10px 32px;
+   margin: 0 0 35px 0;
+}
+.ie9 p.change_link{
+   position: absolute;
+   height: 90px;
+   background: transparent;
+}
+.ie9 container h1{
+   font-family: 'BebasNeueRegular', 'Arial Narrow', Arial, sans-serif;
+   font-size: 35px;
+   line-height: 35px;
+   position: relative;
+   font-weight: 400;
+   color: #6C757A;
+   text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+   padding: 0px 0px 5px 0px;
+}
+.ie9 container h1 span{
+   color: #FF9148;
+   text-shadow: 0px 1px 1px rgba(255,255,255,0.8);
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='meteo'>
+   
+   <!-- Inherit the main module. -->
+   <inherits name='es.uned.grc.pfc.meteo.meteo' />
+   
+   <!-- Inherit the default GWT style sheet. -->
+   <inherits name='com.google.gwt.user.theme.clean.Clean' />
+   <!-- add our custom stylesheet -->
+   <stylesheet src="../css/style.css" />
+   
+   <!-- Configure logging -->
+   <set-property name="gwt.logging.popupHandler" value="DISABLED" />
+   <set-property name="gwt.logging.developmentModeHandler" value="DISABLED"/>
+   <set-property name="gwt.logging.systemHandler" value="DISABLED"/>
+
+   <!-- Additional locales to compile -->
+  
+   <!-- default locales -->
+   <extend-property name="locale" values="es_ES" />
+   <set-property-fallback name="locale" value="es_ES"/> 
+</module>

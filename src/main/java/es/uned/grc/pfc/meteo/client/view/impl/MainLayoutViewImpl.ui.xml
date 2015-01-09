@@ -1,0 +1,51 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat' ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+  ui:generateLocales="default">
+
+  <g:ScrollPanel>
+  <g:HTMLPanel>
+    <div class="main-content">
+      <div class="header">
+        <g:SimplePanel ui:field="headerPanel"/>
+        <div class="logo">
+          <h1>
+            <g:Anchor ui:field="homeAnchor">
+              <span class="dark"><ui:msg description="Name of the suit or products (VMobil)">VMobil</ui:msg></span>
+              <ui:msg description="Name of the product (Drug Authoring System)">Drug Authoring System</ui:msg>
+            </g:Anchor>
+          </h1>
+        </div>
+      </div>
+      <g:SimplePanel ui:field="menuPanel"/>
+      <div class="search_field">
+        <g:SimplePanel ui:field="searchPanel"/>
+      </div>
+      <div class="left" ui:field="mainDiv">
+        <g:SimplePanel ui:field="messagesPanel" width="100%" />
+        <h3>
+          <table width="100%">
+            <tr>
+               <td width="70%">
+                  <g:Label ui:field="detailsTitleLabel" styleName="details_left_header"/>
+               </td>
+               <td width="30%">
+                  <g:Label ui:field="backToListLabel" styleName="details_right_header"><ui:msg description="Return to list text">Return to the list</ui:msg></g:Label>
+               </td>
+            </tr>
+          </table>
+        </h3>
+        <g:SimplePanel ui:field="mainPanel" />
+      </div>
+      <div>
+        <div class="right" ui:field="actionsDiv">
+          <h3><ui:msg description="Actions block title">Actions:</ui:msg></h3>
+          <g:SimplePanel ui:field="actionsPanel"/>
+        </div>
+      </div>
+      <div class="footer">
+        &nbsp;
+      </div>
+    </div>
+  </g:HTMLPanel>
+  </g:ScrollPanel>
+</ui:UiBinder>

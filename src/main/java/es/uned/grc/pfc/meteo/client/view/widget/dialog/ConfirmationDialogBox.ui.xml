@@ -1,0 +1,21 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+             xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+             ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+             ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+             ui:generateLocales="default">
+  <g:HTMLPanel>
+    <div>
+      <g:Label ui:field="questionLabel" />
+    </div>
+    <g:HorizontalPanel width="100%">
+        <g:cell horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
+        <g:Button ui:field="acceptButton"><ui:msg meaning="confirmation accept" description="Label for accept button">Accept</ui:msg></g:Button>
+        </g:cell>
+        <g:cell horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
+        <g:Button ui:field="cancelButton"><ui:msg meaning="confirmation cancel" description="Label for cancel button">Cancel</ui:msg></g:Button>
+        </g:cell>
+    </g:HorizontalPanel>
+  </g:HTMLPanel>
+</ui:UiBinder>

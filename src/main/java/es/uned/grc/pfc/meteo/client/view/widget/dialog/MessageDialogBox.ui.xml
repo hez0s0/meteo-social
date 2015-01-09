@@ -1,0 +1,24 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+             xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+             xmlns:meteo-widget="urn:import:es.uned.grc.pfc.meteo.client.view.widget"
+             ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+             ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+             ui:generateLocales="default">
+  <g:HTMLPanel>
+    <table>
+      <tr>
+        <td><ul ui:field="messagesUnorderedList"/></td>
+      </tr>
+    </table>
+    <g:HorizontalPanel width="100%">
+      <g:cell horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
+        <g:Button ui:field="acceptButton" visible="false"/>
+      </g:cell>
+      <g:cell horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
+        <g:Button ui:field="cancelButton"><ui:msg meaning="message dialog button" description="Label for cancel button">Close</ui:msg></g:Button>
+      </g:cell>
+    </g:HorizontalPanel>
+  </g:HTMLPanel>
+</ui:UiBinder>

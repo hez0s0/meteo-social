@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<display-name>Meteo Social - PFC</display-name>
+
+    <!-- context params -->
+    <context-param>
+       <param-name>contextConfigLocation</param-name>
+       <param-value>/WEB-INF/applicationContext.xml</param-value>
+    </context-param>
+  
+   	<!-- filters -->
+	<filter>
+		<filter-name>transactionalFilter</filter-name>
+		<filter-class>es.uned.grc.pfc.meteo.server.filter.TransactionalFilter</filter-class>
+		<init-param>
+			<param-name>excludePatterns</param-name>
+			<param-value>/favicon.ico,/css,/img,/images,/js</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>transactionalFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- servlets -->
+	<servlet>
+		<servlet-name>requestFactoryServlet</servlet-name>
+		<servlet-class>es.uned.grc.pfc.meteo.server.servlet.CustomRequestFactoryServlet</servlet-class>
+		<init-param>
+			<param-name>logAudit</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logTime</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logTimeThreshold</param-name>
+			<param-value>300</param-value>
+		</init-param>
+	</servlet>
+	<servlet>
+		<servlet-name>remoteLogging</servlet-name>
+		<servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl</servlet-class>
+		<init-param>
+			<param-name>symbolMapsDirectory</param-name>
+			<!-- you'll need to compile with -extras and move the symbolMaps directory 
+				to this location if you want stack trace deobfuscation to work -->
+			<param-value>WEB-INF/deploy/symbolMaps/</param-value>
+		</init-param>
+	</servlet>
+
+	<!-- servlet mappings -->
+	<servlet-mapping>
+		<servlet-name>requestFactoryServlet</servlet-name>
+		<url-pattern>/gwtRequest</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>remoteLogging</servlet-name>
+		<url-pattern>/vdas/remote_logging</url-pattern>
+	</servlet-mapping>
+
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>meteo.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>
