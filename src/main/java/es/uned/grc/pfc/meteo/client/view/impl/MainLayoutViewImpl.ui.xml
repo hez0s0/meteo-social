@@ -10,8 +10,8 @@
         <div class="logo">
           <h1>
             <g:Anchor ui:field="homeAnchor">
-              <span class="dark"><ui:msg description="Name of the suit or products (VMobil)">VMobil</ui:msg></span>
-              <ui:msg description="Name of the product (Drug Authoring System)">Drug Authoring System</ui:msg>
+              <span class="dark"><ui:msg description="Name of the system">meteo</ui:msg></span>
+              <ui:msg description="subtitle">social</ui:msg>
             </g:Anchor>
           </h1>
         </div>
