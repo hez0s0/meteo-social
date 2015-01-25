@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.Station;
@@ -30,6 +32,7 @@ public class QualityJob {
    /**
     * To be executed periodically
     */
+   @Transactional (propagation = Propagation.REQUIRED)
    @Scheduled (fixedRate = IServerConstants.QUALITY_POLLING_TIME)
    public synchronized void timeout () {
       Station station = null;
@@ -46,20 +49,23 @@ public class QualityJob {
          if (observations != null && !observations.isEmpty ()) {
             processQuality (station, observations);
          }
+         logger.info ("Quality processed for {} observations", observations != null ? observations.size () : 0);
       } catch (Exception e) {
          logger.error ("Error computing quality control of observations", e);
       }
    }
 
-   public void processQuality (Station station, List <Observation> observations) {
+   @Transactional (propagation = Propagation.REQUIRED)
+   private void processQuality (Station station, List <Observation> observations) {
       boolean ok = false;
       StringBuffer warning = null;
-      Date now = null;
+      Date now = new Date ();
       
       try {
          logger.info ("Quality to be checked on {} observations", observations.size ());
 
          for (Observation observation : observations) {
+            ok = false;
             warning = new StringBuffer ();
             
             if (!StringUtils.isEmpty (observation.getValue ())) {
@@ -103,6 +109,8 @@ public class QualityJob {
             if (!ok) {
                observation.setWarning (warning.toString ());
             }
+            observationPersistence.merge (observation);
+            logger.info ("Quality result for observation {} is {}", observation.getId (), observation.getQuality ());
          }
       } catch (Exception e) {
          logger.error ("Error collecting observations", e);
@@ -111,25 +119,30 @@ public class QualityJob {
 
    private boolean processQuality (String stringValue, Double minimum, Double maximum, Double physicalMinimum, Double physicalMaximum, StringBuffer warning) {
       Double value = null;
-      boolean ok = false;
+      boolean ok = true;
       
       try {
          value = Double.valueOf (stringValue);
          if (minimum != null && value < minimum) {
+            ok = false;
             addWarning (String.format ("Value '%s' should not be less than '%s'", value, minimum), warning);
          }
          if (maximum != null && value > maximum) {
+            ok = false;
             addWarning (String.format ("Value '%s' should not be more than '%s'", value, maximum), warning);
          }
          if (minimum != null && value < physicalMinimum) {
+            ok = false;
             addWarning (String.format ("Value '%s' cannot be less than '%s'", value, physicalMinimum), warning);
          }
          if (maximum != null && value > physicalMaximum) {
+            ok = false;
             addWarning (String.format ("Value '%s' cannot be more than '%s'", value, physicalMaximum), warning);
          }
       } catch (Exception e) {
          //if not a double, it should not have limits, so this is suspicious (sensor data corruption)
          ok = false;
+         addWarning (String.format ("Value '%s' is not a number", value, physicalMaximum), warning);
       }
       
       return ok;

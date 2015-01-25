@@ -13,7 +13,7 @@ public class IServerConstants {
    public static final long ONE_MINUTE = 60 * 1000;
    
    /** time between executions of the collector, in milliseconds */
-   public static final long COLLECTION_POLLING_TIME = 10000;
+   public static final long COLLECTION_POLLING_TIME = 60000;
    
    /** time between executions of the quality control, in milliseconds */
    public static final long QUALITY_POLLING_TIME = 60000;

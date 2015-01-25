@@ -103,7 +103,7 @@ public class CollectorJob {
       while (collect (station, configuredParameters, collector, parser, result)){
          logger.debug ("Block of observations appended. Aggregated results {}", result.size ());
       }
-      logger.debug ("End of collection. Aggregated results {}", result.size ());
+      logger.info ("End of collection. Aggregated results {}", result.size ());
       
       return result;
    }
@@ -129,17 +129,19 @@ public class CollectorJob {
       //parse them into a well-known observation structure
       observations = toObservations (parser.parseBlock (block), station, now);
       
-      //persist the collected info and update the station
-      logger.info ("Storing %s observations for station {} at time {}", observations.size (), station.getName (), nextObservationPeriod);
-      store (observations);
-      
-      result.addAll (observations);
-      
-      station.setLastCollectedPeriod (nextObservationPeriod);
-      stationPersistence.merge (station);
+      if (!observations.isEmpty ()) {
+         //persist the collected info and update the station
+         logger.info ("Storing {} observations for station {} at time {}", observations.size (), station.getName (), nextObservationPeriod);
+         store (observations);
+         
+         result.addAll (observations);
+         
+         station.setLastCollectedPeriod (nextObservationPeriod);
+         stationPersistence.merge (station);
+      }
       
       //true if there are more observations
-      return ! (nextObservationPeriod.getTime () + stationPlugin.getObservationPeriod () * IServerConstants.ONE_MINUTE >= new Date ().getTime ());
+      return ! (nextObservationPeriod.getTime () + (stationPlugin.getObservationPeriod () * IServerConstants.ONE_MINUTE) >= new Date ().getTime ());
    }
 
    private void store (List <Observation> observations) {
@@ -175,7 +177,7 @@ public class CollectorJob {
 
    private Variable findByName (String variableName, Set <Variable> variables) {
       for (Variable variable : variables) {
-         if (variable.getName ().equalsIgnoreCase (variableName)) {
+         if (variable.getAcronym ().equalsIgnoreCase (variableName)) {
             return variable;
          }
       }

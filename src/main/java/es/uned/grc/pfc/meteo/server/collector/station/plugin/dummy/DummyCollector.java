@@ -16,7 +16,6 @@ public class DummyCollector implements ICollector {
 
    private static final String FILE_MASK = "%s" + File.separator + "%s" + "_%s.csv";
    private static final String FILE_DATE_FORMAT = "yyyyMMdd";
-   private static final String LINE_DATE_FORMAT = "yyyyMMddHHmmss"; 
    
    @Override
    public byte [] getObservationBlock (Date observationTime, Map <String, String> params) {
@@ -73,7 +72,7 @@ public class DummyCollector implements ICollector {
    }
 
    private boolean isObservationLine (String line, Date observationTime) {
-      return (line != null && line.startsWith (new SimpleDateFormat (LINE_DATE_FORMAT).format (observationTime)));
+      return (line != null && line.startsWith (new SimpleDateFormat (IDummyConstants.OBSERVATION_DATE_FORMAT).format (observationTime)));
    }
 
    private String getParamValue (String key, Map <String, String> params) {

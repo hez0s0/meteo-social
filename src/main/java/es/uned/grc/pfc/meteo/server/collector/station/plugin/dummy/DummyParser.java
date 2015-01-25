@@ -10,7 +10,6 @@ import es.uned.grc.pfc.meteo.server.collector.station.RawObservation;
 
 public class DummyParser implements IParser {
 
-   private static final String OBSERVATION_DATE_FORMAT = "yyyyMMddHHmmss";
    
    /**
     * Parses a line in the format yyyyMMddHHmmss,P1=V1,P2=V2,...
@@ -21,7 +20,7 @@ public class DummyParser implements IParser {
       List <RawObservation> result = null;
       RawObservation rawObservation = null;
       Date dateObserved = null;
-      SimpleDateFormat sdf = new SimpleDateFormat (OBSERVATION_DATE_FORMAT);
+      SimpleDateFormat sdf = new SimpleDateFormat (IDummyConstants.OBSERVATION_DATE_FORMAT);
       String line = null;
       String [] columns = null;
       String [] observation = null;
@@ -48,30 +47,29 @@ public class DummyParser implements IParser {
                   if (observation.length != 2) {
                      throw new RuntimeException (String.format ("Column %s with value '%s' does not denote an observation correctly", columnPosition, column));
                   }
+                  observationAcronym = observation [0] != null ? observation [0].trim () : "";
+                  
+                  if (!observationAcronym.equalsIgnoreCase (IDummyConstants.TEMPERATURE_ACRONYM)
+                      && !observationAcronym.equalsIgnoreCase (IDummyConstants.PRESSURE_ACRONYM)
+                      && !observationAcronym.equalsIgnoreCase (IDummyConstants.HUMIDITY_ACRONYM)
+                      && !observationAcronym.equalsIgnoreCase (IDummyConstants.WIND_SPEED_ACRONYM)
+                      && !observationAcronym.equalsIgnoreCase (IDummyConstants.WIND_DIRECTION_ACRONYM)) {
+                     throw new RuntimeException (String.format ("Column %s with value '%s' does not contain a well-known acronym [%s, %s, %s, %s, %s]", 
+                                                 columnPosition, 
+                                                 column,
+                                                 IDummyConstants.TEMPERATURE_ACRONYM,
+                                                 IDummyConstants.PRESSURE_ACRONYM,
+                                                 IDummyConstants.HUMIDITY_ACRONYM,
+                                                 IDummyConstants.WIND_SPEED_ACRONYM,
+                                                 IDummyConstants.WIND_DIRECTION_ACRONYM));
+                  }
+                  //create the representation of the parsed values and add it to results
+                  rawObservation = new RawObservation ();
+                  rawObservation.setObserved (dateObserved);
+                  rawObservation.setVariableName (observation [0]);
+                  rawObservation.setValue (observation [1]);
+                  result.add (rawObservation);
                }
-
-               observationAcronym = observation [0] != null ? observation [0].trim () : "";
-               
-               if (!observationAcronym.equals (IDummyConstants.TEMPERATURE_ACRONYM)
-                   && !observationAcronym.equals (IDummyConstants.PRESSURE_ACRONYM)
-                   && !observationAcronym.equals (IDummyConstants.HUMIDITY_ACRONYM)
-                   && !observationAcronym.equals (IDummyConstants.WIND_SPEED_ACRONYM)
-                   && !observationAcronym.equals (IDummyConstants.WIND_DIRECTION_ACRONYM)) {
-                  throw new RuntimeException (String.format ("Column %s with value '%s' does not contain a well-known acronym [%s, %s, %s, %s, %s]", 
-                                              columnPosition, 
-                                              column,
-                                              IDummyConstants.TEMPERATURE_ACRONYM,
-                                              IDummyConstants.PRESSURE_ACRONYM,
-                                              IDummyConstants.HUMIDITY_ACRONYM,
-                                              IDummyConstants.WIND_SPEED_ACRONYM,
-                                              IDummyConstants.WIND_DIRECTION_ACRONYM));
-               }
-               //create the representation of the parsed values and add it to results
-               rawObservation = new RawObservation ();
-               rawObservation.setObserved (dateObserved);
-               rawObservation.setVariableName (observation [0]);
-               rawObservation.setValue (observation [1]);
-               result.add (rawObservation);
                
                columnPosition ++;
             }

@@ -10,4 +10,6 @@ public interface IDummyConstants {
    String HUMIDITY_ACRONYM = "Hum";
    String WIND_SPEED_ACRONYM = "WindS";
    String WIND_DIRECTION_ACRONYM = "WindD";
+   
+   String OBSERVATION_DATE_FORMAT = "yyyyMMddHHmm";
 }

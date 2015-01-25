@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.RequestParamFilter;
@@ -19,9 +23,12 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
       
    }
 
+   @SuppressWarnings ("unchecked")
    @Override
+   @Transactional (propagation = Propagation.REQUIRED)
    public List <Observation> getUncontrolled () {
-      // TODO Auto-generated method stub
-      return null;
+      return getBaseCriteria ().add (Restrictions.isNull ("quality"))
+                               .addOrder (Order.asc ("observed"))
+                               .list ();
    }
 }
