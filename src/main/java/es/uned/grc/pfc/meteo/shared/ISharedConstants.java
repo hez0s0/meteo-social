@@ -54,4 +54,10 @@ public class ISharedConstants {
    
    public static final String DECIMAL_SEPARATOR = ".";
    public static final String DECIMAL_SEPARATOR_RE = "\\.";
+   
+   /** the filters that can be applied over stations */
+   public static enum StationFilter {NAME, COUNTRY, CITY, ZIP};
+   
+   /** the filters that can be applied over observations */
+   public static enum ObservationFilter {OWN, STATION_ID, START_DATE, END_DATE, VARIABLE_IDS}; 
 }

@@ -26,6 +26,7 @@ public class Variable extends AbstractVersionable <Integer> {
    private Integer id = null;
    private Station station = null;
    private String name = null;
+   private String acronym = null;
    private String description = null;
    private Double defaultMinimum = null;
    private Double defaultMaximum = null;
@@ -46,12 +47,20 @@ public class Variable extends AbstractVersionable <Integer> {
       this.id = id;
    }
    
-   @Column (nullable = false, length = 64)
+   @Column (nullable = false, length = 256)
    public String getName () {
       return name;
    }
    public void setName (String name) {
       this.name = name;
+   }
+
+   @Column (nullable = false, length = 16)
+   public String getAcronym () {
+      return acronym;
+   }
+   public void setAcronym (String acronym) {
+      this.acronym = acronym;
    }
    
    @Column (length = 4000)

@@ -3,6 +3,8 @@ package es.uned.grc.pfc.meteo.server.collector.station.plugin.dummy;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import es.uned.grc.pfc.meteo.server.collector.station.ICollector;
 import es.uned.grc.pfc.meteo.server.collector.station.IParser;
 import es.uned.grc.pfc.meteo.server.collector.station.IStationPlugin;
@@ -10,6 +12,7 @@ import es.uned.grc.pfc.meteo.server.collector.station.ParameterDescriptor;
 import es.uned.grc.pfc.meteo.server.collector.station.StationModelDescriptor;
 import es.uned.grc.pfc.meteo.server.collector.station.VariableDescriptor;
 
+@Component
 public class DummyStationPlugin implements IStationPlugin {
 
    @Override

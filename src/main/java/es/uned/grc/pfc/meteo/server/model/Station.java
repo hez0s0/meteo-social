@@ -37,6 +37,7 @@ public class Station extends AbstractVersionable <Integer> {
    private String city = null;
    private String country = null;
    private Date lastCollectedPeriod = null;
+   private Boolean own = false;
 
    @Id
    @GeneratedValue (strategy = GenerationType.AUTO, generator = "metStationID_gen")
@@ -137,5 +138,13 @@ public class Station extends AbstractVersionable <Integer> {
    }
    public void setHeight (Integer height) {
       this.height = height;
+   }
+
+   @Column (nullable = false)
+   public Boolean getOwn () {
+      return own;
+   }
+   public void setOwn (Boolean own) {
+      this.own = own;
    }
 }

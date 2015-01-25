@@ -30,6 +30,9 @@ public class Observation extends AbstractVersionable <Integer> {
    private Date observed = null;
    private Date received = null;
    private Date sent = null;
+   private Date controlled = null;
+   private String warning = null;
+   private Boolean quality = null;
 
    @Id
    @GeneratedValue (strategy = GenerationType.AUTO, generator = "metObservationID_gen")
@@ -92,5 +95,27 @@ public class Observation extends AbstractVersionable <Integer> {
    }
    public void setSent (Date sent) {
       this.sent = sent;
+   }
+   
+   @Column
+   public Date getControlled () {
+      return controlled;
+   }
+   public void setControlled (Date controlled) {
+      this.controlled = controlled;
+   }
+   
+   @Column
+   public String getWarning () {
+      return warning;
+   }
+   public void setWarning (String warning) {
+      this.warning = warning;
+   }
+   public Boolean getQuality () {
+      return quality;
+   }
+   public void setQuality (Boolean quality) {
+      this.quality = quality;
    }
 }
