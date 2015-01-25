@@ -1,7 +1,7 @@
 package es.uned.grc.pfc.meteo.server.model;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,8 +28,8 @@ public class Station extends AbstractVersionable <Integer> {
    private Integer id = null;
    private String name = null;
    private StationModel stationModel = null;
-   private List <Parameter> parameters = null;
-   private List <Variable> variables = null;
+   private Set <Parameter> parameters = null;
+   private Set <Variable> variables = null;
    private Long latitude = null;
    private Long longitude = null;
    private Integer height = null;
@@ -59,18 +59,18 @@ public class Station extends AbstractVersionable <Integer> {
    }
 
    @OneToMany (mappedBy = "station", cascade = {CascadeType.ALL}, orphanRemoval = true)
-   public List <Parameter> getParameters () {
+   public Set <Parameter> getParameters () {
       return parameters;
    }
-   public void setParameters (List <Parameter> parameters) {
+   public void setParameters (Set <Parameter> parameters) {
       this.parameters = parameters;
    }
 
    @OneToMany (mappedBy = "station", cascade = {CascadeType.ALL}, orphanRemoval = true)
-   public List <Variable> getVariables () {
+   public Set <Variable> getVariables () {
       return variables;
    }
-   public void setVariables (List <Variable> variables) {
+   public void setVariables (Set <Variable> variables) {
       this.variables = variables;
    }
 

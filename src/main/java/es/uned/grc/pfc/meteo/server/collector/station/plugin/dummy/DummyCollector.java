@@ -28,10 +28,10 @@ public class DummyCollector implements ICollector {
       String fileName = getParamValue (IDummyConstants.FILE_PARAM, params);
       
       //validate params
-      if (!StringUtils.isEmpty (folderName)) {
+      if (StringUtils.isEmpty (folderName)) {
          throw new RuntimeException (String.format ("Param %s not configured or empty", IDummyConstants.FOLDER_PARAM));
       }
-      if (!StringUtils.isEmpty (fileName)) {
+      if (StringUtils.isEmpty (fileName)) {
          throw new RuntimeException (String.format ("Param %s not configured or empty", IDummyConstants.FILE_PARAM));
       }
       

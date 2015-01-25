@@ -6,7 +6,7 @@ INSERT INTO metStation (name, own) VALUES ('Gustavo', true);
 
 --insert the config parameters of the own station
 INSERT INTO metParameter (name, description, defaultValue, stationId) VALUES ('Folder', 'The folder where the observations file is to be located', '/home/dummy/observations', (SELECT id FROM metStation WHERE own = true));
-INSERT INTO metParameter (name, description, defaultValue, stationId) VALUES ('File', 'Name of the file where the observations are included', 'dummy_observations.csv', (SELECT id FROM metStation WHERE own = true));
+INSERT INTO metParameter (name, description, defaultValue, stationId) VALUES ('File', 'Name of the file where the observations are included', 'dummy_observations', (SELECT id FROM metStation WHERE own = true));
 
 --insert the variables of the own station
 INSERT INTO metVariable (name, acronym, description, unit, defaultMaximum, defaultMinimum, physicalMaximum, physicalMinimum, stationId) VALUES ('Temperature', 'Temp', 'The air temperature', 'ºC', 50, -30, 80, -80, (SELECT id FROM metStation WHERE own = true));

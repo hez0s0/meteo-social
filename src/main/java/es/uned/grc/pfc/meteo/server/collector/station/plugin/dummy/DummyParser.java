@@ -22,8 +22,8 @@ public class DummyParser implements IParser {
       RawObservation rawObservation = null;
       Date dateObserved = null;
       SimpleDateFormat sdf = new SimpleDateFormat (OBSERVATION_DATE_FORMAT);
-      String line = new String (block);
-      String [] columns = line.split (",");
+      String line = null;
+      String [] columns = null;
       String [] observation = null;
       int columnPosition = 0;
       String observationAcronym = null;

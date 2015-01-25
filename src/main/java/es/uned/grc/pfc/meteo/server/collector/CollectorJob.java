@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,7 +158,7 @@ public class CollectorJob {
             }
          }
       }
-      return null;
+      return observations;
    }
 
    private Observation toObservation (RawObservation rawObservation, Station station, Date now) {
@@ -172,7 +173,7 @@ public class CollectorJob {
       return observation;
    }
 
-   private Variable findByName (String variableName, List <Variable> variables) {
+   private Variable findByName (String variableName, Set <Variable> variables) {
       for (Variable variable : variables) {
          if (variable.getName ().equalsIgnoreCase (variableName)) {
             return variable;
@@ -201,7 +202,7 @@ public class CollectorJob {
       return (new Date ().getTime () - lastCollectedPeriod.getTime () > TOO_OLD_MINUTES);
    }
 
-   private Map <String, String> asMap (List <Parameter> parameters) {
+   private Map <String, String> asMap (Set <Parameter> parameters) {
       Map <String, String> configuredParameters = new HashMap <String, String> (parameters.size ());
       
       for (Parameter parameter : parameters) {
