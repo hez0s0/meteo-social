@@ -24,7 +24,6 @@ import es.uned.grc.pfc.meteo.client.view.IMenuView;
 public class MenuActivityMapper implements ActivityMapper {
    @Inject
    private PlaceController placeController = null;
-   @SuppressWarnings ("unused")
    @Inject
    private EventBus eventBus = null;
 

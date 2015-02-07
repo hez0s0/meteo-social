@@ -11,7 +11,7 @@
   
   <g:HTMLPanel styleName="left_box">
     <meteo-widget:LimitedSimplePager ui:field="pagerTop" />
-    <c:CellTable ui:field="workSpaceTable" pageSize="20" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false" />
+    <c:CellTable ui:field="observationTable" pageSize="20" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false" />
     <meteo-widget:LimitedSimplePager ui:field="pagerBottom" />
   </g:HTMLPanel>
 </ui:UiBinder>

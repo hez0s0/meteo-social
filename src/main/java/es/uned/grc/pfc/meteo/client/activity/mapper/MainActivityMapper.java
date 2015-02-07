@@ -109,6 +109,7 @@ public class MainActivityMapper implements ActivityMapper {
       });
    }
    
+   @SuppressWarnings ("unused")
    private void setListPlace (AbstractPlace listPlace, IFormView <?> formView) {
       mainLayoutView.getBackToList ().setVisible (true);
       configuredListPlace = listPlace;

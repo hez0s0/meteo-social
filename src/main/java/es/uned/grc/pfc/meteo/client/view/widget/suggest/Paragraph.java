@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class Paragraph extends Widget implements HasText {
 
-   
+   @SuppressWarnings ("deprecation")
    public Paragraph () {
       setElement (DOM.createElement ("p"));
    }

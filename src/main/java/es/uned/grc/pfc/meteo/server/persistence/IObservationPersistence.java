@@ -8,4 +8,6 @@ public interface IObservationPersistence extends IPersistence <Integer, Observat
    
    /** obtains the observations of the own station whose quality controls have not yet been conducted */ 
    List <Observation> getUncontrolled ();
+   /** obtains the observations of the own station whose derived calculations have not yet been conducted */ 
+   List <Observation> getUnderived ();
 }

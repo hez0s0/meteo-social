@@ -3,9 +3,10 @@ package es.uned.grc.pfc.meteo.server.decorator;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.inject.Singleton;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+
+import org.springframework.stereotype.Component;
 
 import com.google.web.bindery.requestfactory.server.ServiceLayerDecorator;
 
@@ -14,7 +15,7 @@ import es.uned.grc.pfc.meteo.server.model.base.IValidatable;
 import es.uned.grc.pfc.meteo.server.validator.ValidatorUtils;
 import es.uned.grc.pfc.meteo.shared.validator.ServerValidationGroup;
 
-@Singleton
+@Component
 public class ValidationServiceLayerDecorator extends ServiceLayerDecorator {
    
    @Override

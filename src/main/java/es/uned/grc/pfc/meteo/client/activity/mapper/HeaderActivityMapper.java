@@ -26,7 +26,6 @@ public class HeaderActivityMapper implements ActivityMapper {
 
    @Inject
    private PlaceController placeController = null;
-   @SuppressWarnings ("unused")
    @Inject
    private EventBus eventBus = null;
 

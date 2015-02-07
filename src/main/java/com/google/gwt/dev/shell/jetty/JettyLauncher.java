@@ -565,7 +565,6 @@ public class JettyLauncher extends ServletContainerLauncher {
    @Override
    public boolean processArguments (TreeLogger logger, String arguments) {
       if (arguments != null && arguments.length () > 0) {
-         // TODO(jat): better parsing of the args
          for (String arg : arguments.split (",")) {
             int equals = arg.indexOf ('=');
             String tag;
@@ -625,7 +624,6 @@ public class JettyLauncher extends ServletContainerLauncher {
    }
 
    /*
-    * TODO: This is a hack to pass the base log level to the SCL. We'll have to
     * figure out a better way to do this for SCLs in general. Please do not
     * depend on this method, as it is subject to change.
     */
@@ -733,7 +731,6 @@ public class JettyLauncher extends ServletContainerLauncher {
    }
 
    /*
-    * TODO: This is a hack to pass the base log level to the SCL. We'll have to
     * figure out a better way to do this for SCLs in general.
     */
    private TreeLogger.Type getBaseLogLevel () {

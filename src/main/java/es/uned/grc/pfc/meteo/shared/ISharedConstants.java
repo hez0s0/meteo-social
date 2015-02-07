@@ -1,6 +1,5 @@
 package es.uned.grc.pfc.meteo.shared;
 
-
 /**
  * Constants that are shared by both the client and the server.
  */
@@ -9,7 +8,8 @@ public class ISharedConstants {
    public static final String LOGOUT_URL = "logout";
    /** the URL of the login page */
    public static final String LOGIN_URL = "login.jsp";
-   
+
+   public static final String SHARED_FULL_DATE_FORMAT = "yyyyMMddHHmmss";
    public static final String SHARED_SHORT_DATE_FORMAT = "yyyyMMdd";
 
    public static final String OPEN_BRACKET = "[";

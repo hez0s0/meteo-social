@@ -113,6 +113,7 @@ public class FormUtils {
    /**
     * Sets a field readonly/enabled or not, depending on editorMode
     */
+   @SuppressWarnings ("deprecation")
    public static void notifyEditMode (EditorMode editorMode, ValueListBox <?> valueListBox) {
       if ( (editorMode != null) && (valueListBox != null) && (valueListBox.getElement () != null) ) {
          DOM.setElementPropertyBoolean (valueListBox.getElement (), "disabled", (editorMode.equals (EditorMode.VIEW)));

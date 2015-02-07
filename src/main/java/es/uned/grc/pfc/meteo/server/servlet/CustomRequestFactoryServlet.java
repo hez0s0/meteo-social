@@ -15,7 +15,7 @@ import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 import es.uned.grc.pfc.meteo.server.decorator.LoggingServiceLayerDecorator;
 import es.uned.grc.pfc.meteo.server.decorator.ValidationServiceLayerDecorator;
-import es.uned.grc.pfc.meteo.server.util.CdiUtils;
+import es.uned.grc.pfc.meteo.server.util.ApplicationContextProvider;
 
 @WebServlet (name = "requestFactoryServlet", 
              urlPatterns = "/gwtRequest", 
@@ -40,7 +40,7 @@ public class CustomRequestFactoryServlet extends RequestFactoryServlet {
       }
    }
 
-   private LoggingServiceLayerDecorator loggingServiceLayerDecorator = null;
+   private LoggingServiceLayerDecorator loggingServiceLayerDecorator = ApplicationContextProvider.getApplicationContext ().getBean (LoggingServiceLayerDecorator.class);
    
    @Override
    public void init (ServletConfig servletConfig) throws ServletException {
@@ -52,9 +52,10 @@ public class CustomRequestFactoryServlet extends RequestFactoryServlet {
    }
 
    public CustomRequestFactoryServlet () {
-      this (new LoquaciousExceptionHandler(), 
-            CdiUtils.getReference (LoggingServiceLayerDecorator.class),
-            CdiUtils.getReference (ValidationServiceLayerDecorator.class)); //note decorators are added in proper order (they will behave like a filter chain)
+      //note decorators are added in proper order (they will behave like a filter chain)
+      this (new LoquaciousExceptionHandler(),
+            ApplicationContextProvider.getApplicationContext ().getBean (LoggingServiceLayerDecorator.class),
+            ApplicationContextProvider.getApplicationContext ().getBean (ValidationServiceLayerDecorator.class));
    }
 
    public CustomRequestFactoryServlet (ExceptionHandler exceptionHandler, LoggingServiceLayerDecorator loggingServiceLayerDecorator, ValidationServiceLayerDecorator validationServiceLayerDecorator) {

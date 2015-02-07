@@ -3,18 +3,17 @@ package es.uned.grc.pfc.meteo.server.decorator;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-import javax.inject.Singleton;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Component;
 
 import com.google.web.bindery.requestfactory.server.ServiceLayerDecorator;
 
 /**
  * Audit user actions into a log
  */
-@Singleton
+@Component
 public class LoggingServiceLayerDecorator extends ServiceLayerDecorator {
    
    private static Log log = LogFactory.getLog (LoggingServiceLayerDecorator.class);

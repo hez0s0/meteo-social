@@ -4,6 +4,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 
+@SuppressWarnings ("deprecation")
 public class FadeAnimation {
 
    private static final int REFRESH_RATE = 100;

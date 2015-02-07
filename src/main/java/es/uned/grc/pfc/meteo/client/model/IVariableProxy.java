@@ -16,4 +16,37 @@ public interface IVariableProxy extends IEntityProxy {
    
    String getDescription ();
    void setDescription (String description);
+   
+   String getAcronym ();
+   void setAcronym (String acronym);
+   
+   Double getDefaultMinimum ();
+   void setDefaultMinimum (Double defaultMinimum);
+   
+   Double getDefaultMaximum ();
+   void setDefaultMaximum (Double defaultMaximum);
+   
+   Double getPhysicalMinimum ();
+   void setPhysicalMinimum (Double physicalMinimum);
+   
+   Double getPhysicalMaximum ();
+   void setPhysicalMaximum (Double physicalMaximum);
+   
+   Double getMinimum ();
+   void setMinimum (Double minimum);
+   
+   Double getMaximum ();
+   void setMaximum (Double maximum);
+   
+   String getUnit ();
+   void setUnit (String unit);
+   
+   boolean getInternal ();
+   void setInternal (boolean internal);
+   
+   IStationProxy getStation ();
+   void setStation (IStationProxy station);
+   
+   IVariableProxy getRelated ();
+   void setRelated (IVariableProxy related);
 }

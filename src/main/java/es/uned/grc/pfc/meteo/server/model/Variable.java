@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -35,6 +36,8 @@ public class Variable extends AbstractVersionable <Integer> {
    private Double minimum = null;
    private Double maximum = null;
    private String unit = null;
+   private boolean internal = false;
+   private Variable related = null;
 
    @Id
    @GeneratedValue (strategy = GenerationType.AUTO, generator = "metVariableID_gen")
@@ -47,7 +50,7 @@ public class Variable extends AbstractVersionable <Integer> {
       this.id = id;
    }
    
-   @Column (nullable = false, length = 256)
+   @Column (nullable = false, length = 1024)
    public String getName () {
       return name;
    }
@@ -55,7 +58,7 @@ public class Variable extends AbstractVersionable <Integer> {
       this.name = name;
    }
 
-   @Column (nullable = false, length = 16)
+   @Column (nullable = false, length = 64)
    public String getAcronym () {
       return acronym;
    }
@@ -126,6 +129,14 @@ public class Variable extends AbstractVersionable <Integer> {
    public void setUnit (String unit) {
       this.unit = unit;
    }
+   
+   @Column (nullable = false)
+   public boolean getInternal () {
+      return internal;
+   }
+   public void setInternal (boolean internal) {
+      this.internal = internal;
+   }
 
    @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
    @JoinColumn (name = "stationId",
@@ -135,5 +146,15 @@ public class Variable extends AbstractVersionable <Integer> {
    }
    public void setStation (Station station) {
       this.station = station;
+   }
+   
+   @OneToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
+   @JoinColumn (name = "relatedId",
+                foreignKey = @ForeignKey (name = "fk2Variable"))
+   public Variable getRelated () {
+      return related;
+   }
+   public void setRelated (Variable related) {
+      this.related = related;
    }
 }

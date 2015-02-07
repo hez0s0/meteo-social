@@ -32,10 +32,9 @@ import es.uned.grc.pfc.meteo.server.util.IServerConstants;
 @Component
 public class CollectorJob {
    
-
    private static final long TOO_OLD_MINUTES = 7 * 24 * 60 * IServerConstants.ONE_MINUTE;
 
-   protected static Logger logger = LoggerFactory.getLogger (CollectorJob.class);   
+   protected static Logger logger = LoggerFactory.getLogger (CollectorJob.class);
    
    @Autowired
    private IStationPersistence stationPersistence = null;
@@ -100,7 +99,8 @@ public class CollectorJob {
       configuredParameters = asMap (station.getParameters ());
       
       //iterate until every pending observation has been obtained
-      while (collect (station, configuredParameters, collector, parser, result)){
+      Date nextObservationPeriod = getNextObservationPeriod (station);
+      while (collect (station, nextObservationPeriod, configuredParameters, collector, parser, result)) {
          logger.debug ("Block of observations appended. Aggregated results {}", result.size ());
       }
       logger.info ("End of collection. Aggregated results {}", result.size ());
@@ -109,18 +109,15 @@ public class CollectorJob {
    }
    
    /**
-    * Collects and stores one specific block. It is isolated so that 
-    * it can be executed within its own transaction (thus, one transaction per block)
+    * Collects and stores one specific block
     */
-   @Transactional (propagation = Propagation.REQUIRES_NEW)
-   private boolean collect (Station station, Map <String, String> configuredParameters, ICollector collector, IParser parser, List <Observation> result) {
-      Date nextObservationPeriod = null;
+   @Transactional (propagation = Propagation.REQUIRED)
+   private boolean collect (Station station, Date nextObservationPeriod, Map <String, String> configuredParameters, ICollector collector, IParser parser, List <Observation> result) {
       List <Observation> observations = null;
       byte [] block = null;
       Date now = null;
       
       now = new Date ();
-      nextObservationPeriod = getNextObservationPeriod (station);
       logger.info ("Obtaining observations for station {} at time {}", station.getName (), nextObservationPeriod);
       
       //read a raw block ob observations from the station at the given timestamp
@@ -141,7 +138,9 @@ public class CollectorJob {
       }
       
       //true if there are more observations
-      return ! (nextObservationPeriod.getTime () + (stationPlugin.getObservationPeriod () * IServerConstants.ONE_MINUTE) >= new Date ().getTime ());
+      nextObservationPeriod.setTime (nextObservationPeriod.getTime () + (stationPlugin.getObservationPeriod () * IServerConstants.ONE_MINUTE));
+      
+      return ! (nextObservationPeriod.getTime () >= new Date ().getTime ());
    }
 
    private void store (List <Observation> observations) {
@@ -170,18 +169,18 @@ public class CollectorJob {
       observation.setReceived (now);
       observation.setStation (station);
       observation.setValue (rawObservation.getValue ());
-      observation.setVariable (findByName (rawObservation.getVariableName (), station.getVariables ()));
+      observation.setVariable (findByAcronyn (rawObservation.getVariableName (), station.getVariables ()));
       
       return observation;
    }
 
-   private Variable findByName (String variableName, Set <Variable> variables) {
+   private Variable findByAcronyn (String acronym, Set <Variable> variables) {
       for (Variable variable : variables) {
-         if (variable.getAcronym ().equalsIgnoreCase (variableName)) {
+         if (variable.getAcronym ().equalsIgnoreCase (acronym)) {
             return variable;
          }
       }
-      throw new RuntimeException (String.format ("Variable '%' not found in the station", variableName));
+      throw new RuntimeException (String.format ("Variable '%' not found in the station", acronym));
    }
 
    private Date getNextObservationPeriod (Station station) {

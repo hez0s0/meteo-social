@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 
+@SuppressWarnings ("deprecation")
 public class ListItem <E extends Object> extends ComplexPanel implements HasText, HasHTML, HasClickHandlers, HasKeyDownHandlers, HasBlurHandlers {
 
    private E entity = null;

@@ -9,11 +9,15 @@ import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.uned.grc.pfc.meteo.server.collector.station.ICollector;
 
 public class DummyCollector implements ICollector {
 
+   protected static Logger logger = LoggerFactory.getLogger (DummyCollector.class);
+   
    private static final String FILE_MASK = "%s" + File.separator + "%s" + "_%s.csv";
    private static final String FILE_DATE_FORMAT = "yyyyMMdd";
    
@@ -43,27 +47,27 @@ public class DummyCollector implements ICollector {
       fileName = String.format (FILE_MASK, folderName, fileName, new SimpleDateFormat (FILE_DATE_FORMAT).format (observationTime));
       file = new File (fileName);
       if (!file.exists () || !file.isFile () || !file.canRead ()) {
-         throw new RuntimeException (String.format ("File '%s' does not exist or is not accessible", fileName));
-      }
-
-      try {
-         //if the file for given date is there, find the row that includes the info for the given period
-         br = new BufferedReader (new FileReader (file));
-         for (String line; (line = br.readLine ()) != null; ) {
-            if (isObservationLine (line, observationTime)) {
-               //we found the line for the date
-               block = line.getBytes ();
-               break;
+         logger.info ("File '{}' does not exist or is not accessible", fileName);
+      } else {
+         try {
+            //if the file for given date is there, find the row that includes the info for the given period
+            br = new BufferedReader (new FileReader (file));
+            for (String line; (line = br.readLine ()) != null; ) {
+               if (isObservationLine (line, observationTime)) {
+                  //we found the line for the date
+                  block = line.getBytes ();
+                  break;
+               }
             }
-         }
-      } catch (Exception e) {
-         throw new RuntimeException (String.format ("Read error on file '%s'", fileName));
-      } finally {
-         if (br != null) {
-            try {
-               br.close ();
-            } catch (IOException e) {
-               //silent, unimportant
+         } catch (Exception e) {
+            throw new RuntimeException (String.format ("Read error on file '%s'", fileName));
+         } finally {
+            if (br != null) {
+               try {
+                  br.close ();
+               } catch (IOException e) {
+                  //silent, unimportant
+               }
             }
          }
       }

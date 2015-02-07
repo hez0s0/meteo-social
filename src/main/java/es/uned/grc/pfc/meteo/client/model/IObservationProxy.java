@@ -30,4 +30,16 @@ public interface IObservationProxy extends IEntityProxy {
    
    Date getSent ();
    void setSent (Date sent);
+   
+   Date getControlled ();
+   void setControlled (Date controlled);
+      
+   String getWarning ();
+   void setWarning (String warning);
+   
+   Boolean getQuality ();
+   void setQuality (Boolean quality);
+   
+   Date getDerived ();
+   void setDerived (Date derived);
 }

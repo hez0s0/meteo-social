@@ -31,6 +31,7 @@ public class Observation extends AbstractVersionable <Integer> {
    private Date received = null;
    private Date sent = null;
    private Date controlled = null;
+   private Date derived = null;
    private String warning = null;
    private Boolean quality = null;
 
@@ -112,10 +113,20 @@ public class Observation extends AbstractVersionable <Integer> {
    public void setWarning (String warning) {
       this.warning = warning;
    }
+   
+   @Column
    public Boolean getQuality () {
       return quality;
    }
    public void setQuality (Boolean quality) {
       this.quality = quality;
+   }
+   
+   @Column
+   public Date getDerived () {
+      return derived;
+   }
+   public void setDerived (Date derived) {
+      this.derived = derived;
    }
 }
