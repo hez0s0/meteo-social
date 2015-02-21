@@ -4,13 +4,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.uned.grc.pfc.meteo.server.collector.station.IStationPlugin;
+import es.uned.grc.pfc.meteo.server.dto.ObservationBlockDTO;
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.RequestParam;
 import es.uned.grc.pfc.meteo.server.model.RequestParamFilter;
@@ -154,6 +157,40 @@ public class ObservationServiceHelper {
          }
       }
       return null;
+   }
+
+   /**
+    * Groups the observations per blocks and sorts them
+    */
+   public List <ObservationBlockDTO> groupBlocks (List <Observation> observations) {
+      ObservationBlockDTO block = null;
+      Map <Date, List <Observation>> observationMap = new HashMap <Date, List <Observation>> ();
+      List <ObservationBlockDTO> result = new ArrayList <ObservationBlockDTO> ();
+      
+      //group them into a map
+      for (Observation observation : observations) {
+         if (!observationMap.containsKey (observation.getObserved ())) {
+            //create a new block
+            observationMap.put (observation.getObserved (), new ArrayList <Observation> ());
+         }
+         //append the observation to eht block
+         observationMap.get (observation.getObserved ()).add (observation);
+      }
+      
+      //dump the map into the resulting list
+      for (Map.Entry <Date, List <Observation>> entry : observationMap.entrySet ()) {
+         block = new ObservationBlockDTO ();
+         block.setObserved (entry.getKey ());
+         block.setStation (entry.getValue ().get (0).getStation ());
+         block.setObservations (entry.getValue ());
+         
+         result.add (block);
+         //TODO sort the observations
+      }
+      
+      //TODO: sort the blocks
+      
+      return result;
    }
 
 }

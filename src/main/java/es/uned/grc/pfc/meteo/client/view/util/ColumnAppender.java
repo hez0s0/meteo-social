@@ -40,7 +40,7 @@ public class ColumnAppender <C, E extends Object> {
       });
       
       return selectHeader;
-   } //end of getSelectAllHeader
+   }
    
    /**
     * Add a column with some properties
@@ -62,7 +62,7 @@ public class ColumnAppender <C, E extends Object> {
             fieldUpdater, 
             sortable, 
             widthPercentage);
-   } //end of addColumn
+   }
    
    /**
     * Add a column with some properties
@@ -120,6 +120,6 @@ public class ColumnAppender <C, E extends Object> {
       }
       
       return column;
-   } //end of addColumn
+   }
    
-} //end of ColumnAppender
+}

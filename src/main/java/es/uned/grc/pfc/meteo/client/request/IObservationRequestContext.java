@@ -7,7 +7,7 @@ import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.Service;
 
-import es.uned.grc.pfc.meteo.client.model.IObservationProxy;
+import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamFilterProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
 import es.uned.grc.pfc.meteo.server.service.ObservationService;
@@ -27,5 +27,5 @@ public interface IObservationRequestContext extends RequestContext {
     * IMPORTANT: this method assumes that 1 station is provided as filter, either by id
     * or by marking the own station flag !! 
     */
-   Request <List <IObservationProxy>> getObservations (IRequestParamProxy requestParam);
+   Request <List <IObservationBlockProxy>> getObservations (IRequestParamProxy requestParam);
 }

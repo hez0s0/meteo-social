@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.uned.grc.pfc.meteo.server.dto.ObservationBlockDTO;
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.RequestParam;
 import es.uned.grc.pfc.meteo.server.model.paged.PagedList;
@@ -35,19 +36,23 @@ public class ObservationService {
     * is provided, it fills all the possible gaps by pushing Observations with null values
     * for every period within the range and every variable.
     * IMPORTANT: this method assumes that 1 station is provided as filter, either by id
-    * or by marking the own station flag !! 
+    * or by marking the own station flag !!
+    * The result is formed as a list of blocks of observations
     */
-   public List <Observation> getObservations (RequestParam requestParam) {
-      PagedList <Integer, Observation> observations =  null;
+   public List <ObservationBlockDTO> getObservations (RequestParam requestParam) {
+      PagedList <Integer, Observation> observationsPagedList =  null;
+      List <Observation> observations = null;
       try {
 
          if ( (StringUtils.isEmpty (observationServiceHelper.findFilterValue (requestParam, ISharedConstants.ObservationFilter.OWN)))
                && (StringUtils.isEmpty (observationServiceHelper.findFilterValue (requestParam, ISharedConstants.ObservationFilter.STATION_ID))) ) {
             throw new RuntimeException ("Either the 'own' flag must be active, or the station id must contain a value in order to run this method ");
          }
-         observations = observationPersistence.getList (requestParam);
+         observationsPagedList = observationPersistence.getList (requestParam);
          
-         return observationServiceHelper.fillGaps (observations.getList (), requestParam);
+         observations = observationServiceHelper.fillGaps (observationsPagedList.getList (), requestParam);
+         
+         return observationServiceHelper.groupBlocks (observations);
       } catch (Exception e) {
          logger.error ("Error listing observations", e);
          throw new RuntimeException ("Could not list observations. See server logs.");

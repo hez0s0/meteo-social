@@ -1,10 +1,11 @@
 package es.uned.grc.pfc.meteo.client.view.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import com.google.gwt.cell.client.DateCell;
-import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
@@ -24,10 +25,12 @@ import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionModel;
 import com.google.inject.Inject;
 
+import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationProxy;
 import es.uned.grc.pfc.meteo.client.util.IClientConstants;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractPage;
+import es.uned.grc.pfc.meteo.client.view.table.IndexedObservationColumn;
 import es.uned.grc.pfc.meteo.client.view.util.ColumnAppender;
 import es.uned.grc.pfc.meteo.client.view.util.CustomCellTableResources;
 import es.uned.grc.pfc.meteo.client.view.util.FormUtils;
@@ -46,16 +49,16 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
 
    protected CustomCellTableResources cellTableResources = GWT.create (CustomCellTableResources.class);
    @UiField (provided = true)
-   protected CellTable <IObservationProxy> observationTable = new CellTable <IObservationProxy> (IClientConstants.DEFAULT_PAGE_SIZE, cellTableResources);
+   protected CellTable <IObservationBlockProxy> observationTable = new CellTable <IObservationBlockProxy> (IClientConstants.DEFAULT_PAGE_SIZE, cellTableResources);
    @UiField (provided = true) //it has to be provided so we can use the options of the constructor !!
    protected LimitedSimplePager pagerTop = null;
    @UiField (provided = true) //it has to be provided so we can use the options of the constructor !!
    protected LimitedSimplePager pagerBottom = null;
    
-   public static final ProvidesKey <IObservationProxy> keyProvider = new ProvidesKey <IObservationProxy>() {
+   public static final ProvidesKey <IObservationBlockProxy> keyProvider = new ProvidesKey <IObservationBlockProxy>() {
       @Override
-      public Object getKey(IObservationProxy ObservationProxy) {
-        return (ObservationProxy != null) ? ObservationProxy.getId () : null;
+      public Object getKey (IObservationBlockProxy observationBlockProxy) {
+        return (observationBlockProxy != null) ? observationBlockProxy.getStation ().getId () + "_" + observationBlockProxy.getObserved ().getTime () : null;
       }
    };
     
@@ -64,7 +67,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    }
 
    @Override
-   public AbstractCellTable <IObservationProxy> getDataTable () {
+   public AbstractCellTable <IObservationBlockProxy> getDataTable () {
       return observationTable;
    }
 
@@ -72,7 +75,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
     * Creates, binds and configures the UI
     */
    private void initUI () {
-      SelectionModel <IObservationProxy> selectionModel = null;
+      SelectionModel <IObservationBlockProxy> selectionModel = null;
 
       // Create a Pager to control the table
       SimplePager.Resources pagerResources = GWT.create (LimitedSimplePager.Resources.class);
@@ -87,53 +90,53 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
       pagerTop.setDisplay (observationTable);
 
       // Add a selection model so we can select cells
-      selectionModel = new MultiSelectionModel <IObservationProxy> (keyProvider);
-      observationTable.setSelectionModel (selectionModel, DefaultSelectionEventManager.<IObservationProxy> createCheckboxManager ());
-
-      // Initialize the columns
-      initTableColumns (selectionModel);
-      
-      // Set alternating row styles
-      FormUtils.setAlternatigRowStyle (observationTable);
+      selectionModel = new MultiSelectionModel <IObservationBlockProxy> (keyProvider);
+      observationTable.setSelectionModel (selectionModel, DefaultSelectionEventManager.<IObservationBlockProxy> createCheckboxManager ());
    }
    
    /**
     * Add the columns to the table.
     */
-   private void initTableColumns (final SelectionModel <IObservationProxy> selectionModel) {
+   @Override
+   public void initTableColumns (List <IObservationBlockProxy> observationBlock) {
       AsyncHandler columnSortHandler = null;
-      Column <IObservationProxy, String> nameColumn = null;
+      Column <IObservationBlockProxy, String> nameColumn = null;
       DateTimeFormat dateFormat = DateTimeFormat.getFormat (PredefinedFormat.TIME_SHORT);
+      int observedWidth = 15;
+      int leftWidth = 100 - observedWidth;
+      List <IObservationProxy> firstRow = null;
+      IndexedObservationColumn indexedObservationColumn = null;
+      int col = 0;
       
-      // variable
-      nameColumn = new ColumnAppender <String, IObservationProxy> ().addColumn (observationTable, 
-            new TextCell (), "variable", null, new ColumnAppender.GetValue <String, IObservationProxy> () {
-         @Override
-         public String getValue (IObservationProxy o) {
-            return o.getVariable ().getAcronym ();
-         }
-      }, null, false, 30);
+      //clear all the columns
+      while (observationTable.getColumnCount () > 0) {
+         observationTable.removeColumn (0);
+      }
       
-      // date created
-      new ColumnAppender <Date, IObservationProxy> ().addColumn (observationTable, 
-            new DateCell (dateFormat), "observed", null, new ColumnAppender.GetValue <Date, IObservationProxy> () {
+      // date observed
+      new ColumnAppender <Date, IObservationBlockProxy> ().addColumn (observationTable, 
+            new DateCell (dateFormat), "observed", null, new ColumnAppender.GetValue <Date, IObservationBlockProxy> () {
          @Override
-         public Date getValue (IObservationProxy o) {
+         public Date getValue (IObservationBlockProxy o) {
             return o.getObserved ();
          }
-      }, null, false, 15);
+      }, null, false, observedWidth);
       
-      // description
-      new ColumnAppender <String, IObservationProxy> ().addColumn (observationTable, 
-            new TextCell (), "value", null, new ColumnAppender.GetValue <String, IObservationProxy> () {
-         @Override
-         public String getValue (IObservationProxy o) {
-            return o.getValue ();
+      if (!observationBlock.isEmpty ()) {
+         firstRow = observationBlock.get (0).getObservations ();
+         for (IObservationProxy observation : firstRow) {
+            indexedObservationColumn = new IndexedObservationColumn (col ++);
+            
+            observationTable.addColumn (indexedObservationColumn, observation != null ? observation.getVariable ().getAcronym () : "???");
+            observationTable.setColumnWidth (indexedObservationColumn, leftWidth / firstRow.size (), Unit.PCT);
          }
-      }, null, false, 40);
+      }
 
       columnSortHandler = new AsyncHandler (observationTable);
       observationTable.addColumnSortHandler (columnSortHandler);
       observationTable.getColumnSortList ().push (nameColumn);
+
+      // Set alternating row styles
+      FormUtils.setAlternatigRowStyle (observationTable);
    }
 }

@@ -13,7 +13,7 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 import es.uned.grc.pfc.meteo.client.event.MessageChangeEvent;
-import es.uned.grc.pfc.meteo.client.model.IObservationProxy;
+import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamFilterProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
 import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
@@ -21,17 +21,17 @@ import es.uned.grc.pfc.meteo.client.request.IObservationRequestContext;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
-public class ObservationListActivity extends AbstractAsyncDataActivity <IObservationProxy, IObservationListView, ObservationListPlace> {
+public class ObservationListActivity extends AbstractAsyncDataActivity <IObservationBlockProxy, IObservationListView, ObservationListPlace> {
 
    public ObservationListActivity (ObservationListPlace workSpaceListPlace, IObservationListView workSpaceListView, PlaceController placeController) {
       super (workSpaceListPlace, workSpaceListView, placeController);
    }
    @Override
-   protected AsyncDataProvider <IObservationProxy> getAsyncDataProvider (final EventBus eventBus) {
-      return new AsyncDataProvider <IObservationProxy> () {
+   protected AsyncDataProvider <IObservationBlockProxy> getAsyncDataProvider (final EventBus eventBus) {
+      return new AsyncDataProvider <IObservationBlockProxy> () {
 
          @Override
-         protected void onRangeChanged (HasData <IObservationProxy> display) {
+         protected void onRangeChanged (HasData <IObservationBlockProxy> display) {
             IRequestParamFilterProxy paramFilter = null;
             final Range range = display.getVisibleRange ();
             final ColumnSortList sortList = listView.getDataTable ().getColumnSortList ();
@@ -54,10 +54,11 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
             }
 
             observationRequestContext.getObservations (requestParamProxy)
-                                     .with ("variable", "station")
-                                     .fire (new Receiver <List <IObservationProxy>> () {
+                                     .with ("station", "observations", "observations.variable")
+                                     .fire (new Receiver <List <IObservationBlockProxy>> () {
                @Override
-               public void onSuccess (List <IObservationProxy> response) {
+               public void onSuccess (List <IObservationBlockProxy> response) {
+                  listView.initTableColumns (response);
                   listView.getDataTable ().setRowCount (0);
                   listView.getDataTable ().setRowCount (response.size ());
                   listView.getDataTable ().setRowData (range.getStart (), response);
