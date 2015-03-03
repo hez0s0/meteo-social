@@ -76,34 +76,44 @@ public class CollectorJob {
       Map <String, String> configuredParameters = null;
       List <Observation> result = new ArrayList <Observation> ();
       
-      station = stationPersistence.getOwnStation ();
-      if (station == null) {
-         throw new RuntimeException ("unable to obtain own station, please review the system configuration");
+      synchronized (IJobConstants.STATION_ACCESS) {
+         station = stationPersistence.getOwnStation ();
+         if (station == null) {
+            throw new RuntimeException ("unable to obtain own station, please review the system configuration");
+         }
+         if (stationPlugin == null) {
+            throw new RuntimeException ("unable to obtain station plugin, please review the system configuration");
+         }
+         if (stationPlugin.getStationModelDescriptor () == null) {
+            throw new RuntimeException (String.format ("unable to obtain a descriptor for '%s' station, please review the station plugin code", stationPlugin));
+         }
+         
+         collector = stationPlugin.getCollector ();
+         if (collector == null) {
+            throw new RuntimeException (String.format ("unable to obtain collector for '%s' station, please review the station plugin code", stationPlugin.getStationModelDescriptor ().getName ()));
+         }
+         parser = stationPlugin.getParser ();
+         if (parser == null) {
+            throw new RuntimeException (String.format ("unable to obtain parser for '%s' station, please review the station plugin code", stationPlugin.getStationModelDescriptor ().getName ()));
+         }
+         
+         configuredParameters = asMap (station.getParameters ());
+         
+         //iterate until every pending observation has been obtained
+         Date nextObservationPeriod = getNextObservationPeriod (station);
+         while (nextObservationPeriod.getTime () < new Date ().getTime ()) {
+            if (collect (station, nextObservationPeriod, configuredParameters, collector, parser, result)) {
+               logger.debug ("Block of observations appended. Aggregated results {}", result.size ());
+               
+               station.setLastCollectedPeriod (nextObservationPeriod);
+               station = stationPersistence.merge (station);
+            }
+            
+            //true if there are more observations
+            nextObservationPeriod.setTime (nextObservationPeriod.getTime () + (stationPlugin.getObservationPeriod () * IServerConstants.ONE_MINUTE));
+         }
+         logger.info ("End of collection. Aggregated results {}", result.size ());   
       }
-      if (stationPlugin == null) {
-         throw new RuntimeException ("unable to obtain station plugin, please review the system configuration");
-      }
-      if (stationPlugin.getStationModelDescriptor () == null) {
-         throw new RuntimeException (String.format ("unable to obtain a descriptor for '%s' station, please review the station plugin code", stationPlugin));
-      }
-      
-      collector = stationPlugin.getCollector ();
-      if (collector == null) {
-         throw new RuntimeException (String.format ("unable to obtain collector for '%s' station, please review the station plugin code", stationPlugin.getStationModelDescriptor ().getName ()));
-      }
-      parser = stationPlugin.getParser ();
-      if (parser == null) {
-         throw new RuntimeException (String.format ("unable to obtain parser for '%s' station, please review the station plugin code", stationPlugin.getStationModelDescriptor ().getName ()));
-      }
-      
-      configuredParameters = asMap (station.getParameters ());
-      
-      //iterate until every pending observation has been obtained
-      Date nextObservationPeriod = getNextObservationPeriod (station);
-      while (collect (station, nextObservationPeriod, configuredParameters, collector, parser, result)) {
-         logger.debug ("Block of observations appended. Aggregated results {}", result.size ());
-      }
-      logger.info ("End of collection. Aggregated results {}", result.size ());
       
       return result;
    }
@@ -132,15 +142,9 @@ public class CollectorJob {
          store (observations);
          
          result.addAll (observations);
-         
-         station.setLastCollectedPeriod (nextObservationPeriod);
-         stationPersistence.merge (station);
       }
       
-      //true if there are more observations
-      nextObservationPeriod.setTime (nextObservationPeriod.getTime () + (stationPlugin.getObservationPeriod () * IServerConstants.ONE_MINUTE));
-      
-      return ! (nextObservationPeriod.getTime () >= new Date ().getTime ());
+      return !observations.isEmpty ();
    }
 
    private void store (List <Observation> observations) {

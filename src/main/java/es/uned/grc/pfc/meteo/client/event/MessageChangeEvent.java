@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.i18n.client.LocalizableResource.Generate;
-import com.google.gwt.i18n.client.LocalizableResource.GenerateKeys;
 import com.google.gwt.i18n.client.Messages;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
@@ -17,8 +15,8 @@ public class MessageChangeEvent extends GwtEvent <IMessageChangeEventHandler> {
    /**
     * The constants used in this Widget.
     */
-   @Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
-   @GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
+   @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
+   @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextMessages extends Messages {
       @DefaultMessage ("An unknown event ocurred in the system") @Meaning ("An error message")
       String unknownEvent ();

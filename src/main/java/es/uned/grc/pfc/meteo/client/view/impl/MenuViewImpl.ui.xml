@@ -16,30 +16,11 @@
          <ui:msg meaning="the menu item" description="Configuracion menu item">Configuration</ui:msg>
          
          <g:MenuBar vertical="true" ui:field="configurationSubMenu" styleName="subBar" >
-           <g:MenuItem ui:field="drugCodeDomainMenuItem" styleName="subBarItem">
-              <ui:msg meaning="the menu item" description="Drug code domain management menu item">Manage drug code domains</ui:msg>
+           <g:MenuItem ui:field="stationConfigurationMenuItem" styleName="subBarItem">
+              <ui:msg meaning="the menu item" description="Station configuration menu item">Configure your station</ui:msg>
            </g:MenuItem>
-           <g:MenuItem ui:field="workSpaceMenuItem" styleName="subBarItem">
-              <ui:msg meaning="the menu item" description="Workspace management menu item">Manage work spaces</ui:msg>
-           </g:MenuItem>
-           <g:MenuItem ui:field="catalogMenuItem" styleName="subBarItem">
-              <ui:msg meaning="the menu item" description="Catalog management menu item">Manage drug catalogs</ui:msg>
-           </g:MenuItem>
-           <g:MenuItem ui:field="workGroupMenuItem" styleName="subBarItem">
-              <ui:msg meaning="the menu item" description="Workgroup management menu item">Manage workgroups</ui:msg>
-           </g:MenuItem>
-           <g:MenuItem ui:field="tagMenuItem" styleName="subBarItem">
-              <ui:msg meaning="the menu item" description="Tag management menu item">Manage tags</ui:msg>
-           </g:MenuItem>
-           <g:MenuItem ui:field="reportMenuItem" styleName="subBarItem">
-              <ui:msg meaning="the menu item" description="Report management menu item">Manage reports</ui:msg>
-           </g:MenuItem>
-           <g:MenuItemSeparator styleName="subBarSeparator" ui:field="subBarSeparator" />
-           <g:MenuItem ui:field="drugItemTemplateMenuItem" styleName="subBarItem">
-              <ui:msg meaning="the menu item" description="Drug item template management menu item">Manage drug item templates</ui:msg>
-           </g:MenuItem>
-           <g:MenuItem ui:field="indicationTemplateMenuItem" styleName="subBarItem">
-              <ui:msg meaning="the menu item" description="Indication template management menu item">Manage indication templates</ui:msg>
+           <g:MenuItem ui:field="profileConfigurationMenuItem" styleName="subBarItem">
+              <ui:msg meaning="the menu item" description="Profile configuration menu item">Configure your social profile</ui:msg>
            </g:MenuItem>
          </g:MenuBar>
       </g:MenuItem>

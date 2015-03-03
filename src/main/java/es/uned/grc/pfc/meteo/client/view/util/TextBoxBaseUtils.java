@@ -9,8 +9,6 @@ import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.i18n.client.LocalizableResource.Generate;
-import com.google.gwt.i18n.client.LocalizableResource.GenerateKeys;
 import com.google.gwt.i18n.client.Messages;
 
 import es.uned.grc.pfc.meteo.client.view.widget.INonUnicodeTextBoxBase;
@@ -18,8 +16,8 @@ import es.uned.grc.pfc.meteo.client.view.widget.dialog.AlertDialogBox;
 
 public class TextBoxBaseUtils {
    /** global text constants */
-   @Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
-   @GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
+   @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
+   @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextMessages extends Messages {
       @DefaultMessage ("There were invalid characters that have been removed: {0}")
       @Meaning ("Display of an error message about invalid characters")

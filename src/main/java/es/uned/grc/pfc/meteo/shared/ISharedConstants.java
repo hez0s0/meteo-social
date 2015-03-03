@@ -4,7 +4,11 @@ package es.uned.grc.pfc.meteo.shared;
  * Constants that are shared by both the client and the server.
  */
 public class ISharedConstants {
-      /** the URL to invoke to perform a logout */
+   
+   /** one day in milliseconds */
+   public static final long ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
+   
+   /** the URL to invoke to perform a logout */
    public static final String LOGOUT_URL = "logout";
    /** the URL of the login page */
    public static final String LOGIN_URL = "login.jsp";
@@ -44,7 +48,8 @@ public class ISharedConstants {
    
    /** the url to reach an image within flags folder */
    public static final String FLAG_IMAGE_URL = "%s/images/flags/%s.png";
-  
+
+   public static final String PARAM_VALUE_SEP = "=";
    public static final String PARAM_SEP = "&";
    public static final String MULTIPLE_SEP = ";";
    public static final String ENCODED_PARAM_SEP = "!!!";
@@ -59,5 +64,8 @@ public class ISharedConstants {
    public static enum StationFilter {NAME, COUNTRY, CITY, ZIP};
    
    /** the filters that can be applied over observations */
-   public static enum ObservationFilter {OWN, STATION_ID, START_DATE, END_DATE, VARIABLE_IDS}; 
+   public static enum ObservationFilter {OWN, STATION_ID, START_DATE, END_DATE, VARIABLE_IDS, MEASURED_ONLY, DERIVED_ONLY};
+   
+   /** type of graphic to represent a variable */
+   public static enum GraphType {NONE, LINE, BAR, AREA, POINT};
 }

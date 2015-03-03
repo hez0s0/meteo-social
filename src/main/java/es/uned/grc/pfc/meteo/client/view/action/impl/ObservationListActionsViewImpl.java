@@ -17,41 +17,33 @@ import es.uned.grc.pfc.meteo.client.view.base.IHasActionHandlers;
 import es.uned.grc.pfc.meteo.client.view.widget.ImageLabel;
 
 /**
- * Implementation of the WorkSpaceListActionsView with UiBinder.
+ * Implementation of the ObservationListActionsViewImpl with UiBinder.
  */
 public class ObservationListActionsViewImpl extends Composite implements IObservationListActionsView {
 
-   interface WorkSpaceListActionsViewImplUiBinder extends UiBinder <HTMLPanel, ObservationListActionsViewImpl> {
+   interface ObservationListActionsViewImplUiBinder extends UiBinder <HTMLPanel, ObservationListActionsViewImpl> {
    }
-
-   private static WorkSpaceListActionsViewImplUiBinder workSpaceListActionsViewImplUiBinder = GWT.create (WorkSpaceListActionsViewImplUiBinder.class);
+   private static ObservationListActionsViewImplUiBinder observationListActionsViewImplUiBinder = GWT.create (ObservationListActionsViewImplUiBinder.class);
 
    @Inject
    EventBus eventBus = null;
    @Inject
    PlaceController placeController = null;
    @Inject
-   IObservationListView workSpaceListView = null;
+   IObservationListView listView = null;
 
    @UiField
-   protected HTMLPanel createWorkSpacePanel = null;
+   protected HTMLPanel viewGraphicsPanel = null;
    @UiField
-   protected HTMLPanel deleteWorkSpacePanel = null;
+   protected HTMLPanel viewDerivedPanel = null;
+   
    @UiField
-   protected HTMLPanel exportWorkSpacePanel = null;
+   protected ImageLabel viewGraphics = null;
    @UiField
-   protected HTMLPanel importWorkSpacePanel = null;
-   @UiField
-   protected ImageLabel createWorkSpace = null;
-   @UiField
-   protected ImageLabel deleteWorkSpaceList = null;
-   @UiField
-   protected ImageLabel exportWorkSpaceList = null;
-   @UiField
-   protected ImageLabel importWorkSpaceList = null;
+   protected ImageLabel viewDerived = null;
 
    public ObservationListActionsViewImpl () {
-      initWidget (workSpaceListActionsViewImplUiBinder.createAndBindUi (this));
+      initWidget (observationListActionsViewImplUiBinder.createAndBindUi (this));
    }
 
    @Override
@@ -60,42 +52,22 @@ public class ObservationListActionsViewImpl extends Composite implements IObserv
    }
    
    @Override
-   public UIObject getCreatePanel () {
-      return createWorkSpacePanel;
+   public UIObject getGraphicsPanel () {
+      return viewGraphicsPanel;
    }
    
    @Override
-   public UIObject getDeletePanel () {
-      return deleteWorkSpacePanel;
+   public UIObject getDerivedPanel () {
+      return viewDerivedPanel;
    }
    
    @Override
-   public UIObject getExportPanel () {
-      return exportWorkSpacePanel;
-   }
-   
-   @Override
-   public UIObject getImportPanel () {
-      return importWorkSpacePanel;
+   public IHasActionHandlers getGraphicsHandler () {
+      return viewGraphics;
    }
 
    @Override
-   public IHasActionHandlers getCreateHandler () {
-      return createWorkSpace;
-   }
-
-   @Override
-   public IHasActionHandlers getDeleteHandler () {
-      return deleteWorkSpaceList;
-   }
-
-   @Override
-   public IHasActionHandlers getExportHandler () {
-      return exportWorkSpaceList;
-   }
-
-   @Override
-   public IHasActionHandlers getImportHandler () {
-      return importWorkSpaceList;
+   public IHasActionHandlers getDerivedHandler () {
+      return viewDerived;
    }
 }

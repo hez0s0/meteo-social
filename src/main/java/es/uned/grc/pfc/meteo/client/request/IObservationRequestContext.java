@@ -1,5 +1,6 @@
 package es.uned.grc.pfc.meteo.client.request;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.web.bindery.requestfactory.shared.ExtraTypes;
@@ -10,6 +11,7 @@ import com.google.web.bindery.requestfactory.shared.Service;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamFilterProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
+import es.uned.grc.pfc.meteo.client.model.paged.IVariablePagedListProxy;
 import es.uned.grc.pfc.meteo.server.service.ObservationService;
 import es.uned.grc.pfc.meteo.shared.locators.SpringServiceLocator;
 
@@ -28,4 +30,13 @@ public interface IObservationRequestContext extends RequestContext {
     * or by marking the own station flag !! 
     */
    Request <List <IObservationBlockProxy>> getObservations (IRequestParamProxy requestParam);
+   /**
+    * Get the variables that a given station is able to measure
+    * Specify null as the stationId to get the variables of your own station
+    */
+   Request <IVariablePagedListProxy> getStationVariables (String filer, Integer stationId, boolean measuredOnly, boolean internalOnly);
+   /**
+    * Obtain the start of the current day
+    */
+   Request <Date> getTodayStart ();
 }

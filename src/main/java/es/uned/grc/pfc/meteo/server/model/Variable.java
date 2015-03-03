@@ -3,6 +3,8 @@ package es.uned.grc.pfc.meteo.server.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -11,12 +13,12 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import es.uned.grc.pfc.meteo.server.model.base.AbstractVersionable;
+import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
 @Entity
 @Table (name = "metVariable",
@@ -37,7 +39,9 @@ public class Variable extends AbstractVersionable <Integer> {
    private Double maximum = null;
    private String unit = null;
    private boolean internal = false;
-   private Variable related = null;
+   private int position = 0;
+   private int displayGroup = 0;
+   private ISharedConstants.GraphType graphType = null;
 
    @Id
    @GeneratedValue (strategy = GenerationType.AUTO, generator = "metVariableID_gen")
@@ -148,13 +152,28 @@ public class Variable extends AbstractVersionable <Integer> {
       this.station = station;
    }
    
-   @OneToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
-   @JoinColumn (name = "relatedId",
-                foreignKey = @ForeignKey (name = "fk2Variable"))
-   public Variable getRelated () {
-      return related;
+   @Column (nullable = false)
+   public int getPosition () {
+      return position;
    }
-   public void setRelated (Variable related) {
-      this.related = related;
+   public void setPosition (int position) {
+      this.position = position;
+   }
+
+   @Column (nullable = false)
+   public int getDisplayGroup () {
+      return displayGroup;
+   }
+   public void setDisplayGroup (int displayGroup) {
+      this.displayGroup = displayGroup;
+   }
+
+   @Enumerated (EnumType.STRING)
+   @Column (nullable = false)
+   public ISharedConstants.GraphType getGraphType () {
+      return graphType;
+   }
+   public void setGraphType (ISharedConstants.GraphType graphType) {
+      this.graphType = graphType;
    }
 }

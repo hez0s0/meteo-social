@@ -2,8 +2,6 @@ package es.uned.grc.pfc.meteo.client.view.renderer;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.i18n.client.LocalizableResource.Generate;
-import com.google.gwt.i18n.client.LocalizableResource.GenerateKeys;
 
 import es.uned.grc.pfc.meteo.client.model.IStationModelProxy;
 
@@ -12,8 +10,8 @@ import es.uned.grc.pfc.meteo.client.model.IStationModelProxy;
  */
 public class StationModelRenderer extends AbstractEntityRenderer <IStationModelProxy> {
    /** the text constants used by this class */
-   @Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
-   @GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
+   @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
+   @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
       @DefaultStringValue ("(Select a station model)") @Meaning ("Empty list element title")
       String empty ();

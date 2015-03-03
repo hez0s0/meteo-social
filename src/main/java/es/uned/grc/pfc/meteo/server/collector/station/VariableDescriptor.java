@@ -1,5 +1,7 @@
 package es.uned.grc.pfc.meteo.server.collector.station;
 
+import es.uned.grc.pfc.meteo.shared.ISharedConstants;
+
 public class VariableDescriptor {
 
    private String name = null;
@@ -8,8 +10,11 @@ public class VariableDescriptor {
    private String unit = null;
    private Double defaultMinimum = null;
    private Double defaultMaximum = null;
-   private Double physicaltMinimum = null;
+   private Double physicalMinimum = null;
    private Double physicalMaximum = null;
+   private Integer position = null;
+   private Integer displayGroup = null;
+   private ISharedConstants.GraphType graphType = null;
    
    public String getName () {
       return name;
@@ -48,16 +53,34 @@ public class VariableDescriptor {
       this.acronym = acronym;
    }
    public Double getPhysicalMinimum () {
-      return physicaltMinimum;
+      return physicalMinimum;
    }
    public void setPhysicalMinimum (Double physicalMinimum) {
-      this.physicaltMinimum = physicalMinimum;
+      this.physicalMinimum = physicalMinimum;
    }
    public Double getPhysicalMaximum () {
       return physicalMaximum;
    }
    public void setPhysicalMaximum (Double physicalMaximum) {
       this.physicalMaximum = physicalMaximum;
+   }
+   public Integer getPosition () {
+      return position;
+   }
+   public void setPosition (Integer position) {
+      this.position = position;
+   }
+   public Integer getDisplayGroup () {
+      return displayGroup;
+   }
+   public void setDisplayGroup (Integer displayGroup) {
+      this.displayGroup = displayGroup;
+   }
+   public ISharedConstants.GraphType getGraphType () {
+      return graphType;
+   }
+   public void setGraphType (ISharedConstants.GraphType graphType) {
+      this.graphType = graphType;
    }
    
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
@@ -16,9 +17,11 @@ import com.google.gwt.user.cellview.client.AbstractCellTable;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.AsyncHandler;
-import com.google.gwt.user.cellview.client.SimplePager;
-import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
@@ -27,19 +30,19 @@ import com.google.inject.Inject;
 
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationProxy;
-import es.uned.grc.pfc.meteo.client.util.IClientConstants;
+import es.uned.grc.pfc.meteo.client.model.IVariableProxy;
+import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractPage;
 import es.uned.grc.pfc.meteo.client.view.table.IndexedObservationColumn;
 import es.uned.grc.pfc.meteo.client.view.util.ColumnAppender;
 import es.uned.grc.pfc.meteo.client.view.util.CustomCellTableResources;
 import es.uned.grc.pfc.meteo.client.view.util.FormUtils;
-import es.uned.grc.pfc.meteo.client.view.widget.LimitedSimplePager;
+import es.uned.grc.pfc.meteo.client.view.widget.suggest.impl.VariableSuggestInputListBox;
 
 public class ObservationListViewImpl extends AbstractPage implements IObservationListView {
    interface ObservationListViewUiBinder extends UiBinder <HTMLPanel, ObservationListViewImpl> {
    }
-
    private static ObservationListViewUiBinder uiBinder = GWT.create (ObservationListViewUiBinder.class);
 
    @Inject
@@ -49,12 +52,24 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
 
    protected CustomCellTableResources cellTableResources = GWT.create (CustomCellTableResources.class);
    @UiField (provided = true)
-   protected CellTable <IObservationBlockProxy> observationTable = new CellTable <IObservationBlockProxy> (IClientConstants.DEFAULT_PAGE_SIZE, cellTableResources);
-   @UiField (provided = true) //it has to be provided so we can use the options of the constructor !!
-   protected LimitedSimplePager pagerTop = null;
-   @UiField (provided = true) //it has to be provided so we can use the options of the constructor !!
-   protected LimitedSimplePager pagerBottom = null;
-   
+   protected CellTable <IObservationBlockProxy> observationTable = new CellTable <IObservationBlockProxy> (Integer.MAX_VALUE, cellTableResources);
+   @UiField
+   protected DateBox startDateBox = null;
+   @UiField
+   protected DateBox endDateBox = null;
+   @UiField
+   protected VariableSuggestInputListBox variableSuggestInputListBox = null;
+   @UiField
+   protected CheckBox onlyMeasuredCheckBox = null;
+   @UiField
+   protected CheckBox onlyDerivedCheckBox = null;
+   @UiField
+   protected Button searchButton = null;
+   @UiField
+   protected Panel textPanel = null;
+   @UiField
+   protected Panel graphPanel = null;
+
    public static final ProvidesKey <IObservationBlockProxy> keyProvider = new ProvidesKey <IObservationBlockProxy>() {
       @Override
       public Object getKey (IObservationBlockProxy observationBlockProxy) {
@@ -76,22 +91,21 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
     */
    private void initUI () {
       SelectionModel <IObservationBlockProxy> selectionModel = null;
-
-      // Create a Pager to control the table
-      SimplePager.Resources pagerResources = GWT.create (LimitedSimplePager.Resources.class);
-      pagerBottom = new LimitedSimplePager (TextLocation.CENTER, pagerResources, false, 0, true);
-      pagerTop = new LimitedSimplePager (TextLocation.CENTER, pagerResources, false, 0, true);
       
       // Bind the UI with myself
       initWidget (uiBinder.createAndBindUi (this));
-      
-      // Set the Pager on the table
-      pagerBottom.setDisplay (observationTable);
-      pagerTop.setDisplay (observationTable);
 
       // Add a selection model so we can select cells
       selectionModel = new MultiSelectionModel <IObservationBlockProxy> (keyProvider);
       observationTable.setSelectionModel (selectionModel, DefaultSelectionEventManager.<IObservationBlockProxy> createCheckboxManager ());
+   }
+   
+   @Override
+   public void setInput (IRequestFactory requestFactory) {
+      variableSuggestInputListBox.setRequestFactory (requestFactory);
+      
+      onlyMeasuredCheckBox.setValue (true);
+      onlyDerivedCheckBox.setValue (false);
    }
    
    /**
@@ -101,7 +115,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    public void initTableColumns (List <IObservationBlockProxy> observationBlock) {
       AsyncHandler columnSortHandler = null;
       Column <IObservationBlockProxy, String> nameColumn = null;
-      DateTimeFormat dateFormat = DateTimeFormat.getFormat (PredefinedFormat.TIME_SHORT);
+      DateTimeFormat dateFormat = DateTimeFormat.getFormat (PredefinedFormat.DATE_TIME_SHORT);
       int observedWidth = 15;
       int leftWidth = 100 - observedWidth;
       List <IObservationProxy> firstRow = null;
@@ -138,5 +152,57 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
 
       // Set alternating row styles
       FormUtils.setAlternatigRowStyle (observationTable);
+   }
+   
+   @Override
+   public Date getStartDate () {
+      //TODO consider hour
+      return startDateBox.getValue ();
+   }
+   
+   @Override
+   public void setStartDate (Date date) {
+      startDateBox.setValue (date);
+   }
+
+   @Override
+   public Date getEndDate () {
+      //TODO consider hour
+      return endDateBox.getValue ();
+   }
+   
+   @Override
+   public void setEndDate (Date date) {
+      endDateBox.setValue (date);
+   }
+
+   @Override
+   public List <IVariableProxy> getVariables () {
+      return variableSuggestInputListBox.getValues ();
+   }
+
+   @Override
+   public boolean getOnlyMeasured () {
+      return onlyMeasuredCheckBox.getValue ();
+   }
+
+   @Override
+   public boolean getOnlyDerived () {
+      return onlyDerivedCheckBox.getValue ();
+   }
+   
+   @Override
+   public HasClickHandlers getSearchHandler () {
+      return searchButton;
+   }
+
+   @Override
+   public void setTextVisible (boolean visible) {
+      textPanel.setVisible (visible);
+   }
+
+   @Override
+   public void setGraphVisible (boolean visible) {
+      graphPanel.setVisible (visible);
    }
 }

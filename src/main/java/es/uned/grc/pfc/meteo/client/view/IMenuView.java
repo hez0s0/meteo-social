@@ -16,23 +16,8 @@ public interface IMenuView extends IView {
    /** handler for the configuration menu item */
    MenuItem getConfigurationMenuItem ();
 
-   /** handler for the drug code domains menu item */
-   MenuItem getDrugCodeDomainsMenuItem ();
-   /** handler for the workSpaces menu item */
-   MenuItem getObservationsMenuItem ();
-   /** handler for the catalogs menu item */
-   MenuItem getCatalogsMenuItem ();
-   /** handler for the workgroups menu item */
-   MenuItem getWorkGroupsMenuItem ();
-   /** handler for the tags menu item */
-   MenuItem getTagsMenuItem ();
-   /** handler for the reports menu item */
-   MenuItem getReportsMenuItem ();
-   /** handler for the drug item template menu item */
-   MenuItem getDrugItemTemplatesMenuItem ();
-   /** handler for the indication templates menu item */
-   MenuItem getIndicationTemplatesMenuItem ();
-
-   /** the bar that separates menu items */ 
-   UIObject getSubBarSeparator ();
+   /** handler for the station configuration menu item */
+   MenuItem getStationConfigurationMenuItem ();
+   /** handler for the profile configuration menu item */
+   MenuItem getProfileConfigurationMenuItem ();
 }

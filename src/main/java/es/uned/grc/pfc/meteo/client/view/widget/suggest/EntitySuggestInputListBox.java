@@ -17,8 +17,6 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.i18n.client.LocalizableResource.Generate;
-import com.google.gwt.i18n.client.LocalizableResource.GenerateKeys;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -44,8 +42,8 @@ public abstract class EntitySuggestInputListBox <E extends BaseProxy, R extends 
    private final static int CURSOR_DOWN = 40; 
    
    /** global text constants */
-   @Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
-   @GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
+   @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
+   @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
       @DefaultStringValue ("Unregognized input. It shall be ignored")
       @Meaning ("Validation message")

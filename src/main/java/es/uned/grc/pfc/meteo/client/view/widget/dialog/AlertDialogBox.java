@@ -2,8 +2,6 @@ package es.uned.grc.pfc.meteo.client.view.widget.dialog;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.i18n.client.LocalizableResource.Generate;
-import com.google.gwt.i18n.client.LocalizableResource.GenerateKeys;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -15,8 +13,8 @@ import es.uned.grc.pfc.meteo.client.util.IStyleConstants;
 
 public class AlertDialogBox extends ActionDialogBox {
    /** global text constants */
-   @Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
-   @GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
+   @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
+   @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
       @DefaultStringValue ("Information") @Meaning ("AlertDialogBox Dialog title")
       String caption ();

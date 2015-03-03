@@ -25,10 +25,16 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 public class ObservationPersistence extends AbstractPersistence <Integer, Observation> implements IObservationPersistence {
    
    @Override
+   protected void applyDefaultSort (Criteria criteria, Map <String, Object> contextParams) {
+      criteria.addOrder (Order.asc ("observed"));
+   }
+   
+   @Override
    protected void applyFilter (Criteria criteria, List <RequestParamFilter> filters, Map <String, Object> contextParams) {
       ISharedConstants.ObservationFilter property = null;
       Date parsedDate = null;
       Criteria stationCriteria = null;
+      Criteria variableCriteria = null;
       
       stationCriteria = criteria.createCriteria ("station");
       
@@ -56,13 +62,28 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
                      } catch (ParseException e) {
                         throw new RuntimeException (String.format ("End date cannot be parsed: '%s'", filter.getValue ()));
                      }
-                     criteria.add (Restrictions.le ("observed", parsedDate));
+                     criteria.add (Restrictions.lt ("observed", parsedDate));
                      break;
                   case STATION_ID:
                      stationCriteria.add (Restrictions.idEq (Integer.valueOf (filter.getValue ())));
                      break;
                   case VARIABLE_IDS:
-                     criteria.createCriteria ("variable").add (Restrictions.in ("id", parseIntegerList (filter.getValue ()))); 
+                     if (variableCriteria == null) {
+                        variableCriteria = criteria.createCriteria ("variable");
+                     }
+                     variableCriteria.add (Restrictions.in ("id", parseIntegerList (filter.getValue ()))); 
+                     break;
+                  case DERIVED_ONLY:
+                     if (variableCriteria == null) {
+                        variableCriteria = criteria.createCriteria ("variable");
+                     }
+                     variableCriteria.add (Restrictions.eq ("internal", true));
+                     break;
+                  case MEASURED_ONLY:
+                     if (variableCriteria == null) {
+                        variableCriteria = criteria.createCriteria ("variable");
+                     }
+                     variableCriteria.add (Restrictions.eq ("internal", false)); 
                      break;
                }
             }

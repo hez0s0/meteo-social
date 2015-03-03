@@ -4,6 +4,7 @@ import com.google.web.bindery.requestfactory.shared.ProxyFor;
 
 import es.uned.grc.pfc.meteo.client.model.base.IEntityProxy;
 import es.uned.grc.pfc.meteo.server.model.Variable;
+import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 import es.uned.grc.pfc.meteo.shared.locators.PersistenceEntityLocator;
 
 @ProxyFor (value = Variable.class, locator = PersistenceEntityLocator.class)
@@ -46,7 +47,13 @@ public interface IVariableProxy extends IEntityProxy {
    
    IStationProxy getStation ();
    void setStation (IStationProxy station);
+
+   int getPosition ();
+   void setPosition (int position);
+
+   int getDisplayGroup ();
+   void setDisplayGroup (int displayGroup);
    
-   IVariableProxy getRelated ();
-   void setRelated (IVariableProxy related);
+   ISharedConstants.GraphType getGraphType ();
+   void setGraphType (ISharedConstants.GraphType graphType);
 }

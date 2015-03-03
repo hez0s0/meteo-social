@@ -9,11 +9,6 @@
    <!-- add our custom stylesheet -->
    <stylesheet src="../css/style.css" />
    
-   <!-- Configure logging -->
-   <set-property name="gwt.logging.popupHandler" value="DISABLED" />
-   <set-property name="gwt.logging.developmentModeHandler" value="DISABLED"/>
-   <set-property name="gwt.logging.systemHandler" value="DISABLED"/>
-
    <!-- Additional locales to compile -->
   
    <!-- default locales -->

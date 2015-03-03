@@ -3,12 +3,16 @@ package es.uned.grc.pfc.meteo.server.service.helper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +35,9 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 @Service
 public class ObservationServiceHelper {
 
+   @SuppressWarnings ("unused")
+   private static Logger logger = LoggerFactory.getLogger (ObservationServiceHelper.class);
+   
    @Autowired
    private IObservationPersistence observationPersistence = null;
    @Autowired
@@ -40,7 +47,7 @@ public class ObservationServiceHelper {
    
    @Autowired
    private IStationPlugin stationPlugin = null;
-
+   
    public List <Observation> fillGaps (List <Observation> observations, RequestParam requestParam) throws ParseException {
       Observation  observation = null;
       List <Observation> result = new ArrayList <Observation> ();
@@ -58,11 +65,13 @@ public class ObservationServiceHelper {
          
          for (long observed = startDate.getTime (); observed <= endDate.getTime (); observed += stationPeriod) {
             for (Variable variable : variables) {
-               observation = findObservation (observations, observed, variable.getId ());
-               if (observation == null) {
-                  observation = createEmptyObservation (observed, variable, station);
+               if (!variable.getInternal ()) {
+                  observation = findObservation (observations, observed, variable.getId ());
+                  if (observation == null) {
+                     observation = createEmptyObservation (observed, variable, station);
+                  }
+                  result.add (observation);
                }
-               result.add (observation);
             }
          }
       } else {
@@ -82,7 +91,7 @@ public class ObservationServiceHelper {
          result = variablePersistence.findByIdList (variablePersistence.parseIntegerList (filterValue));
       } else {
          //use the variables of the station
-         result = new ArrayList <Variable> (station.getVariables ());
+         result = new ArrayList <Variable> (variablePersistence.getStationVariables (null, station.getId (), true, false));
       }
       
       return result;
@@ -185,12 +194,26 @@ public class ObservationServiceHelper {
          block.setObservations (entry.getValue ());
          
          result.add (block);
-         //TODO sort the observations
+         
+         Collections.sort (block.getObservations (), new ObservationComparator ());
       }
-      
-      //TODO: sort the blocks
+
+      Collections.sort (result, new ObservationBlockComparator ());
       
       return result;
    }
 
+   private class ObservationBlockComparator implements Comparator <ObservationBlockDTO> {
+      @Override
+      public int compare (ObservationBlockDTO o1, ObservationBlockDTO o2) {
+         return o1.getObserved ().compareTo (o2.getObserved ());
+      }
+   }
+
+   private class ObservationComparator implements Comparator <Observation> {
+      @Override
+      public int compare (Observation o1, Observation o2) {
+         return new Integer (o1.getVariable ().getPosition ()).compareTo (new Integer (o2.getVariable ().getPosition ()));
+      }
+   }
 }

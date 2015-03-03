@@ -3,8 +3,6 @@ package es.uned.grc.pfc.meteo.client.view.widget;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.i18n.client.LocalizableResource.Generate;
-import com.google.gwt.i18n.client.LocalizableResource.GenerateKeys;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -20,8 +18,8 @@ public class ButtonPanel extends HorizontalPanel {
    /**
     * The constants used in this Widget.
     */
-   @Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
-   @GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
+   @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
+   @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
       @DefaultStringValue ("Delete") @Meaning ("A small sized image button")
       String delete ();

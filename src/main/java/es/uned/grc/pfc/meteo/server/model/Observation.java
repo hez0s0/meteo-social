@@ -34,6 +34,7 @@ public class Observation extends AbstractVersionable <Integer> {
    private Date derived = null;
    private String warning = null;
    private Boolean quality = null;
+   private Variable derivedVariable = null;
 
    @Id
    @GeneratedValue (strategy = GenerationType.AUTO, generator = "metObservationID_gen")
@@ -48,7 +49,8 @@ public class Observation extends AbstractVersionable <Integer> {
 
    @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
    @JoinColumn (name = "variableId",
-                foreignKey = @ForeignKey (name = "fk1Observation"))
+                foreignKey = @ForeignKey (name = "fk1Observation"),
+                nullable = false)
    public Variable getVariable () {
       return variable;
    }
@@ -58,7 +60,8 @@ public class Observation extends AbstractVersionable <Integer> {
 
    @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
    @JoinColumn (name = "stationId",
-                foreignKey = @ForeignKey (name = "fk2Observation"))
+                foreignKey = @ForeignKey (name = "fk2Observation"),
+                nullable = false)
    public Station getStation () {
       return station;
    }
@@ -128,5 +131,15 @@ public class Observation extends AbstractVersionable <Integer> {
    }
    public void setDerived (Date derived) {
       this.derived = derived;
+   }
+
+   @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
+   @JoinColumn (name = "derivedVariableId",
+                foreignKey = @ForeignKey (name = "fk3Observation"))
+   public Variable getDerivedVariable () {
+      return derivedVariable;
+   }
+   public void setDerivedVariable (Variable derivedVariable) {
+      this.derivedVariable = derivedVariable;
    }
 }

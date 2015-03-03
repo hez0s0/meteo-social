@@ -3,8 +3,6 @@ package es.uned.grc.pfc.meteo.client.util;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.i18n.client.LocalizableResource.Generate;
-import com.google.gwt.i18n.client.LocalizableResource.GenerateKeys;
 import com.google.gwt.i18n.client.Messages;
 
 public interface IClientConstants {
@@ -12,8 +10,8 @@ public interface IClientConstants {
    int [] ACTION_KEY_CODES = {32, KeyCodes.KEY_ENTER }; //32=spacebar
       
    /** global text constants */
-   @Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
-   @GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
+   @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
+   @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
       @DefaultStringValue ("Open and synchronized") @Meaning ("Drug item status")
       String statusSynchedOpen ();
@@ -76,8 +74,8 @@ public interface IClientConstants {
    public static TextConstants textConstants = GWT.create (TextConstants.class);
    
    /** global text constants */
-   @Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
-   @GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
+   @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
+   @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextMessages extends Messages {
       @DefaultMessage ("{0} (by {1})")
       @Meaning ("Identification of a version within drug item general form (detail). Params: version and userName")
@@ -105,4 +103,6 @@ public interface IClientConstants {
    String LOCALE_SPANISH = "es_ES";
    /** english locale string on client-side */
    String LOCALE_ENGLISH = "en_EN";
+   
+   String DISPLAY_SHORT_DATE = "dd/MM/yyyy";
 }

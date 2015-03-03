@@ -11,6 +11,7 @@ import es.uned.grc.pfc.meteo.server.collector.station.IStationPlugin;
 import es.uned.grc.pfc.meteo.server.collector.station.ParameterDescriptor;
 import es.uned.grc.pfc.meteo.server.collector.station.StationModelDescriptor;
 import es.uned.grc.pfc.meteo.server.collector.station.VariableDescriptor;
+import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
 @Component
 public class DummyStationPlugin implements IStationPlugin {
@@ -57,6 +58,9 @@ public class DummyStationPlugin implements IStationPlugin {
       variable.setDefaultMinimum (-30.0);
       variable.setPhysicalMaximum (80.0);
       variable.setPhysicalMinimum (-80.0);
+      variable.setPosition (0);
+      variable.setDisplayGroup (0);
+      variable.setGraphType (ISharedConstants.GraphType.LINE);
       variables.add (variable);
       
       variable = new VariableDescriptor ();
@@ -68,6 +72,9 @@ public class DummyStationPlugin implements IStationPlugin {
       variable.setDefaultMinimum (850.0);
       variable.setPhysicalMaximum (1500.0);
       variable.setPhysicalMinimum (500.0);
+      variable.setPosition (1);
+      variable.setDisplayGroup (1);
+      variable.setGraphType (ISharedConstants.GraphType.BAR);
       variables.add (variable);
       
       variable = new VariableDescriptor ();
@@ -79,6 +86,9 @@ public class DummyStationPlugin implements IStationPlugin {
       variable.setDefaultMinimum (0.0);
       variable.setPhysicalMaximum (100.0);
       variable.setPhysicalMinimum (0.0);
+      variable.setPosition (2);
+      variable.setDisplayGroup (2);
+      variable.setGraphType (ISharedConstants.GraphType.AREA);
       variables.add (variable);
       
       variable = new VariableDescriptor ();
@@ -90,6 +100,9 @@ public class DummyStationPlugin implements IStationPlugin {
       variable.setDefaultMinimum (0.0);
       variable.setPhysicalMaximum (200.0);
       variable.setPhysicalMinimum (0.0);
+      variable.setPosition (3);
+      variable.setDisplayGroup (3);
+      variable.setGraphType (ISharedConstants.GraphType.LINE);
       variables.add (variable);
 
       variable = new VariableDescriptor ();
@@ -101,6 +114,9 @@ public class DummyStationPlugin implements IStationPlugin {
       variable.setDefaultMinimum (0.0);
       variable.setPhysicalMaximum (360.0);
       variable.setPhysicalMinimum (0.0);
+      variable.setPosition (4);
+      variable.setDisplayGroup (4);
+      variable.setGraphType (ISharedConstants.GraphType.NONE);
       variables.add (variable);
       
       return variables;

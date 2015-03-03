@@ -40,16 +40,18 @@ public class QualityJob {
       
       logger.info ("Executing task {}", getClass ().getSimpleName ());
       try {
-         station = stationPersistence.getOwnStation ();
-         if (station == null) {
-            throw new RuntimeException ("unable to obtain own station, please review the system configuration");
+         synchronized (IJobConstants.STATION_ACCESS) {
+            station = stationPersistence.getOwnStation ();
+            if (station == null) {
+               throw new RuntimeException ("unable to obtain own station, please review the system configuration");
+            }
+            observations = observationPersistence.getUncontrolled ();
+            
+            if (observations != null && !observations.isEmpty ()) {
+               processQuality (station, observations);
+            }
+            logger.info ("Quality processed for {} observations", observations != null ? observations.size () : 0);
          }
-         observations = observationPersistence.getUncontrolled ();
-         
-         if (observations != null && !observations.isEmpty ()) {
-            processQuality (station, observations);
-         }
-         logger.info ("Quality processed for {} observations", observations != null ? observations.size () : 0);
       } catch (Exception e) {
          logger.error ("Error computing quality control of observations", e);
       }

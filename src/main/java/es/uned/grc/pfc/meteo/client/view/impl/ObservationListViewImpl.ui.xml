@@ -1,17 +1,61 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder
-  xmlns:ui="urn:ui:com.google.gwt.uibinder"
-  xmlns:g="urn:import:com.google.gwt.user.client.ui"
-  xmlns:c="urn:import:com.google.gwt.user.cellview.client"
-  xmlns:meteo-widget="urn:import:es.uned.grc.pfc.meteo.client.view.widget"
-  xmlns:meteo="urn:import:es.uned.grc.pfc.meteo.client.view.impl"
-  ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-  ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
-  ui:generateLocales="default">
-  
-  <g:HTMLPanel styleName="left_box">
-    <meteo-widget:LimitedSimplePager ui:field="pagerTop" />
-    <c:CellTable ui:field="observationTable" pageSize="20" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false" />
-    <meteo-widget:LimitedSimplePager ui:field="pagerBottom" />
-  </g:HTMLPanel>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+   xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+   xmlns:meteo-suggest="urn:import:es.uned.grc.pfc.meteo.client.view.widget.suggest.impl"
+   xmlns:meteo-widget="urn:import:es.uned.grc.pfc.meteo.client.view.widget"
+   xmlns:meteo="urn:import:es.uned.grc.pfc.meteo.client.view.impl"
+   xmlns:dp="urn:import:com.google.gwt.user.datepicker.client"
+   ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+   ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+   ui:generateLocales="default">
+
+   <g:HTMLPanel styleName="left_box">
+      <g:HTMLPanel styleName="formulaire" ui:field="searchPanel">
+         <g:VerticalPanel>
+            <g:HorizontalPanel>
+               <g:VerticalPanel>
+                  <g:Label>
+                     <ui:msg meaning="init date filter" description="label for observations filter">Start date</ui:msg>
+                  </g:Label>
+                  <dp:DateBox ui:field="startDateBox" />
+               </g:VerticalPanel>
+               <g:VerticalPanel>
+                  <g:Label>
+                     <ui:msg meaning="end date filter" description="label for observations filter">End date</ui:msg>
+                  </g:Label>
+                  <dp:DateBox ui:field="endDateBox" />
+               </g:VerticalPanel>
+            </g:HorizontalPanel>
+            <g:HorizontalPanel>
+               <g:VerticalPanel>
+                  <g:Label>
+                     <ui:msg meaning="variable filter" description="label for observations filter">Variable</ui:msg>
+                  </g:Label>
+                  <meteo-suggest:VariableSuggestInputListBox ui:field="variableSuggestInputListBox" />
+               </g:VerticalPanel>
+               <g:VerticalPanel>
+                  <g:Label>
+                     <ui:msg meaning="only measured filter" description="label for observations filter">Only measured</ui:msg>
+                  </g:Label>
+                  <g:CheckBox ui:field="onlyMeasuredCheckBox" />
+               </g:VerticalPanel>
+               <g:VerticalPanel>
+                  <g:Label>
+                     <ui:msg meaning="only derived filter" description="label for observations filter">Only derived</ui:msg>
+                  </g:Label>
+                  <g:CheckBox ui:field="onlyDerivedCheckBox" />
+               </g:VerticalPanel>
+               <g:Button ui:field="searchButton" styleName="submit">
+                  <ui:msg meaning="sync button" description="Title for search button">Search</ui:msg>
+               </g:Button>
+            </g:HorizontalPanel>
+         </g:VerticalPanel>
+      </g:HTMLPanel>
+      <g:HorizontalPanel ui:field="textPanel">
+         <c:CellTable ui:field="observationTable" pageSize="1000" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false" />
+      </g:HorizontalPanel>
+      <g:VerticalPanel ui:field="graphPanel">
+          <g:HTMLPanel>NICE GRAPHICS !!!</g:HTMLPanel>
+      </g:VerticalPanel>
+   </g:HTMLPanel>
 </ui:UiBinder>

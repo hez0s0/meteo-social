@@ -62,7 +62,7 @@ public class MainLayoutViewImpl extends Composite implements IMainLayoutView {
       homeAnchor.addClickHandler (new ClickHandler() {
          @Override
          public void onClick (ClickEvent event) {
-            FormUtils.goConditionallyToPlace (mainActivityMapper, new ObservationListPlace (), placeController);
+            FormUtils.goConditionallyToPlace (mainActivityMapper, new ObservationListPlace (ObservationListPlace.Representation.TEXT), placeController);
          }
       });
    }

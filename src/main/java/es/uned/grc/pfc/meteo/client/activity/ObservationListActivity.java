@@ -1,14 +1,18 @@
 package es.uned.grc.pfc.meteo.client.activity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.cellview.client.ColumnSortList;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
-import com.google.gwt.view.client.Range;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
@@ -16,60 +20,151 @@ import es.uned.grc.pfc.meteo.client.event.MessageChangeEvent;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamFilterProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
+import es.uned.grc.pfc.meteo.client.model.IVariableProxy;
 import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
 import es.uned.grc.pfc.meteo.client.request.IObservationRequestContext;
+import es.uned.grc.pfc.meteo.client.util.PortableStringUtils;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
 public class ObservationListActivity extends AbstractAsyncDataActivity <IObservationBlockProxy, IObservationListView, ObservationListPlace> {
 
-   public ObservationListActivity (ObservationListPlace workSpaceListPlace, IObservationListView workSpaceListView, PlaceController placeController) {
-      super (workSpaceListPlace, workSpaceListView, placeController);
+   private ObservationListPlace listPlace = null;
+   
+   public ObservationListActivity (ObservationListPlace listPlace, IObservationListView listView, PlaceController placeController) {
+      super (listPlace, listView, placeController);
+      
+      this.listPlace = listPlace;
    }
+   
    @Override
-   protected AsyncDataProvider <IObservationBlockProxy> getAsyncDataProvider (final EventBus eventBus) {
-      return new AsyncDataProvider <IObservationBlockProxy> () {
+   public void start (final AcceptsOneWidget panel, final EventBus eventBus) {
+      getRequestFactory (eventBus).getObservationContext ().getTodayStart ().fire (new Receiver <Date> () {
 
          @Override
-         protected void onRangeChanged (HasData <IObservationBlockProxy> display) {
-            IRequestParamFilterProxy paramFilter = null;
-            final Range range = display.getVisibleRange ();
-            final ColumnSortList sortList = listView.getDataTable ().getColumnSortList ();
-            IObservationRequestContext observationRequestContext = getRequestFactory (eventBus).getObservationContext ();
-            IRequestParamProxy requestParamProxy = observationRequestContext.create (IRequestParamProxy.class);
-
-            requestParamProxy.setStart (0);
-            requestParamProxy.setLength (Integer.MAX_VALUE);
-
-            //own station
-            requestParamProxy.setFilters (new ArrayList <IRequestParamFilterProxy> ());
-            paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
-            paramFilter.setParam (ISharedConstants.ObservationFilter.OWN.toString ());
-            paramFilter.setValue ("true");
-            requestParamProxy.getFilters ().add (paramFilter);
+         public void onSuccess (Date response) {
+          //set default interval between 00 and 24 of today
+            listView.setStartDate (response);
+            listView.setEndDate (new Date (response.getTime () + ISharedConstants.ONE_DAY_MILLIS));
             
-            if ((sortList != null) && (sortList.size () > 0) && (sortList.get (0) != null) && (sortList.get (0).getColumn () != null)) {
-               requestParamProxy.setSortField (sortList.get (0).getColumn ().getDataStoreName ());
-               requestParamProxy.setAscending (sortList.get (0).isAscending ());
-            }
+            ObservationListActivity.super.start (panel, eventBus);
+         }
+      });
+   }
+   
+   @Override
+   protected AsyncDataProvider <IObservationBlockProxy> getAsyncDataProvider (final EventBus eventBus) {
+      listView.setInput (getRequestFactory (eventBus));
 
-            observationRequestContext.getObservations (requestParamProxy)
-                                     .with ("station", "observations", "observations.variable")
-                                     .fire (new Receiver <List <IObservationBlockProxy>> () {
-               @Override
-               public void onSuccess (List <IObservationBlockProxy> response) {
-                  listView.initTableColumns (response);
-                  listView.getDataTable ().setRowCount (0);
-                  listView.getDataTable ().setRowCount (response.size ());
-                  listView.getDataTable ().setRowData (range.getStart (), response);
-               }
-
-               @Override
-               public void onFailure (ServerFailure serverFailure) {
-                  eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
-               }
-            });
+      listView.setTextVisible (false);
+      listView.setGraphVisible (false);
+      
+      registerHandler (listView.getSearchHandler (), new ClickHandler () {
+         @Override
+         public void onClick (ClickEvent event) {
+            doSearch (eventBus);
+         }
+      });
+      
+      return new AsyncDataProvider <IObservationBlockProxy> () {
+         @Override
+         protected void onRangeChanged (HasData <IObservationBlockProxy> display) {
+            doSearch (eventBus);
          }
       };
+   }
+
+   protected void doSearch (final EventBus eventBus) {
+      IRequestParamFilterProxy paramFilter = null;
+      DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat (ISharedConstants.SHARED_SHORT_DATE_FORMAT);
+      final ColumnSortList sortList = listView.getDataTable ().getColumnSortList ();
+      IObservationRequestContext observationRequestContext = getRequestFactory (eventBus).getObservationContext ();
+      IRequestParamProxy requestParamProxy = observationRequestContext.create (IRequestParamProxy.class);
+
+      requestParamProxy.setStart (0);
+      requestParamProxy.setLength (Integer.MAX_VALUE);
+
+      //own station
+      requestParamProxy.setFilters (new ArrayList <IRequestParamFilterProxy> ());
+      paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+      paramFilter.setParam (ISharedConstants.ObservationFilter.OWN.toString ());
+      paramFilter.setValue ("true");
+      requestParamProxy.getFilters ().add (paramFilter);
+
+      //start date filter, if present
+      if (listView.getStartDate () != null) {
+         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+         paramFilter.setParam (ISharedConstants.ObservationFilter.START_DATE.toString ());
+         paramFilter.setValue (dateTimeFormat.format (listView.getStartDate ()));
+         requestParamProxy.getFilters ().add (paramFilter);
+      }
+      //end date filter, if present
+      if (listView.getEndDate () != null) {
+         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+         paramFilter.setParam (ISharedConstants.ObservationFilter.END_DATE.toString ());
+         paramFilter.setValue (dateTimeFormat.format (listView.getEndDate ()));
+         requestParamProxy.getFilters ().add (paramFilter);
+      }
+      //variable list filter, if present
+      if (listView.getVariables () != null && !listView.getVariables ().isEmpty ()) {
+         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+         paramFilter.setParam (ISharedConstants.ObservationFilter.VARIABLE_IDS.toString ());
+         paramFilter.setValue (getVariableIdList (listView.getVariables ()));
+         requestParamProxy.getFilters ().add (paramFilter);
+      }
+      //only measured filter, if active
+      if (listView.getOnlyMeasured ()) {
+         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+         paramFilter.setParam (ISharedConstants.ObservationFilter.MEASURED_ONLY.toString ());
+         paramFilter.setValue ("true");
+         requestParamProxy.getFilters ().add (paramFilter);
+      }
+      //only derived filter, if active
+      if (listView.getOnlyDerived ()) {
+         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+         paramFilter.setParam (ISharedConstants.ObservationFilter.DERIVED_ONLY.toString ());
+         paramFilter.setValue ("true");
+         requestParamProxy.getFilters ().add (paramFilter);
+      }
+      
+      if ((sortList != null) && (sortList.size () > 0) && (sortList.get (0) != null) && (sortList.get (0).getColumn () != null)) {
+         requestParamProxy.setSortField (sortList.get (0).getColumn ().getDataStoreName ());
+         requestParamProxy.setAscending (sortList.get (0).isAscending ());
+      }
+
+      observationRequestContext.getObservations (requestParamProxy)
+                               .with ("station", "observations", "observations.variable")
+                               .fire (new Receiver <List <IObservationBlockProxy>> () {
+         @Override
+         public void onSuccess (List <IObservationBlockProxy> response) {
+            if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) {
+               listView.setTextVisible (true);
+               listView.setGraphVisible (false);
+               listView.initTableColumns (response);
+               listView.getDataTable ().setRowCount (0);
+               listView.getDataTable ().setRowCount (response.size ());
+               listView.getDataTable ().setRowData (0, response);
+            } else {
+               listView.setTextVisible (false);
+               listView.setGraphVisible (true);
+            }
+         }
+
+         @Override
+         public void onFailure (ServerFailure serverFailure) {
+            eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
+         }
+      });
+   }
+
+   private String getVariableIdList (List <IVariableProxy> variables) {
+      String [] ids = new String [variables.size ()];
+      int i = 0;
+      
+      for (IVariableProxy variable : variables) {
+         ids [i ++] = String.valueOf (variable.getId ());
+      }
+      
+      return PortableStringUtils.join (ids, ISharedConstants.ID_LIST_ALTERNATIVE_SEPARATOR);
    }
 }

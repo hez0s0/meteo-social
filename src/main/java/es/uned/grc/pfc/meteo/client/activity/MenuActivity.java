@@ -6,14 +6,13 @@ import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceChangeRequestEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import es.uned.grc.pfc.meteo.client.activity.mapper.MainActivityMapper;
 import es.uned.grc.pfc.meteo.client.place.AbstractPlace;
-import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
 import es.uned.grc.pfc.meteo.client.util.IClientConstants;
 import es.uned.grc.pfc.meteo.client.view.IMenuView;
-import es.uned.grc.pfc.meteo.client.view.util.FormUtils;
 import es.uned.grc.pfc.meteo.client.view.widget.dialog.ActionDialogBox;
 import es.uned.grc.pfc.meteo.client.view.widget.dialog.ActionDialogBoxClickEvent;
 import es.uned.grc.pfc.meteo.client.view.widget.dialog.ConfirmationDialogBox;
@@ -50,7 +49,8 @@ public class MenuActivity extends AbstractBaseActivity {
       if (!bound) {
          menuView.getRefreshMenuItem ().setScheduledCommand (new Command () {
             public void execute () {
-               if (mainActivityMapper.isMainViewDirty ()) { //if there are unsaved changes, confirmation is needed to proceed
+               if (mainActivityMapper.isMainViewDirty ()) { 
+                  //if there are unsaved changes, confirmation is needed to proceed
                   ConfirmationDialogBox.askConfirmation (IClientConstants.textConstants.pendingChangesQuestion ()).addClickHandler (ActionDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
                      @Override
                      public void onActionClicked (ActionDialogBoxClickEvent event) {
@@ -62,15 +62,22 @@ public class MenuActivity extends AbstractBaseActivity {
                }
             }
          });
-         menuView.getObservationsMenuItem ().setScheduledCommand (new Command () {
+         menuView.getStationConfigurationMenuItem ().setScheduledCommand (new Command () {
             public void execute () {
-               FormUtils.goConditionallyToPlace (mainActivityMapper, new ObservationListPlace (), placeController);
+               Window.alert ("Station configuration not implemented");
+//               FormUtils.goConditionallyToPlace (mainActivityMapper, new ObservationListPlace (ObservationListPlace.Representation.GRAPHIC), placeController); //TODO
+            }
+         });
+         menuView.getProfileConfigurationMenuItem ().setScheduledCommand (new Command () {
+            public void execute () {
+               Window.alert ("Profile configuration not implemented");
+//               FormUtils.goConditionallyToPlace (mainActivityMapper, new ObservationListPlace (), placeController); //TODO
             }
          });
                   
          bound = true;
       }
-   } //end of bind
+   }
 
    private void refreshView (final EventBus eventBus) {
       Place currentPlace = placeController.getWhere ();

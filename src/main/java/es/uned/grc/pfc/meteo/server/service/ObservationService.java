@@ -1,5 +1,7 @@
 package es.uned.grc.pfc.meteo.server.service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -12,7 +14,10 @@ import es.uned.grc.pfc.meteo.server.dto.ObservationBlockDTO;
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.RequestParam;
 import es.uned.grc.pfc.meteo.server.model.paged.PagedList;
+import es.uned.grc.pfc.meteo.server.model.paged.VariablePagedList;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
+import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
+import es.uned.grc.pfc.meteo.server.persistence.IVariablePersistence;
 import es.uned.grc.pfc.meteo.server.service.helper.ObservationServiceHelper;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
@@ -27,9 +32,29 @@ public class ObservationService {
    
    @Autowired
    private IObservationPersistence observationPersistence = null;
+   @Autowired
+   private IStationPersistence stationPersistence = null;
+   @Autowired
+   private IVariablePersistence variablePersistence = null;
    
    @Autowired
    private ObservationServiceHelper observationServiceHelper = null;
+
+   /**
+    * Get the variables that a given station is able to measure.
+    * Specify null as the stationId to get the variables of your own station
+    */
+   public VariablePagedList getStationVariables (String filter, Integer stationId, boolean measuredOnly, boolean derivedOnly) {
+      try {
+         if (stationId == null) {
+            stationId = stationPersistence.getOwnStation ().getId ();
+         }
+         return new VariablePagedList (variablePersistence.getStationVariables (filter, stationId, measuredOnly, derivedOnly));
+      } catch (Exception e) {
+         logger.error ("Error listing station variable", e);
+         throw new RuntimeException ("Could not list variables of a station. See server logs.");
+      }
+   }
    
    /**
     * Obtains a list of observations for the given filter. If a start and end date
@@ -57,5 +82,19 @@ public class ObservationService {
          logger.error ("Error listing observations", e);
          throw new RuntimeException ("Could not list observations. See server logs.");
       }
+   }
+   
+   /**
+    * Obtain the start of the current day
+    */
+   public Date getTodayStart () {
+      Calendar today = Calendar.getInstance ();
+      
+      today.set (Calendar.HOUR_OF_DAY, 0);
+      today.set (Calendar.MINUTE, 0);
+      today.set (Calendar.SECOND, 0);
+      today.set (Calendar.MILLISECOND, 0);
+      
+      return today.getTime ();
    }
 }
