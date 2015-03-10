@@ -6,6 +6,16 @@
   ui:generateLocales="default">
 
   <g:HTMLPanel>
+    <g:HTMLPanel ui:field="viewTablePanel" styleName="right_articles">
+      <p>
+        <b>
+          <meteo-widget:ImageLabel ui:field="viewTable" imageUrl="images/icons/application_view_list.png">
+            <ui:msg meaning="the observation action" description="Title to view table">View observations table</ui:msg>
+          </meteo-widget:ImageLabel>
+        </b>
+        <ui:msg description="Detail text to view table">Click here to obtain a table representation of the observations</ui:msg>
+      </p>
+    </g:HTMLPanel>
     <g:HTMLPanel ui:field="viewGraphicsPanel" styleName="right_articles">
       <p>
         <b>
@@ -24,6 +34,16 @@
           </meteo-widget:ImageLabel>
         </b>
         <ui:msg description="Detail text to view derived observations">Display derived observations of the period, such as averages, minimums, maximums, etc.</ui:msg>
+      </p>
+    </g:HTMLPanel>
+    <g:HTMLPanel ui:field="viewMapPanel" styleName="right_articles">
+      <p>
+        <b>
+          <meteo-widget:ImageLabel ui:field="viewMap" imageUrl="images/icons/map.png">
+            <ui:msg meaning="the observation action" description="Title to view the station map">Station map</ui:msg>
+          </meteo-widget:ImageLabel>
+        </b>
+        <ui:msg description="Detail text to view the station map">Display all the stations in the system on a map</ui:msg>
       </p>
     </g:HTMLPanel>
   </g:HTMLPanel>

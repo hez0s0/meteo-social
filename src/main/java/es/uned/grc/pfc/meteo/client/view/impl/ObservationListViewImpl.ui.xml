@@ -11,7 +11,7 @@
 
    <g:HTMLPanel styleName="left_box">
       <g:HTMLPanel styleName="formulaire" ui:field="searchPanel">
-         <g:VerticalPanel>
+         <g:VerticalPanel width="100%">
             <g:HorizontalPanel>
                <g:VerticalPanel>
                   <g:Label>
@@ -51,11 +51,9 @@
             </g:HorizontalPanel>
          </g:VerticalPanel>
       </g:HTMLPanel>
-      <g:HorizontalPanel ui:field="textPanel">
-         <c:CellTable ui:field="observationTable" pageSize="1000" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false" />
+      <g:HorizontalPanel ui:field="textPanel" width="100%">
+         <c:DataGrid ui:field="observationDataGrid" pageSize="1000" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false"  width="100%"/>
       </g:HorizontalPanel>
-      <g:VerticalPanel ui:field="graphPanel">
-          <g:HTMLPanel>NICE GRAPHICS !!!</g:HTMLPanel>
-      </g:VerticalPanel>
+      <g:VerticalPanel ui:field="graphPanel"  width="100%"/>
    </g:HTMLPanel>
 </ui:UiBinder>

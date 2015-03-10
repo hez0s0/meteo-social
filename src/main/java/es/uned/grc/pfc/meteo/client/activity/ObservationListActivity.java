@@ -20,6 +20,7 @@ import es.uned.grc.pfc.meteo.client.event.MessageChangeEvent;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamFilterProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
+import es.uned.grc.pfc.meteo.client.model.IVariableObservationsProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableProxy;
 import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
 import es.uned.grc.pfc.meteo.client.request.IObservationRequestContext;
@@ -132,29 +133,45 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
          requestParamProxy.setAscending (sortList.get (0).isAscending ());
       }
 
-      observationRequestContext.getObservations (requestParamProxy)
-                               .with ("station", "observations", "observations.variable")
-                               .fire (new Receiver <List <IObservationBlockProxy>> () {
-         @Override
-         public void onSuccess (List <IObservationBlockProxy> response) {
-            if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) {
+      if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) {
+         //search for table representation
+         observationRequestContext.getObservationBlocks (requestParamProxy)
+                                  .with ("station", "observations", "observations.variable")
+                                  .fire (new Receiver <List <IObservationBlockProxy>> () {
+            @Override
+            public void onSuccess (List <IObservationBlockProxy> response) {
                listView.setTextVisible (true);
                listView.setGraphVisible (false);
                listView.initTableColumns (response);
                listView.getDataTable ().setRowCount (0);
                listView.getDataTable ().setRowCount (response.size ());
                listView.getDataTable ().setRowData (0, response);
-            } else {
+            }
+   
+            @Override
+            public void onFailure (ServerFailure serverFailure) {
+               eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
+            }
+         });
+      } else {
+         //search for graphic representation
+         observationRequestContext.getVariableObservations (requestParamProxy)
+                                  .with ("station", "observations", "observations.variable")
+                                  .fire (new Receiver <List <IVariableObservationsProxy>> () {
+            @Override
+            public void onSuccess (List <IVariableObservationsProxy> response) {
                listView.setTextVisible (false);
                listView.setGraphVisible (true);
+               
+               listView.generateGraphics (response);
             }
-         }
-
-         @Override
-         public void onFailure (ServerFailure serverFailure) {
-            eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
-         }
-      });
+   
+            @Override
+            public void onFailure (ServerFailure serverFailure) {
+               eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
+            }
+         });
+      }
    }
 
    private String getVariableIdList (List <IVariableProxy> variables) {

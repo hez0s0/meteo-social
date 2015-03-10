@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import es.uned.grc.pfc.meteo.server.collector.station.IStationPlugin;
 import es.uned.grc.pfc.meteo.server.dto.ObservationBlockDTO;
+import es.uned.grc.pfc.meteo.server.dto.VariableObservationsDTO;
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.RequestParam;
 import es.uned.grc.pfc.meteo.server.model.RequestParamFilter;
@@ -203,6 +204,49 @@ public class ObservationServiceHelper {
       return result;
    }
 
+   /**
+    * Group observations by variable
+    */
+   public List <VariableObservationsDTO> groupByVariable (List <Observation> observations, RequestParam requestParam) {
+      Station station = null;
+      List <Variable> variables = null;
+      List <VariableObservationsDTO> variableObservations = null;
+      VariableObservationsDTO variableObservation = null;
+      Map <Variable, List <Observation>> observationsMap = new HashMap <Variable, List <Observation>> ();
+      
+      station = getStation (requestParam, observations);
+      variables = getVariables (station, requestParam);
+      
+      for (Variable variable : variables) {
+         observationsMap.put (variable, new ArrayList <Observation> ());
+      }
+      for (Observation observation : observations) {
+         observationsMap.get (observation.getVariable ()).add (observation);
+      }
+      for (Map.Entry <Variable, List <Observation>> entry : observationsMap.entrySet ()) {
+         Collections.sort (entry.getValue (), new ObservationComparator ());
+      }
+      
+      variableObservations = new ArrayList <VariableObservationsDTO> (observationsMap.size ());
+      for (Map.Entry <Variable, List <Observation>> entry : observationsMap.entrySet ()) {
+         variableObservation = new VariableObservationsDTO ();
+         variableObservation.setStation (station);
+         variableObservation.setVariable (entry.getKey ());
+         variableObservation.setObservations (entry.getValue ());
+         variableObservations.add (variableObservation);
+      }
+      Collections.sort (variableObservations, new VariableObservationsComparator ());
+      
+      return variableObservations;
+   }
+   
+   private class VariableObservationsComparator implements Comparator <VariableObservationsDTO> {
+      @Override
+      public int compare (VariableObservationsDTO o1, VariableObservationsDTO o2) {
+         return Integer.valueOf (o1.getVariable ().getPosition ()).compareTo (Integer.valueOf (o2.getVariable ().getPosition ()));
+      }
+   }
+   
    private class ObservationBlockComparator implements Comparator <ObservationBlockDTO> {
       @Override
       public int compare (ObservationBlockDTO o1, ObservationBlockDTO o2) {

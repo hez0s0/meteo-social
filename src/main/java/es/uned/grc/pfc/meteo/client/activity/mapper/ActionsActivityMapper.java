@@ -9,10 +9,14 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Inject;
 
 import es.uned.grc.pfc.meteo.client.activity.action.ObservationListActionsActivity;
+import es.uned.grc.pfc.meteo.client.activity.action.StationMapActionsActivity;
 import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
+import es.uned.grc.pfc.meteo.client.place.StationMapPlace;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
+import es.uned.grc.pfc.meteo.client.view.IStationMapView;
 import es.uned.grc.pfc.meteo.client.view.action.IObservationListActionsView;
+import es.uned.grc.pfc.meteo.client.view.action.IStationMapActionsView;
 
 /**
  * Mapper for the actions display of the screen.
@@ -30,9 +34,13 @@ public class ActionsActivityMapper implements ActivityMapper {
 
    @Inject
    private IObservationListView observationListView = null;
+   @Inject
+   private IStationMapView stationMapView = null;
 
    @Inject
    private IObservationListActionsView observationListActionsView = null;
+   @Inject
+   private IStationMapActionsView stationMapActionsView = null;
    
    private IRequestFactory requestFactory = null;
 
@@ -48,6 +56,8 @@ public class ActionsActivityMapper implements ActivityMapper {
    public Activity getActivity (Place place) {
       if (place instanceof ObservationListPlace) {
          return new ObservationListActionsActivity ((ObservationListPlace) place, observationListView, observationListActionsView, placeController);
+      } else if (place instanceof StationMapPlace) {
+         return new StationMapActionsActivity ((StationMapPlace) place, stationMapView, stationMapActionsView, placeController);
       }
       
       return null;

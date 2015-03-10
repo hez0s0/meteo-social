@@ -8,36 +8,46 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.AbstractCellTable;
-import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.AsyncHandler;
+import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionModel;
+import com.google.gwt.visualization.client.AbstractDataTable;
+import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
+import com.google.gwt.visualization.client.DataTable;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.AreaChart;
+import com.google.gwt.visualization.client.visualizations.BarChart;
+import com.google.gwt.visualization.client.visualizations.ColumnChart;
+import com.google.gwt.visualization.client.visualizations.LineChart;
 import com.google.inject.Inject;
 
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationProxy;
+import es.uned.grc.pfc.meteo.client.model.IVariableObservationsProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableProxy;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractPage;
 import es.uned.grc.pfc.meteo.client.view.table.IndexedObservationColumn;
 import es.uned.grc.pfc.meteo.client.view.util.ColumnAppender;
-import es.uned.grc.pfc.meteo.client.view.util.CustomCellTableResources;
-import es.uned.grc.pfc.meteo.client.view.util.FormUtils;
 import es.uned.grc.pfc.meteo.client.view.widget.suggest.impl.VariableSuggestInputListBox;
 
 public class ObservationListViewImpl extends AbstractPage implements IObservationListView {
@@ -45,14 +55,27 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    }
    private static ObservationListViewUiBinder uiBinder = GWT.create (ObservationListViewUiBinder.class);
 
+   private static final int GRAPH_WIDTH = 500;
+   private static final int GRAPH_HEIGHT = 380;
+
+   /** global text constants */
+   @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
+   @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
+   public interface TextConstants extends Constants {
+      @DefaultStringValue ("Observed") @Meaning ("Observation column")
+      String observedColumn ();
+      @DefaultStringValue ("Value") @Meaning ("Observation column")
+      String valueColumn ();
+   }
+   public static TextConstants textConstants = GWT.create (TextConstants.class);
+   
    @Inject
    EventBus eventBus = null;
    @Inject
    PlaceController placeController = null;
 
-   protected CustomCellTableResources cellTableResources = GWT.create (CustomCellTableResources.class);
    @UiField (provided = true)
-   protected CellTable <IObservationBlockProxy> observationTable = new CellTable <IObservationBlockProxy> (Integer.MAX_VALUE, cellTableResources);
+   protected DataGrid <IObservationBlockProxy> observationDataGrid = new DataGrid <IObservationBlockProxy> (Integer.MAX_VALUE);
    @UiField
    protected DateBox startDateBox = null;
    @UiField
@@ -70,20 +93,20 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @UiField
    protected Panel graphPanel = null;
 
-   public static final ProvidesKey <IObservationBlockProxy> keyProvider = new ProvidesKey <IObservationBlockProxy>() {
+   public static final ProvidesKey <IObservationBlockProxy> keyProvider = new ProvidesKey <IObservationBlockProxy> () {
       @Override
       public Object getKey (IObservationBlockProxy observationBlockProxy) {
-        return (observationBlockProxy != null) ? observationBlockProxy.getStation ().getId () + "_" + observationBlockProxy.getObserved ().getTime () : null;
+         return (observationBlockProxy != null) ? observationBlockProxy.getStation ().getId () + "_" + observationBlockProxy.getObserved ().getTime () : null;
       }
    };
-    
+
    public ObservationListViewImpl () {
       initUI ();
    }
 
    @Override
    public AbstractCellTable <IObservationBlockProxy> getDataTable () {
-      return observationTable;
+      return observationDataGrid;
    }
 
    /**
@@ -91,23 +114,23 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
     */
    private void initUI () {
       SelectionModel <IObservationBlockProxy> selectionModel = null;
-      
+
       // Bind the UI with myself
       initWidget (uiBinder.createAndBindUi (this));
 
       // Add a selection model so we can select cells
       selectionModel = new MultiSelectionModel <IObservationBlockProxy> (keyProvider);
-      observationTable.setSelectionModel (selectionModel, DefaultSelectionEventManager.<IObservationBlockProxy> createCheckboxManager ());
+      observationDataGrid.setSelectionModel (selectionModel, DefaultSelectionEventManager.<IObservationBlockProxy> createCheckboxManager ());
    }
-   
+
    @Override
    public void setInput (IRequestFactory requestFactory) {
       variableSuggestInputListBox.setRequestFactory (requestFactory);
-      
+
       onlyMeasuredCheckBox.setValue (true);
       onlyDerivedCheckBox.setValue (false);
    }
-   
+
    /**
     * Add the columns to the table.
     */
@@ -121,45 +144,41 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
       List <IObservationProxy> firstRow = null;
       IndexedObservationColumn indexedObservationColumn = null;
       int col = 0;
-      
+
       //clear all the columns
-      while (observationTable.getColumnCount () > 0) {
-         observationTable.removeColumn (0);
+      while (observationDataGrid.getColumnCount () > 0) {
+         observationDataGrid.removeColumn (0);
       }
-      
+
       // date observed
-      new ColumnAppender <Date, IObservationBlockProxy> ().addColumn (observationTable, 
-            new DateCell (dateFormat), "observed", null, new ColumnAppender.GetValue <Date, IObservationBlockProxy> () {
+      new ColumnAppender <Date, IObservationBlockProxy> ().addColumn (observationDataGrid, new DateCell (dateFormat), "observed", null, new ColumnAppender.GetValue <Date, IObservationBlockProxy> () {
          @Override
          public Date getValue (IObservationBlockProxy o) {
             return o.getObserved ();
          }
       }, null, false, observedWidth);
-      
+
       if (!observationBlock.isEmpty ()) {
          firstRow = observationBlock.get (0).getObservations ();
          for (IObservationProxy observation : firstRow) {
-            indexedObservationColumn = new IndexedObservationColumn (col ++);
-            
-            observationTable.addColumn (indexedObservationColumn, observation != null ? observation.getVariable ().getAcronym () : "???");
-            observationTable.setColumnWidth (indexedObservationColumn, leftWidth / firstRow.size (), Unit.PCT);
+            indexedObservationColumn = new IndexedObservationColumn (col++);
+
+            observationDataGrid.addColumn (indexedObservationColumn, observation != null ? observation.getVariable ().getAcronym () : "???");
+            observationDataGrid.setColumnWidth (indexedObservationColumn, leftWidth / firstRow.size (), Unit.PCT);
          }
       }
 
-      columnSortHandler = new AsyncHandler (observationTable);
-      observationTable.addColumnSortHandler (columnSortHandler);
-      observationTable.getColumnSortList ().push (nameColumn);
-
-      // Set alternating row styles
-      FormUtils.setAlternatigRowStyle (observationTable);
+      columnSortHandler = new AsyncHandler (observationDataGrid);
+      observationDataGrid.addColumnSortHandler (columnSortHandler);
+      observationDataGrid.getColumnSortList ().push (nameColumn);
    }
-   
+
    @Override
    public Date getStartDate () {
       //TODO consider hour
       return startDateBox.getValue ();
    }
-   
+
    @Override
    public void setStartDate (Date date) {
       startDateBox.setValue (date);
@@ -170,7 +189,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
       //TODO consider hour
       return endDateBox.getValue ();
    }
-   
+
    @Override
    public void setEndDate (Date date) {
       endDateBox.setValue (date);
@@ -190,7 +209,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    public boolean getOnlyDerived () {
       return onlyDerivedCheckBox.getValue ();
    }
-   
+
    @Override
    public HasClickHandlers getSearchHandler () {
       return searchButton;
@@ -204,5 +223,109 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @Override
    public void setGraphVisible (boolean visible) {
       graphPanel.setVisible (visible);
+   }
+
+   @Override
+   public void generateGraphics (final List <IVariableObservationsProxy> variableObservations) {
+      graphPanel.clear ();
+
+      Runnable onLoadCallback = new Runnable () {
+         public void run () {
+            int i = 0;
+            HorizontalPanel horizontalPanel = GWT.create (HorizontalPanel.class);
+            for (IVariableObservationsProxy variableObservation : variableObservations) {
+               Widget chart = null;
+               AbstractDataTable data = createDataTable (variableObservation.getObservations ());
+               switch (variableObservation.getVariable ().getGraphType ()) {
+                  case AREA:
+                     AreaChart.Options areaOptions = createAreaOptions (variableObservation.getVariable ());
+                     chart = new AreaChart (data, areaOptions);
+                     break;
+                  case BAR:
+                     BarChart.Options barOptions = createBarOptions (variableObservation.getVariable ());
+                     chart = new BarChart (data, barOptions);
+                     break;
+                  case COLUMN:
+                     ColumnChart.Options columnOptions = createColumnOptions (variableObservation.getVariable ());
+                     chart = new ColumnChart (data, columnOptions);
+                     break;
+                  case LINE:
+                     LineChart.Options lineOptions = createLineOptions (variableObservation.getVariable ());
+                     chart = new LineChart (data, lineOptions);
+                     break;
+                  case NONE:
+                     chart = null;
+                     break;
+               }
+               
+               if (chart != null) {
+                  horizontalPanel.add (chart);
+                  if (++ i == 2) {
+                     graphPanel.add (horizontalPanel);
+                     
+                     i = 0;
+                     horizontalPanel = GWT.create (HorizontalPanel.class);
+                  }
+               }
+            }
+
+            if (i != 0) {
+               graphPanel.add (horizontalPanel);
+            }
+         }
+      };
+      VisualizationUtils.loadVisualizationApi (onLoadCallback, LineChart.PACKAGE);
+
+   }
+
+   private ColumnChart.Options createColumnOptions (IVariableProxy variable) {
+      ColumnChart.Options options = ColumnChart.Options.create ();
+      options.setWidth (GRAPH_WIDTH);
+      options.setHeight (GRAPH_HEIGHT);
+      options.setTitle (variable.getName ());
+//      options.setEnableTooltip (true);
+      return options;
+   }
+
+   private BarChart.Options createBarOptions (IVariableProxy variable) {
+      BarChart.Options options = BarChart.Options.create ();
+      options.setWidth (GRAPH_WIDTH);
+      options.setHeight (GRAPH_HEIGHT);
+      options.setTitle (variable.getName ());
+//      options.setEnableTooltip (true);
+      return options;
+   }
+
+   private AreaChart.Options createAreaOptions (IVariableProxy variable) {
+      AreaChart.Options options = AreaChart.Options.create ();
+      options.setWidth (GRAPH_WIDTH);
+      options.setHeight (GRAPH_HEIGHT);
+      options.setTitle (variable.getName ());
+//      options.setEnableTooltip (true);
+      return options;
+   }
+
+   private LineChart.Options createLineOptions (IVariableProxy variable) {
+      LineChart.Options options = LineChart.Options.create ();
+      options.setWidth (GRAPH_WIDTH);
+      options.setHeight (GRAPH_HEIGHT);
+      options.setTitle (variable.getName ());
+//      options.setEnableTooltip (true);
+      options.setSmoothLine (true);
+      return options;
+   }
+
+   private AbstractDataTable createDataTable (List <IObservationProxy> observations) {
+      int row = 0;
+      DateTimeFormat representationDateFormat = DateTimeFormat.getFormat (PredefinedFormat.DATE_TIME_SHORT);
+      DataTable data = DataTable.create ();
+      data.addColumn (ColumnType.STRING, textConstants.observedColumn ());
+      data.addColumn (ColumnType.NUMBER, textConstants.valueColumn ());
+      data.addRows (observations.size ());
+      for (IObservationProxy observation : observations) {
+         data.setValue (row, 0, representationDateFormat.format (observation.getObserved ()));
+         data.setValue (row++, 1, observation.getValue ());
+      }
+      return data;
    }
 }

@@ -11,6 +11,7 @@ import com.google.web.bindery.requestfactory.shared.Service;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamFilterProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
+import es.uned.grc.pfc.meteo.client.model.IVariableObservationsProxy;
 import es.uned.grc.pfc.meteo.client.model.paged.IVariablePagedListProxy;
 import es.uned.grc.pfc.meteo.server.service.ObservationService;
 import es.uned.grc.pfc.meteo.shared.locators.SpringServiceLocator;
@@ -29,7 +30,17 @@ public interface IObservationRequestContext extends RequestContext {
     * IMPORTANT: this method assumes that 1 station is provided as filter, either by id
     * or by marking the own station flag !! 
     */
-   Request <List <IObservationBlockProxy>> getObservations (IRequestParamProxy requestParam);
+   Request <List <IObservationBlockProxy>> getObservationBlocks (IRequestParamProxy requestParam);
+
+   /**
+    * Obtains a map of observations for the given filter, grouped by variable, fit 
+    * to be displayed, for example, in graphics. If a start and end date
+    * is provided, it fills all the possible gaps by pushing Observations with null values
+    * for every period within the range and every variable.
+    * IMPORTANT: this method assumes that 1 station is provided as filter, either by id
+    * or by marking the own station flag !! 
+    */
+   Request <List <IVariableObservationsProxy>> getVariableObservations (IRequestParamProxy requestParam);
    /**
     * Get the variables that a given station is able to measure
     * Specify null as the stationId to get the variables of your own station

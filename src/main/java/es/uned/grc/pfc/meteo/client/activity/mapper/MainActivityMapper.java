@@ -12,12 +12,15 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Inject;
 
 import es.uned.grc.pfc.meteo.client.activity.ObservationListActivity;
+import es.uned.grc.pfc.meteo.client.activity.StationMapActivity;
 import es.uned.grc.pfc.meteo.client.place.AbstractPlace;
 import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
+import es.uned.grc.pfc.meteo.client.place.StationMapPlace;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.util.IClientConstants;
 import es.uned.grc.pfc.meteo.client.view.IMainLayoutView;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
+import es.uned.grc.pfc.meteo.client.view.IStationMapView;
 import es.uned.grc.pfc.meteo.client.view.base.IFormView;
 import es.uned.grc.pfc.meteo.client.view.widget.dialog.ActionDialogBoxClickEvent;
 import es.uned.grc.pfc.meteo.client.view.widget.dialog.ConfirmationDialogBox;
@@ -37,6 +40,8 @@ public class MainActivityMapper implements ActivityMapper {
    public interface TextConstants extends Constants {
       @DefaultStringValue ("Observation list") @Meaning ("Detail region title")
       String observationListPlace ();
+      @DefaultStringValue ("Station Map") @Meaning ("Detail region title")
+      String stationMapPlace ();
    }
    public static TextConstants textConstants = GWT.create (TextConstants.class);
 
@@ -49,6 +54,8 @@ public class MainActivityMapper implements ActivityMapper {
    private IMainLayoutView mainLayoutView = null;
    @Inject
    private IObservationListView observationListView = null;
+   @Inject
+   private IStationMapView stationMapView = null;
    
    private boolean init = false;
 
@@ -86,6 +93,9 @@ public class MainActivityMapper implements ActivityMapper {
       if (place instanceof ObservationListPlace) {
          mainLayoutView.getDetailsTitle ().setText (textConstants.observationListPlace ());
          return new ObservationListActivity ((ObservationListPlace) place, observationListView, placeController);
+      } else if (place instanceof StationMapPlace) {
+         mainLayoutView.getDetailsTitle ().setText (textConstants.stationMapPlace ());
+         return new StationMapActivity ((StationMapPlace) place, stationMapView, placeController);
       }
       
       return null;

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.uned.grc.pfc.meteo.server.dto.ObservationBlockDTO;
+import es.uned.grc.pfc.meteo.server.dto.VariableObservationsDTO;
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.RequestParam;
 import es.uned.grc.pfc.meteo.server.model.paged.PagedList;
@@ -64,11 +65,10 @@ public class ObservationService {
     * or by marking the own station flag !!
     * The result is formed as a list of blocks of observations
     */
-   public List <ObservationBlockDTO> getObservations (RequestParam requestParam) {
+   public List <ObservationBlockDTO> getObservationBlocks (RequestParam requestParam) {
       PagedList <Integer, Observation> observationsPagedList =  null;
       List <Observation> observations = null;
       try {
-
          if ( (StringUtils.isEmpty (observationServiceHelper.findFilterValue (requestParam, ISharedConstants.ObservationFilter.OWN)))
                && (StringUtils.isEmpty (observationServiceHelper.findFilterValue (requestParam, ISharedConstants.ObservationFilter.STATION_ID))) ) {
             throw new RuntimeException ("Either the 'own' flag must be active, or the station id must contain a value in order to run this method ");
@@ -78,6 +78,34 @@ public class ObservationService {
          observations = observationServiceHelper.fillGaps (observationsPagedList.getList (), requestParam);
          
          return observationServiceHelper.groupBlocks (observations);
+      } catch (Exception e) {
+         logger.error ("Error listing observations", e);
+         throw new RuntimeException ("Could not list observations. See server logs.");
+      }
+   }
+
+   /**
+    * Obtains a map of observations for the given filter, grouped by variable, fit 
+    * to be displayed, for example, in graphics. If a start and end date
+    * is provided, it fills all the possible gaps by pushing Observations with null values
+    * for every period within the range and every variable.
+    * IMPORTANT: this method assumes that 1 station is provided as filter, either by id
+    * or by marking the own station flag !! 
+    */
+   public List <VariableObservationsDTO> getVariableObservations (RequestParam requestParam) {
+      PagedList <Integer, Observation> observationsPagedList =  null;
+      List <Observation> observations = null;
+      try {
+
+         if ( (StringUtils.isEmpty (observationServiceHelper.findFilterValue (requestParam, ISharedConstants.ObservationFilter.OWN)))
+               && (StringUtils.isEmpty (observationServiceHelper.findFilterValue (requestParam, ISharedConstants.ObservationFilter.STATION_ID))) ) {
+            throw new RuntimeException ("Either the 'own' flag must be active, or the station id must contain a value in order to run this method ");
+         }
+         observationsPagedList = observationPersistence.getList (requestParam);
+
+         observations = observationServiceHelper.fillGaps (observationsPagedList.getList (), requestParam);
+         
+         return observationServiceHelper.groupByVariable (observations, requestParam);
       } catch (Exception e) {
          logger.error ("Error listing observations", e);
          throw new RuntimeException ("Could not list observations. See server logs.");

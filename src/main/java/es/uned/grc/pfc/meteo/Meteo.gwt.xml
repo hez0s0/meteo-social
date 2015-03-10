@@ -9,25 +9,36 @@
    <inherits name="com.google.gwt.place.Place" />
    <inherits name='com.google.web.bindery.requestfactory.RequestFactory' />
    <inherits name="org.hibernate.validator.HibernateValidator" />
-   <inherits name='com.google.gwt.visualization.Visualization'/>
-    
-	<!-- entry point -->
-	<entry-point class='es.uned.grc.pfc.meteo.client.Main' />
+   <inherits name='com.google.gwt.visualization.Visualization' />
+   <inherits name="com.google.maps.gwt.GoogleMaps" />
+   <inherits name="com.google.gwt.ajaxloader.AjaxLoader" />
 
-	<!-- path to translatable code -->
-	<source path='client' />
-	<source path='shared' />
-  
-   <!-- add server-side code for those (translatable) classes containing enums that need to be available at client-side -->
-   <source path="server/model"><include name="IModelEnums.java" /></source>
-   <source path="server/model"><include name="IModelConstants.java" /></source>
-   
+   <!-- entry point -->
+   <entry-point class='es.uned.grc.pfc.meteo.client.Main' />
+
+   <!-- path to translatable code -->
+   <source path='client' />
+   <source path='shared' />
+
+   <!-- add server-side code for those (translatable) classes containing 
+      enums that need to be available at client-side -->
+   <source path="server/model">
+      <include name="IModelEnums.java" />
+   </source>
+   <source path="server/model">
+      <include name="IModelConstants.java" />
+   </source>
+
    <!-- specify the Validator for the Validation bootstrap to use. -->
-   <replace-with class="es.uned.grc.pfc.meteo.client.validator.BeanValidatorFactory">
-     <when-type-is class="javax.validation.ValidatorFactory" />
+   <replace-with
+      class="es.uned.grc.pfc.meteo.client.validator.BeanValidatorFactory">
+      <when-type-is class="javax.validation.ValidatorFactory" />
    </replace-with>
-  <!--  specify the ValidationMessageResolver to use for your custom validation messages -->
-  <replace-with class="es.uned.grc.pfc.meteo.client.validator.CustomValidationMessagesResolver">
-    <when-type-is class="com.google.gwt.validation.client.UserValidationMessagesResolver" />
-  </replace-with>
+   <!-- specify the ValidationMessageResolver to use for your custom validation 
+      messages -->
+   <replace-with
+      class="es.uned.grc.pfc.meteo.client.validator.CustomValidationMessagesResolver">
+      <when-type-is
+         class="com.google.gwt.validation.client.UserValidationMessagesResolver" />
+   </replace-with>
 </module>

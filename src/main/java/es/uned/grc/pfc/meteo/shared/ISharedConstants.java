@@ -67,5 +67,5 @@ public class ISharedConstants {
    public static enum ObservationFilter {OWN, STATION_ID, START_DATE, END_DATE, VARIABLE_IDS, MEASURED_ONLY, DERIVED_ONLY};
    
    /** type of graphic to represent a variable */
-   public static enum GraphType {NONE, LINE, BAR, AREA, POINT};
+   public static enum GraphType {NONE, LINE, BAR, AREA, COLUMN};
 }

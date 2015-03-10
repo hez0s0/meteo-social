@@ -5,6 +5,7 @@ import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.cellview.client.AbstractCellTable;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.Header;
@@ -67,7 +68,7 @@ public class ColumnAppender <C, E extends Object> {
    /**
     * Add a column with some properties
     */
-   public Column <E, C> addColumn (CellTable <E> cellTable,
+   public Column <E, C> addColumn (AbstractCellTable <E> cellTable,
                                    Cell <C> cell, 
                                    String headerText, 
                                    String columnServerName, 
@@ -89,7 +90,7 @@ public class ColumnAppender <C, E extends Object> {
    /**
     * Add a column with some properties
     */
-   private Column <E, C> addColumn (CellTable <E> cellTable,
+   private Column <E, C> addColumn (AbstractCellTable <E> cellTable,
                                    Cell <C> cell, 
                                    String headerText, 
                                    Header <?> header,
