@@ -20,6 +20,8 @@ public class StationMapActivity extends AbstractBaseActivity {
    
    @Override
    public void start (final AcceptsOneWidget panel, final EventBus eventBus) {
+      panel.setWidget (mapView.asWidget ());
+      
       getRequestFactory (eventBus).getStationContext ().getOwnStation ().fire (new Receiver <IStationProxy> () {
 
          @Override

@@ -10,6 +10,12 @@
    ui:generateLocales="default">
 
    <g:HTMLPanel styleName="left_box">
-       <div id="map_canvas"/>
+      <g:HTMLPanel styleName="formulaire" ui:field="searchPanel">
+         <g:VerticalPanel width="100%">
+            <g:HTMLPanel width="100%">
+               <div id="map_canvas" style="width: 100%; height: 600px;"/>
+            </g:HTMLPanel>
+         </g:VerticalPanel>
+      </g:HTMLPanel>
    </g:HTMLPanel>
 </ui:UiBinder>

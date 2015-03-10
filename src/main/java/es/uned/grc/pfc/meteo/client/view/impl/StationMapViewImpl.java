@@ -13,6 +13,8 @@ import com.google.maps.gwt.client.GoogleMap;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
 import com.google.maps.gwt.client.MapTypeId;
+import com.google.maps.gwt.client.Marker;
+import com.google.maps.gwt.client.MarkerOptions;
 
 import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.view.IStationMapView;
@@ -44,16 +46,21 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
    protected void renderMap (IStationProxy station) {
       LatLng myLatLng = LatLng.create (station.getLatitude (), station.getLongitude ());
       MapOptions myOptions = MapOptions.create ();
-      myOptions.setZoom (8.0);
+      myOptions.setZoom (12.0);
       myOptions.setCenter (myLatLng);
       myOptions.setMapTypeId (MapTypeId.ROADMAP);
-      GoogleMap.create (Document.get ().getElementById ("map_canvas"), myOptions);
+      GoogleMap map = GoogleMap.create (Document.get ().getElementById ("map_canvas"), myOptions);
+
+      MarkerOptions newMarkerOpts = MarkerOptions.create ();
+      newMarkerOpts.setPosition (myLatLng);
+      newMarkerOpts.setMap (map);
+      newMarkerOpts.setTitle (station.getName () + " weather station");
+      Marker.create (newMarkerOpts);
    }
 
    @Override
    public void setCenterStation (final IStationProxy station) {
       AjaxLoaderOptions options = AjaxLoaderOptions.newInstance ();
-      options.setOtherParms ("sensor=false&language=ja");
       Runnable callback = new Runnable () {
          public void run () {
             renderMap (station);

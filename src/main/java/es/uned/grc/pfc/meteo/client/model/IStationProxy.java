@@ -26,11 +26,11 @@ public interface IStationProxy extends IEntityProxy {
    IStationModelProxy getStationModel ();
    void setStationModel (IStationModelProxy stationModel);
    
-   Long getLatitude ();
-   void setLatitude (Long latitude);
+   Double getLatitude ();
+   void setLatitude (Double latitude);
    
-   Long getLongitude ();
-   void setLongitude (Long longitude);
+   Double getLongitude ();
+   void setLongitude (Double longitude);
    
    String getZip ();
    void setZip (String zip);
