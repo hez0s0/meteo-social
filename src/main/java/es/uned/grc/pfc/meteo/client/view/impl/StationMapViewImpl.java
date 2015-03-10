@@ -7,7 +7,6 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
 import com.google.maps.gwt.client.GoogleMap;
@@ -40,19 +39,10 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
    private void initUI () {
       // Bind the UI with myself
       initWidget (uiBinder.createAndBindUi (this));
-
-      AjaxLoaderOptions options = AjaxLoaderOptions.newInstance ();
-      options.setOtherParms ("sensor=false&language=ja");
-      Runnable callback = new Runnable () {
-         public void run () {
-            renderMap ();
-         }
-      };
-      AjaxLoader.loadApi ("maps", "3", callback, options);
    }
 
-   protected void renderMap () {
-      LatLng myLatLng = LatLng.create (40, -4);
+   protected void renderMap (IStationProxy station) {
+      LatLng myLatLng = LatLng.create (station.getLatitude (), station.getLongitude ());
       MapOptions myOptions = MapOptions.create ();
       myOptions.setZoom (8.0);
       myOptions.setCenter (myLatLng);
@@ -61,7 +51,14 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
    }
 
    @Override
-   public void setCenterStation (IStationProxy station) {
-      Window.alert ("UNIMPLENTED setCenterStation");
+   public void setCenterStation (final IStationProxy station) {
+      AjaxLoaderOptions options = AjaxLoaderOptions.newInstance ();
+      options.setOtherParms ("sensor=false&language=ja");
+      Runnable callback = new Runnable () {
+         public void run () {
+            renderMap (station);
+         }
+      };
+      AjaxLoader.loadApi ("maps", "3", callback, options);
    }
 }
