@@ -32,15 +32,6 @@ public interface IStationProxy extends IEntityProxy {
    Double getLongitude ();
    void setLongitude (Double longitude);
    
-   String getZip ();
-   void setZip (String zip);
-   
-   String getCity ();
-   void setCity (String city);
-   
-   String getCountry ();
-   void setCountry (String country);
-   
    Date getLastCollectedPeriod ();
    void setLastCollectedPeriod (Date lastCollectedPeriod);
    

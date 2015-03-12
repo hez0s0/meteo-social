@@ -1,5 +1,7 @@
 package es.uned.grc.pfc.meteo.client.request;
 
+import java.util.List;
+
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.Service;
@@ -18,4 +20,9 @@ public interface IStationRequestContext extends RequestContext {
     * Obtain the own station
     */
    Request <IStationProxy> getOwnStation ();
+
+   /**
+    * Obtained the list of stations contained within a rectagle
+    */
+   Request <List <IStationProxy>> getStationsInArea (double minLatitude, double minLongitude, double maxLatitude, double maxLongitude);
 }

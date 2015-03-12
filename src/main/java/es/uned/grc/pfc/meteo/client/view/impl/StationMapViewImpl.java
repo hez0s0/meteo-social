@@ -1,5 +1,7 @@
 package es.uned.grc.pfc.meteo.client.view.impl;
 
+import java.util.List;
+
 import com.google.gwt.ajaxloader.client.AjaxLoader;
 import com.google.gwt.ajaxloader.client.AjaxLoader.AjaxLoaderOptions;
 import com.google.gwt.core.client.GWT;
@@ -16,9 +18,11 @@ import com.google.maps.gwt.client.MapTypeId;
 import com.google.maps.gwt.client.Marker;
 import com.google.maps.gwt.client.MarkerOptions;
 
+import es.uned.grc.pfc.meteo.client.event.MapLoadedEvent;
 import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.view.IStationMapView;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractPage;
+import es.uned.grc.pfc.meteo.client.view.util.IMapsContants;
 
 public class StationMapViewImpl extends AbstractPage implements IStationMapView {
    interface StationMapViewUiBinder extends UiBinder <HTMLPanel, StationMapViewImpl> {
@@ -31,6 +35,8 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
    @Inject
    PlaceController placeController = null;
 
+   protected GoogleMap map = null;
+   
    public StationMapViewImpl () {
       initUI ();
    }
@@ -44,18 +50,28 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
    }
 
    protected void renderMap (IStationProxy station) {
-      LatLng myLatLng = LatLng.create (station.getLatitude (), station.getLongitude ());
-      MapOptions myOptions = MapOptions.create ();
-      myOptions.setZoom (12.0);
-      myOptions.setCenter (myLatLng);
-      myOptions.setMapTypeId (MapTypeId.ROADMAP);
-      GoogleMap map = GoogleMap.create (Document.get ().getElementById ("map_canvas"), myOptions);
+      LatLng stationPosition = LatLng.create (station.getLatitude (), station.getLongitude ());
+      MapOptions mapOptions = MapOptions.create ();
+      mapOptions.setZoom (12.0);
+      mapOptions.setCenter (stationPosition);
+      mapOptions.setMapTypeId (MapTypeId.ROADMAP);
+      map = GoogleMap.create (Document.get ().getElementById ("map_canvas"), mapOptions);
 
-      MarkerOptions newMarkerOpts = MarkerOptions.create ();
-      newMarkerOpts.setPosition (myLatLng);
-      newMarkerOpts.setMap (map);
-      newMarkerOpts.setTitle (station.getName () + " weather station");
-      Marker.create (newMarkerOpts);
+      addMarker (station, true);
+      
+      eventBus.fireEvent (new MapLoadedEvent ());
+   }
+   
+   private void addMarker (IStationProxy station, boolean own) {
+      LatLng stationPosition = LatLng.create (station.getLatitude (), station.getLongitude ());
+      MarkerOptions stationMarkerOptions = MarkerOptions.create ();
+      if (!own) {
+         stationMarkerOptions.setIcon (IMapsContants.OWN_MARKER);
+      }
+      stationMarkerOptions.setPosition (stationPosition);
+      stationMarkerOptions.setMap (map);
+      stationMarkerOptions.setTitle (station.getName ());
+      Marker.create (stationMarkerOptions);
    }
 
    @Override
@@ -67,5 +83,12 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
          }
       };
       AjaxLoader.loadApi ("maps", "3", callback, options);
+   }
+
+   @Override
+   public void renderStations (List <IStationProxy> stations) {
+      for (IStationProxy station : stations) {
+         addMarker (station, false);
+      }
    }
 }

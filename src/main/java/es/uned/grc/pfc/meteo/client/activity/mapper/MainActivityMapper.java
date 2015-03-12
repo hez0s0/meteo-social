@@ -1,5 +1,7 @@
 package es.uned.grc.pfc.meteo.client.activity.mapper;
 
+import java.util.List;
+
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.core.client.GWT;
@@ -10,9 +12,13 @@ import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Inject;
+import com.google.web.bindery.requestfactory.shared.Receiver;
 
 import es.uned.grc.pfc.meteo.client.activity.ObservationListActivity;
 import es.uned.grc.pfc.meteo.client.activity.StationMapActivity;
+import es.uned.grc.pfc.meteo.client.event.IMapLoadedEventHandler;
+import es.uned.grc.pfc.meteo.client.event.MapLoadedEvent;
+import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.place.AbstractPlace;
 import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
 import es.uned.grc.pfc.meteo.client.place.StationMapPlace;
@@ -106,6 +112,7 @@ public class MainActivityMapper implements ActivityMapper {
     */
    private void bind () {
       bindGeneralViewEvents ();
+      bindStationMapEvents ();
    }
    
    private void bindGeneralViewEvents () {
@@ -113,6 +120,23 @@ public class MainActivityMapper implements ActivityMapper {
          @Override
          public void onClick (ClickEvent event) {
             goToList ();
+         }
+      });
+   }
+
+   private void bindStationMapEvents () {
+      eventBus.addHandler (MapLoadedEvent.TYPE, new IMapLoadedEventHandler () {
+         
+         @Override
+         public void onMapLoaded (MapLoadedEvent event) {
+            //TODO obtain display rectangle
+            getRequestFactory (eventBus).getStationContext ().getStationsInArea (0.0, 0.0, 0.0, 0.0).fire (new Receiver <List <IStationProxy>> () {
+
+               @Override
+               public void onSuccess (List <IStationProxy> response) {
+                  stationMapView.renderStations (response);
+               }
+            });
          }
       });
    }

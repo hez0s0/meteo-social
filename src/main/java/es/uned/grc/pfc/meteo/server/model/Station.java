@@ -33,9 +33,6 @@ public class Station extends AbstractVersionable <Integer> {
    private Double latitude = null;
    private Double longitude = null;
    private Integer height = null;
-   private String zip = null;
-   private String city = null;
-   private String country = null;
    private Date lastCollectedPeriod = null;
    private Boolean own = false;
 
@@ -98,30 +95,6 @@ public class Station extends AbstractVersionable <Integer> {
    }
    public void setLongitude (Double longitude) {
       this.longitude = longitude;
-   }
-   
-   @Column
-   public String getZip () {
-      return zip;
-   }
-   public void setZip (String zip) {
-      this.zip = zip;
-   }
-
-   @Column
-   public String getCity () {
-      return city;
-   }
-   public void setCity (String city) {
-      this.city = city;
-   }
-
-   @Column
-   public String getCountry () {
-      return country;
-   }
-   public void setCountry (String country) {
-      this.country = country;
    }
    
    @Column
