@@ -10,10 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.uned.grc.pfc.meteo.client.util.DerivedUtils;
+import es.uned.grc.pfc.meteo.server.dto.DerivedRangeDTO;
 import es.uned.grc.pfc.meteo.server.dto.ObservationBlockDTO;
 import es.uned.grc.pfc.meteo.server.dto.VariableObservationsDTO;
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.RequestParam;
+import es.uned.grc.pfc.meteo.server.model.Station;
 import es.uned.grc.pfc.meteo.server.model.paged.PagedList;
 import es.uned.grc.pfc.meteo.server.model.paged.VariablePagedList;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
@@ -111,7 +114,52 @@ public class ObservationService {
          throw new RuntimeException ("Could not list observations. See server logs.");
       }
    }
-   
+
+   /**
+    * Obtains a list of derivedRange objects of given type referred to the given date 
+    */
+   public DerivedRangeDTO getDerivedInRange (ISharedConstants.DerivedRangeType derivedRangeType, Date searched, Integer stationId) {
+      Date [] range = new Date [2];
+      List <Observation> observations = null;
+      Station station = null;
+
+      try {
+         station = stationId == null ? stationPersistence.getOwnStation () : stationPersistence.findById (stationId);
+         
+         switch (derivedRangeType) {
+            case AFTERNOON:
+               range [0] = DerivedUtils.getAfternoonIni (searched);
+               range [1] = DerivedUtils.getAfternoonEnd (searched);
+               break;
+            case DAY:
+               range [0] = DerivedUtils.getDayIni (searched);
+               range [1] = DerivedUtils.getDayEnd (searched);
+               break;
+            case EVENING:
+               range [0] = DerivedUtils.getEveningIni (searched);
+               range [1] = DerivedUtils.getEveningEnd (searched);
+               break;
+            case MONTH:
+               range [0] = DerivedUtils.getMonthIni (searched);
+               range [1] = DerivedUtils.getMonthEnd (searched);
+               break;
+            case MORNING:
+               range [0] = DerivedUtils.getMorningIni (searched);
+               range [1] = DerivedUtils.getMorningEnd (searched);
+               break;
+            case NIGHT:
+               range [0] = DerivedUtils.getNightIni (searched);
+               range [1] = DerivedUtils.getNightEnd (searched);
+               break;
+         }
+         observations = observationPersistence.getDerivedInRange (range [0], range [1]);
+         
+         return observationServiceHelper.fillAndGroupAsRange (station, observations, range);
+      } catch (Exception e) {
+         logger.error ("Error listing derived observations in range", e);
+         throw new RuntimeException ("Could not list derived observations in range. See server logs.");
+      }
+   }
    /**
     * Obtain the start of the current day
     */

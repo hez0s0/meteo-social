@@ -22,6 +22,8 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 @Component
 public class QualityJob {
 
+   private static final int UNCONTROLLED_BLOCK = 20;
+
    protected static Logger logger = LoggerFactory.getLogger (QualityJob.class);
 
    @Autowired
@@ -45,7 +47,7 @@ public class QualityJob {
             if (station == null) {
                throw new RuntimeException ("unable to obtain own station, please review the system configuration");
             }
-            observations = observationPersistence.getUncontrolled ();
+            observations = observationPersistence.getUncontrolled (UNCONTROLLED_BLOCK);
             
             if (observations != null && !observations.isEmpty ()) {
                processQuality (station, observations);

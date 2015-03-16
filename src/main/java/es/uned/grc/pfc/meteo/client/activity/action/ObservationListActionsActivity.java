@@ -3,7 +3,6 @@ package es.uned.grc.pfc.meteo.client.activity.action;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import es.uned.grc.pfc.meteo.client.activity.AbstractBaseActivity;
@@ -47,7 +46,7 @@ public class ObservationListActionsActivity extends AbstractBaseActivity {
       registerHandler (observationListActionsView.getTableHandler (), new IActionHandler () {
          @Override
          public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
-            placeController.goTo (new ObservationListPlace (ObservationListPlace.Representation.TEXT));
+            placeController.goTo (new ObservationListPlace (ObservationListPlace.ObservationType.NORMAL, ObservationListPlace.Representation.TEXT));
             source.setCompleted ();
          }
       });
@@ -55,7 +54,7 @@ public class ObservationListActionsActivity extends AbstractBaseActivity {
       registerHandler (observationListActionsView.getGraphicsHandler (), new IActionHandler () {
          @Override
          public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
-            placeController.goTo (new ObservationListPlace (ObservationListPlace.Representation.GRAPHIC));
+            placeController.goTo (new ObservationListPlace (ObservationListPlace.ObservationType.NORMAL, ObservationListPlace.Representation.GRAPHIC));
             source.setCompleted ();
          }
       });
@@ -63,7 +62,7 @@ public class ObservationListActionsActivity extends AbstractBaseActivity {
       registerHandler (observationListActionsView.getDerivedHandler (), new IActionHandler () {
          @Override
          public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
-            Window.alert ("View derived not implemented");
+            placeController.goTo (new ObservationListPlace (ObservationListPlace.ObservationType.DERIVED, ObservationListPlace.Representation.TEXT));
             source.setCompleted ();
          }
       });

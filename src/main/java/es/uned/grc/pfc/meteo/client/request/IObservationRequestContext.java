@@ -8,12 +8,14 @@ import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.Service;
 
+import es.uned.grc.pfc.meteo.client.model.IDerivedRangeProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamFilterProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableObservationsProxy;
 import es.uned.grc.pfc.meteo.client.model.paged.IVariablePagedListProxy;
 import es.uned.grc.pfc.meteo.server.service.ObservationService;
+import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 import es.uned.grc.pfc.meteo.shared.locators.SpringServiceLocator;
 
 /**
@@ -31,7 +33,6 @@ public interface IObservationRequestContext extends RequestContext {
     * or by marking the own station flag !! 
     */
    Request <List <IObservationBlockProxy>> getObservationBlocks (IRequestParamProxy requestParam);
-
    /**
     * Obtains a map of observations for the given filter, grouped by variable, fit 
     * to be displayed, for example, in graphics. If a start and end date
@@ -50,4 +51,8 @@ public interface IObservationRequestContext extends RequestContext {
     * Obtain the start of the current day
     */
    Request <Date> getTodayStart ();
+   /**
+    * Obtains a list of derivedRange objects of given type referred to the given date 
+    */
+   Request <IDerivedRangeProxy> getDerivedInRange (ISharedConstants.DerivedRangeType derivedRangeType, Date searched, Integer stationId);
 }

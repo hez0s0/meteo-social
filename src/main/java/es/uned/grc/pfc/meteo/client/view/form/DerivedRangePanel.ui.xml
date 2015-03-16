@@ -1,0 +1,17 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+   xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+   xmlns:c="urn:import:com.google.gwt.user.cellview.client" 
+   ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+   ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator" 
+   ui:generateLocales="default">
+
+   <g:VerticalPanel>
+      <g:HTMLPanel>
+         <h3>
+            <g:Label ui:field="title"/>
+         </h3>
+      </g:HTMLPanel>
+      <c:DataGrid ui:field="observationDataGrid" pageSize="1000" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false" width="100%" />
+   </g:VerticalPanel>
+</ui:UiBinder>

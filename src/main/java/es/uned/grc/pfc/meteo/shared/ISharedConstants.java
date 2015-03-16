@@ -3,69 +3,72 @@ package es.uned.grc.pfc.meteo.shared;
 /**
  * Constants that are shared by both the client and the server.
  */
-public class ISharedConstants {
+public interface ISharedConstants {
    
    /** one day in milliseconds */
-   public static final long ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
+   long ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
    
    /** the URL to invoke to perform a logout */
-   public static final String LOGOUT_URL = "logout";
+   String LOGOUT_URL = "logout";
    /** the URL of the login page */
-   public static final String LOGIN_URL = "login.jsp";
+   String LOGIN_URL = "login.jsp";
 
-   public static final String SHARED_FULL_DATE_FORMAT = "yyyyMMddHHmmss";
-   public static final String SHARED_SHORT_DATE_FORMAT = "yyyyMMdd";
+   String SHARED_FULL_DATE_FORMAT = "yyyyMMddHHmmss";
+   String SHARED_SHORT_DATE_FORMAT = "yyyyMMdd";
 
-   public static final String OPEN_BRACKET = "[";
-   public static final String CLOSE_BRACKET = "]";
+   String OPEN_BRACKET = "[";
+   String CLOSE_BRACKET = "]";
    
-   public static final String VALIDATION_PATH_SEP = ".";
+   String VALIDATION_PATH_SEP = ".";
    
-   public static final String IMAGES_BASE_PATH = "images/";
-   public static final String ICONS_BASE_PATH = IMAGES_BASE_PATH + "icons/";
+   String IMAGES_BASE_PATH = "images/";
+   String ICONS_BASE_PATH = IMAGES_BASE_PATH + "icons/";
    
    /** intented to mark an active element in a mask */
-   public static final Character ACTIVE = '1';
+   Character ACTIVE = '1';
    /** intented to mark an inactive element in a mask */
-   public static final Character INACTIVE = '0';
+   Character INACTIVE = '0';
    
    /** separator in object graph string representations */
-   public static final String OBJECT_GRAPH_SEPARATOR = ".";
+   String OBJECT_GRAPH_SEPARATOR = ".";
    /** separator in object graph string representations in RE compatible form (for split, for example) */
-   public static final String OBJECT_GRAPH_SEPARATOR_RE = "\\.";
+   String OBJECT_GRAPH_SEPARATOR_RE = "\\.";
    /** separator for free text expressions that conform a list of words */
-   public static final String WORD_LIST_SEPARATOR = ",";
+   String WORD_LIST_SEPARATOR = ",";
    /** separator for free text words */
-   public static final String WORD_SEPARATOR = " ";
+   String WORD_SEPARATOR = " ";
    /** separator for free text expressions that conform a list of sentences */
-   public static final String SENTENCE_LIST_SEPARATOR = ";";
+   String SENTENCE_LIST_SEPARATOR = ";";
 
-   public static final String ID_LIST_ALTERNATIVE_SEPARATOR = "|";
-   public static final String ID_LIST_ALTERNATIVE_SEPARATOR_RE = "\\|";
+   String ID_LIST_ALTERNATIVE_SEPARATOR = "|";
+   String ID_LIST_ALTERNATIVE_SEPARATOR_RE = "\\|";
    
    /** the url to reach the user image servlet */
-   public static final String USER_IMAGE_SERVLET_URL = "%s/userImage";
+   String USER_IMAGE_SERVLET_URL = "%s/userImage";
    
    /** the url to reach an image within flags folder */
-   public static final String FLAG_IMAGE_URL = "%s/images/flags/%s.png";
+   String FLAG_IMAGE_URL = "%s/images/flags/%s.png";
 
-   public static final String PARAM_VALUE_SEP = "=";
-   public static final String PARAM_SEP = "&";
-   public static final String MULTIPLE_SEP = ";";
-   public static final String ENCODED_PARAM_SEP = "!!!";
+   String PARAM_VALUE_SEP = "=";
+   String PARAM_SEP = "&";
+   String MULTIPLE_SEP = ";";
+   String ENCODED_PARAM_SEP = "!!!";
    
    /** marks a sort field as special for sorting (custom sorting strategy on the persistence class) */
-   public static final String SPECIAL_ORDER_MARK ="#";
+   String SPECIAL_ORDER_MARK ="#";
    
-   public static final String DECIMAL_SEPARATOR = ".";
-   public static final String DECIMAL_SEPARATOR_RE = "\\.";
+   String DECIMAL_SEPARATOR = ".";
+   String DECIMAL_SEPARATOR_RE = "\\.";
    
    /** the filters that can be applied over stations */
-   public static enum StationFilter {NAME, COUNTRY, CITY, ZIP};
+   enum StationFilter {NAME, COUNTRY, CITY, ZIP};
    
    /** the filters that can be applied over observations */
-   public static enum ObservationFilter {OWN, STATION_ID, START_DATE, END_DATE, VARIABLE_IDS, MEASURED_ONLY, DERIVED_ONLY};
+   enum ObservationFilter {OWN, STATION_ID, START_DATE, END_DATE, VARIABLE_IDS, MEASURED_ONLY, DERIVED_ONLY};
    
    /** type of graphic to represent a variable */
-   public static enum GraphType {NONE, LINE, BAR, AREA, COLUMN};
+   enum GraphType {NONE, LINE, BAR, AREA, COLUMN};
+   
+   /** the type of derived variables that we want to seek, when searching for a range */
+   enum DerivedRangeType {MONTH, DAY, NIGHT, MORNING, AFTERNOON, EVENING};
 }

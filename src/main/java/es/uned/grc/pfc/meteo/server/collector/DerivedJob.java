@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.uned.grc.pfc.meteo.client.util.DerivedUtils;
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.Station;
 import es.uned.grc.pfc.meteo.server.model.Variable;
@@ -28,6 +29,8 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 @Component
 public class DerivedJob {
 
+   private static final int UNDERIVED_BLOCK = 20;
+   
    protected static Logger logger = LoggerFactory.getLogger (DerivedJob.class);
 
    private enum DeriveType {MINIMUM, MAXIMUM, AVERAGE};
@@ -57,10 +60,10 @@ public class DerivedJob {
             }
             station = checkInternalVariables (station);
             
-            observations = observationPersistence.getUnderived ();
+            observations = observationPersistence.getUnderived (UNDERIVED_BLOCK);
             
             if (observations != null && !observations.isEmpty ()) {
-               createUpdateDerived (station, observations);
+               createUpdateDerived (station, observations, new Date ());
             }
             logger.info ("Derived calculation processed for {} observations", observations != null ? observations.size () : 0);
          }
@@ -73,9 +76,8 @@ public class DerivedJob {
     * Generates (or updates) the derived variables
     */
    @Transactional (propagation = Propagation.REQUIRED)
-   private void createUpdateDerived (Station station, List <Observation> observations) {
+   private void createUpdateDerived (Station station, List <Observation> observations, Date now) {
       DeriveType deriveType = null;
-      Date now = new Date ();
       Date [] range = new Date [2];
       Map <String, List <Observation>> existingObservationsMap = new HashMap <String, List <Observation>> ();
       
@@ -88,104 +90,106 @@ public class DerivedJob {
                range [1] = null;
                //depending on the variable, calculate the deriveType and date range
                switch (variable.getAcronym ()) {
-                  case IServerConstants.HOUR_MINIMUM:
-                     deriveType = DeriveType.MINIMUM;
-                     range [0] = getHourIni (observation.getObserved ());
-                     range [1] = getHourEnd (observation.getObserved ());
-                     break;
-                  case IServerConstants.HOUR_MAXIMUM:
-                     deriveType = DeriveType.MAXIMUM;
-                     range [0] = getHourIni (observation.getObserved ());
-                     range [1] = getHourEnd (observation.getObserved ());
-                     break;
-                  case IServerConstants.HOUR_AVERAGE:
-                     deriveType = DeriveType.AVERAGE;
-                     range [0] = getHourIni (observation.getObserved ());
-                     range [1] = getHourEnd (observation.getObserved ());
-                     break;
-                  case IServerConstants.MORNING_MINIMUM:
-                     deriveType = DeriveType.MINIMUM;
-                     range [0] = getMorningIni (observation.getObserved ());
-                     range [1] = getMorningEnd (observation.getObserved ());
-                     break;
-                  case IServerConstants.MORNING_MAXIMUM:
-                     deriveType = DeriveType.MAXIMUM;
-                     range [0] = getMorningIni (observation.getObserved ());
-                     range [1] = getMorningEnd (observation.getObserved ());
-                     break;
-                  case IServerConstants.MORNING_AVERAGE:
-                     deriveType = DeriveType.AVERAGE;
-                     range [0] = getMorningIni (observation.getObserved ());
-                     range [1] = getMorningEnd (observation.getObserved ());
-                     break;
-                  case IServerConstants.AFTERNOON_MINIMUM:
-                     deriveType = DeriveType.MINIMUM;
-                     range [0] = getAfternoonIni (observation.getObserved ());
-                     range [1] = getAfternoonEnd (observation.getObserved ());
-                     break;
-                  case IServerConstants.AFTERNOON_MAXIMUM:
-                     deriveType = DeriveType.MAXIMUM;
-                     range [0] = getAfternoonIni (observation.getObserved ());
-                     range [1] = getAfternoonEnd (observation.getObserved ());
-                     break;
-                  case IServerConstants.AFTERNOON_AVERAGE:
-                     deriveType = DeriveType.AVERAGE;
-                     range [0] = getAfternoonIni (observation.getObserved ());
-                     range [1] = getAfternoonEnd (observation.getObserved ());
-                     break;
                   case IServerConstants.NIGHT_MINIMUM:
                      deriveType = DeriveType.MINIMUM;
-                     range [0] = getNightIni (observation.getObserved ());
-                     range [1] = getNightEnd (observation.getObserved ());
+                     range [0] = DerivedUtils.getNightIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getNightEnd (observation.getObserved ());
                      break;
                   case IServerConstants.NIGHT_MAXIMUM:
                      deriveType = DeriveType.MAXIMUM;
-                     range [0] = getNightIni (observation.getObserved ());
-                     range [1] = getNightEnd (observation.getObserved ());
+                     range [0] = DerivedUtils.getNightIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getNightEnd (observation.getObserved ());
                      break;
                   case IServerConstants.NIGHT_AVERAGE:
                      deriveType = DeriveType.AVERAGE;
-                     range [0] = getNightIni (observation.getObserved ());
-                     range [1] = getNightEnd (observation.getObserved ());
+                     range [0] = DerivedUtils.getNightIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getNightEnd (observation.getObserved ());
+                     break;
+                  case IServerConstants.MORNING_MINIMUM:
+                     deriveType = DeriveType.MINIMUM;
+                     range [0] = DerivedUtils.getMorningIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getMorningEnd (observation.getObserved ());
+                     break;
+                  case IServerConstants.MORNING_MAXIMUM:
+                     deriveType = DeriveType.MAXIMUM;
+                     range [0] = DerivedUtils.getMorningIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getMorningEnd (observation.getObserved ());
+                     break;
+                  case IServerConstants.MORNING_AVERAGE:
+                     deriveType = DeriveType.AVERAGE;
+                     range [0] = DerivedUtils.getMorningIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getMorningEnd (observation.getObserved ());
+                     break;
+                  case IServerConstants.AFTERNOON_MINIMUM:
+                     deriveType = DeriveType.MINIMUM;
+                     range [0] = DerivedUtils.getAfternoonIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getAfternoonEnd (observation.getObserved ());
+                     break;
+                  case IServerConstants.AFTERNOON_MAXIMUM:
+                     deriveType = DeriveType.MAXIMUM;
+                     range [0] = DerivedUtils.getAfternoonIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getAfternoonEnd (observation.getObserved ());
+                     break;
+                  case IServerConstants.AFTERNOON_AVERAGE:
+                     deriveType = DeriveType.AVERAGE;
+                     range [0] = DerivedUtils.getAfternoonIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getAfternoonEnd (observation.getObserved ());
+                     break;
+                  case IServerConstants.EVENING_MINIMUM:
+                     deriveType = DeriveType.MINIMUM;
+                     range [0] = DerivedUtils.getEveningIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getEveningEnd (observation.getObserved ());
+                     break;
+                  case IServerConstants.EVENING_MAXIMUM:
+                     deriveType = DeriveType.MAXIMUM;
+                     range [0] = DerivedUtils.getEveningIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getEveningEnd (observation.getObserved ());
+                     break;
+                  case IServerConstants.EVENING_AVERAGE:
+                     deriveType = DeriveType.AVERAGE;
+                     range [0] = DerivedUtils.getEveningIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getEveningEnd (observation.getObserved ());
                      break;
                   case IServerConstants.DAY_MINIMUM:
                      deriveType = DeriveType.MINIMUM;
-                     range [0] = getDayIni (observation.getObserved ());
-                     range [1] = getDayEnd (observation.getObserved ());
+                     range [0] = DerivedUtils.getDayIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getDayEnd (observation.getObserved ());
                      break;
                   case IServerConstants.DAY_MAXIMUM:
                      deriveType = DeriveType.MAXIMUM;
-                     range [0] = getDayIni (observation.getObserved ());
-                     range [1] = getDayEnd (observation.getObserved ());
+                     range [0] = DerivedUtils.getDayIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getDayEnd (observation.getObserved ());
                      break;
                   case IServerConstants.DAY_AVERAGE:
                      deriveType = DeriveType.AVERAGE;
-                     range [0] = getDayIni (observation.getObserved ());
-                     range [1] = getDayEnd (observation.getObserved ());
+                     range [0] = DerivedUtils.getDayIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getDayEnd (observation.getObserved ());
                      break;
                   case IServerConstants.MONTH_MINIMUM:
                      deriveType = DeriveType.MINIMUM;
-                     range [0] = getMonthIni (observation.getObserved ());
-                     range [1] = getMonthEnd (observation.getObserved ());
+                     range [0] = DerivedUtils.getMonthIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getMonthEnd (observation.getObserved ());
                      break;
                   case IServerConstants.MONTH_MAXIMUM:
                      deriveType = DeriveType.MAXIMUM;
-                     range [0] = getMonthIni (observation.getObserved ());
-                     range [1] = getMonthEnd (observation.getObserved ());
+                     range [0] = DerivedUtils.getMonthIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getMonthEnd (observation.getObserved ());
                      break;
                   case IServerConstants.MONTH_AVERAGE:
                      deriveType = DeriveType.AVERAGE;
-                     range [0] = getMonthIni (observation.getObserved ());
-                     range [1] = getMonthEnd (observation.getObserved ());
+                     range [0] = DerivedUtils.getMonthIni (observation.getObserved ());
+                     range [1] = DerivedUtils.getMonthEnd (observation.getObserved ());
                      break;
                }
-            }
-            
-            //actually create and save the derived observation
-            if (range [0] != null && range [1] != null) {
-               derive (observation, variable, range, deriveType, existingObservationsMap, now);
+               
+               //actually create and save the derived observation
+               if (range [0] != null && range [1] != null && isInRange (observation, range)) {
+                  derive (observation, variable, range, deriveType, existingObservationsMap, now);
+               }
             }
          }
+         observation.setDerived (now);
+         observation = observationPersistence.saveOrMerge (observation);
       }
    }
 
@@ -194,18 +198,18 @@ public class DerivedJob {
     */
    @Transactional (propagation = Propagation.REQUIRED)
    private Station checkInternalVariables (Station station) {
-      checkInternalVariable (station, IServerConstants.HOUR_MINIMUM, "Hour minimum", "Minimum value within the hour", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.HOUR_AVERAGE, "Hour average", "Average value within the hour", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.HOUR_MAXIMUM, "Hour maximum", "Maximum value within the hour", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.MORNING_MINIMUM, "Morning minimum", "Minimum value within the morning (06-14)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.MORNING_AVERAGE, "Morning average", "Average value within the morning (06-14)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.MORNING_MAXIMUM, "Morning maximum", "Maximum value within the morning (06-14)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.AFTERNOON_MINIMUM, "Afternoon minimum", "Minimum value within the afternoon (14-22)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.AFTERNOON_AVERAGE, "Afternoon average", "Average value within the afternoon (14-22)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.AFTERNOON_MAXIMUM, "Afternoon maximum", "Maximum value within the afternoon (14-22)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.NIGHT_MINIMUM, "Night minimum", "Minimum value within the night (22-06)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.NIGHT_AVERAGE, "Night average", "Average value within the night (22-06)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.NIGHT_MAXIMUM, "Night maximum", "Maximum value within the night (22-06)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.NIGHT_MINIMUM, "Night minimum", "Minimum value within the night (00-06)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.NIGHT_AVERAGE, "Night average", "Average value within the night (00-06)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.NIGHT_MAXIMUM, "Night maximum", "Maximum value within the night (00-06)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.MORNING_MINIMUM, "Morning minimum", "Minimum value within the morning (06-12)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.MORNING_AVERAGE, "Morning average", "Average value within the morning (06-12)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.MORNING_MAXIMUM, "Morning maximum", "Maximum value within the morning (06-12)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.AFTERNOON_MINIMUM, "Afternoon minimum", "Minimum value within the afternoon (12-18)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.AFTERNOON_AVERAGE, "Afternoon average", "Average value within the afternoon (12-18)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.AFTERNOON_MAXIMUM, "Afternoon maximum", "Maximum value within the afternoon (12-18)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.EVENING_MINIMUM, "Evening minimum", "Minimum value within the evening (18-00)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.EVENING_AVERAGE, "Evening average", "Average value within the evening (18-00)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.EVENING_MAXIMUM, "Evening maximum", "Maximum value within the evening (18-00)", 0, 0, ISharedConstants.GraphType.NONE);
       checkInternalVariable (station, IServerConstants.DAY_MINIMUM, "Day minimum", "Minimum value within the day", 0, 0, ISharedConstants.GraphType.NONE);
       checkInternalVariable (station, IServerConstants.DAY_AVERAGE, "Day average", "Average value within the day", 0, 0, ISharedConstants.GraphType.NONE);
       checkInternalVariable (station, IServerConstants.DAY_MAXIMUM, "Day maximum", "Maximum value within the day", 0, 0, ISharedConstants.GraphType.NONE);
@@ -243,46 +247,97 @@ public class DerivedJob {
       List <Observation> rangeObservations = null;
       Observation derivedObservation = null;
       SimpleDateFormat sdf = new SimpleDateFormat ("yyyyMMdd");
-      String monthKey = sdf.format (observation.getObserved ());
-      List <Observation> monthObservations = existingObservationsMap.get (monthKey);
+      String monthObservedKey = sdf.format (observation.getObserved ());
+      String monthDerivedKey = sdf.format (observation.getObserved ()) + "_range";
+      List <Observation> monthObservations = existingObservationsMap.get (monthObservedKey);
+      List <Observation> monthDerivedObservations = existingObservationsMap.get (monthDerivedKey);
       
       if (monthObservations == null) {
-         monthObservations = getObservations (getMonthIni (observation.getObserved ()), getMonthEnd (observation.getObserved ()));
-         existingObservationsMap.put (monthKey, monthObservations);
+         monthObservations = observationPersistence.getObservedInRange (DerivedUtils.getMonthIni (observation.getObserved ()), DerivedUtils.getMonthEnd (observation.getObserved ()));
+         existingObservationsMap.put (monthObservedKey, monthObservations);
       }
-      rangeObservations = getSubRange (observation, monthObservations, range);
+      if (monthDerivedObservations == null) {
+         monthDerivedObservations = observationPersistence.getDerivedInRange (DerivedUtils.getMonthIni (observation.getObserved ()), DerivedUtils.getMonthEnd (observation.getObserved ()));
+         existingObservationsMap.put (monthDerivedKey, monthDerivedObservations);
+      }
       
-      derivedObservation = findDerived (observation, variable, range);
+      rangeObservations = getSubRange (observation, monthObservations, range);
+      derivedObservation = findDerived (monthDerivedObservations, observation, variable, range);
       
       if (derivedObservation == null) {
          derivedObservation = new Observation ();
-         //TODO all other attributes
+         derivedObservation.setVariable (variable);
+         derivedObservation.setStation (observation.getStation ());
+         derivedObservation.setRangeIni (range [0]);
+         derivedObservation.setRangeEnd (range [1]);
+         derivedObservation.setDerivedVariable (observation.getVariable ());
+         derivedObservation.setReceived (now);
       }
+      derivedObservation.setObserved (now);
       derivedObservation.setValue (calculate (rangeObservations, deriveType));
       derivedObservation = observationPersistence.saveOrMerge (derivedObservation);
-
-      observation.setDerived (now);
-      observation = observationPersistence.saveOrMerge (observation);
    }
    
    private String calculate (List <Observation> rangeObservations, DeriveType deriveType) {
-      // TODO Auto-generated method stub
-      return null;
+      Double result = null;
+      Double value = null;
+      double total = 0.0;
+      for (Observation observation : rangeObservations) {
+         value = getAsDouble (observation.getValue ());
+         switch (deriveType) {
+            case MINIMUM:
+               if ( (value != null) && (result == null || value < result) ) {
+                  result = value;
+               }
+               break;
+            case MAXIMUM:
+               if ( (value != null) && (result == null || value < result) ) {
+                  result = value;
+               }
+               break;
+            case AVERAGE:
+               if (value != null) {
+                  total += value;
+                  result = total / rangeObservations.size ();
+               }
+               break;
+         }
+      }
+      return result != null ? String.valueOf (result) : null;
    }
 
-   private Observation findDerived (Observation observation, Variable variable, Date [] range) {
-      // TODO Auto-generated method stub
+   private Double getAsDouble (String value) {
+      try {
+         return Double.parseDouble (value);
+      } catch (Exception e) {
+         return null;
+      }
+   }
+
+   private Observation findDerived (List <Observation> monthObservations, Observation observation, Variable variable, Date [] range) {
+      for (Observation monthObservation : monthObservations) {
+         if (monthObservation.getDerivedVariable () != null
+               && monthObservation.getVariable ().getId ().equals (variable.getId ())
+               && monthObservation.getRangeIni ().getTime () == range [0].getTime () 
+               && monthObservation.getRangeEnd ().getTime () == range [1].getTime ()
+               && monthObservation.getVariable ().getId ().equals (variable.getId ()) 
+               && monthObservation.getDerivedVariable ().getId ().equals (observation.getVariable ().getId ())  ) {
+            return monthObservation;
+         }
+      }
       return null;
    }
 
    private List <Observation> getSubRange (Observation observation, List <Observation> monthObservations, Date [] range) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   private List <Observation> getObservations (Date monthIni, Date monthEnd) {
-      // TODO Auto-generated method stub
-      return new ArrayList <Observation> (0);
+      List <Observation> result = new ArrayList <Observation> ();
+      
+      for (Observation monthObservation : monthObservations) {
+         if (observation.getVariable ().getId ().equals (monthObservation.getVariable ().getId ()) && isInRange (monthObservation, range)) {
+            result.add (monthObservation);
+         }
+      }
+      
+      return result;
    }
 
    private Variable findInternalByAcronyn (String acronym, Set <Variable> variables) {
@@ -294,63 +349,9 @@ public class DerivedJob {
       return null;
    }
 
-   private Date getHourEnd (Date observed) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   private Date getHourIni (Date observed) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   private Date getMorningEnd (Date observed) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   private Date getMorningIni (Date observed) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   private Date getAfternoonEnd (Date observed) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   private Date getAfternoonIni (Date observed) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   private Date getNightEnd (Date observed) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   private Date getNightIni (Date observed) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   private Date getDayEnd (Date observed) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   private Date getDayIni (Date observed) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   private Date getMonthEnd (Date observed) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   private Date getMonthIni (Date observed) {
-      // TODO Auto-generated method stub
-      return null;
+   private boolean isInRange (Observation observation, Date [] range) {
+      return (observation.getDerivedVariable () == null 
+              && observation.getObserved ().getTime () >= range [0].getTime () 
+              && observation.getObserved ().getTime () <= range [1].getTime ());
    }
 }

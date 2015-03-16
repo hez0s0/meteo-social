@@ -32,6 +32,8 @@ public class Observation extends AbstractVersionable <Integer> {
    private Date sent = null;
    private Date controlled = null;
    private Date derived = null;
+   private Date rangeIni = null;
+   private Date rangeEnd = null;
    private String warning = null;
    private Boolean quality = null;
    private Variable derivedVariable = null;
@@ -141,5 +143,21 @@ public class Observation extends AbstractVersionable <Integer> {
    }
    public void setDerivedVariable (Variable derivedVariable) {
       this.derivedVariable = derivedVariable;
+   }
+   
+   @Column
+   public Date getRangeIni () {
+      return rangeIni;
+   }
+   public void setRangeIni (Date rangeIni) {
+      this.rangeIni = rangeIni;
+   }
+   
+   @Column
+   public Date getRangeEnd () {
+      return rangeEnd;
+   }
+   public void setRangeEnd (Date rangeEnd) {
+      this.rangeEnd = rangeEnd;
    }
 }

@@ -12,17 +12,25 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
  */
 public class ObservationListPlace extends AbstractPlace {
 
+   public enum ObservationType {NORMAL, DERIVED};
    public enum Representation {TEXT, GRAPHIC};
-   
+
    private static final String TYPE_PARAM = "type";
+   private static final String REPRESENTATION_PARAM = "representation";
    
+   private ObservationType observationType = null;
    private Representation representation = null;
 
    public ObservationListPlace () {
-      this.representation = Representation.TEXT;
+      this (ObservationType.NORMAL, Representation.TEXT);
    }
    
    public ObservationListPlace (Representation representation) {
+      this (ObservationType.NORMAL, representation);
+   }
+   
+   public ObservationListPlace (ObservationType observationType, Representation representation) {
+      this.observationType = observationType;
       this.representation = representation;
    }
    
@@ -37,7 +45,16 @@ public class ObservationListPlace extends AbstractPlace {
       @Override
       public ObservationListPlace getPlace (String token) {
          Map <String, String> params = simpleParse (token);
-         String repString = params.get (TYPE_PARAM);
+         String obsTypeString = params.get (TYPE_PARAM);
+         ObservationType obsTypeParam = ObservationType.NORMAL;
+         if (!PortableStringUtils.isEmpty (obsTypeString)) {
+            try {
+               obsTypeParam = ObservationType.valueOf (obsTypeString);
+            } catch (Exception e) {
+               //silent
+            }
+         }
+         String repString = params.get (REPRESENTATION_PARAM);
          Representation repParam = Representation.TEXT;
          if (!PortableStringUtils.isEmpty (repString)) {
             try {
@@ -46,7 +63,7 @@ public class ObservationListPlace extends AbstractPlace {
                //silent
             }
          }
-         return new ObservationListPlace (repParam);
+         return new ObservationListPlace (obsTypeParam, repParam);
       }
 
       /**
@@ -54,7 +71,8 @@ public class ObservationListPlace extends AbstractPlace {
        */
       @Override
       public String getToken (ObservationListPlace place) {
-         return TYPE_PARAM + ISharedConstants.PARAM_VALUE_SEP + place.getRepresentation ().toString ();
+         return TYPE_PARAM + ISharedConstants.PARAM_VALUE_SEP + place.getObservationType ().toString ()
+                + ISharedConstants.PARAM_SEP + REPRESENTATION_PARAM + ISharedConstants.PARAM_VALUE_SEP + place.getRepresentation ().toString ();
       }
    }
 
@@ -64,5 +82,13 @@ public class ObservationListPlace extends AbstractPlace {
 
    public void setRepresentation (Representation representation) {
       this.representation = representation;
+   }
+
+   public ObservationType getObservationType () {
+      return observationType;
+   }
+
+   public void setObservationType (ObservationType observationType) {
+      this.observationType = observationType;
    }
 }

@@ -39,6 +39,7 @@ import com.google.gwt.visualization.client.visualizations.ColumnChart;
 import com.google.gwt.visualization.client.visualizations.LineChart;
 import com.google.inject.Inject;
 
+import es.uned.grc.pfc.meteo.client.model.IDerivedRangeProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableObservationsProxy;
@@ -46,9 +47,11 @@ import es.uned.grc.pfc.meteo.client.model.IVariableProxy;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractPage;
+import es.uned.grc.pfc.meteo.client.view.form.DerivedRangePanel;
 import es.uned.grc.pfc.meteo.client.view.table.IndexedObservationColumn;
 import es.uned.grc.pfc.meteo.client.view.util.ColumnAppender;
 import es.uned.grc.pfc.meteo.client.view.widget.suggest.impl.VariableSuggestInputListBox;
+import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
 
 public class ObservationListViewImpl extends AbstractPage implements IObservationListView {
    interface ObservationListViewUiBinder extends UiBinder <HTMLPanel, ObservationListViewImpl> {
@@ -92,6 +95,8 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    protected Panel textPanel = null;
    @UiField
    protected Panel graphPanel = null;
+   @UiField
+   protected Panel derivedPanel = null;
 
    public static final ProvidesKey <IObservationBlockProxy> keyProvider = new ProvidesKey <IObservationBlockProxy> () {
       @Override
@@ -226,6 +231,11 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    }
 
    @Override
+   public void setDerivedVisible (boolean visible) {
+      derivedPanel.setVisible (visible);
+   }
+
+   @Override
    public void generateGraphics (final List <IVariableObservationsProxy> variableObservations) {
       graphPanel.clear ();
 
@@ -327,5 +337,18 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
          data.setValue (row++, 1, observation.getValue ());
       }
       return data;
+   }
+
+   @Override
+   public void appendDerived (DerivedRangeType derivedRangeType, IDerivedRangeProxy derivedRange) {
+      DerivedRangePanel panel = GWT.create (DerivedRangePanel.class);
+      panel.setInput (derivedRangeType, derivedRange);
+      derivedPanel.add (panel);
+   }
+
+   @Override
+   public void clear () {
+      derivedPanel.clear ();
+      graphPanel.clear ();
    }
 }

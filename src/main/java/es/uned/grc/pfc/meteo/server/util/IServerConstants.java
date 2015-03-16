@@ -1,60 +1,76 @@
 package es.uned.grc.pfc.meteo.server.util;
 
-
-public class IServerConstants {
-   public static final String SERVICE_EXCEPTION_KEY = "serviceException";
+public interface IServerConstants {
+   String SERVICE_EXCEPTION_KEY = "serviceException";
    
-   public static final String VALIDATION_KEY = "validation";
+   String VALIDATION_KEY = "validation";
 
    /** size of buffer to be used on a general basis */
-   public static final int BUF_SIZE = 1024 * 1024;
+   int BUF_SIZE = 1024 * 1024;
    
    /** convenience variable */
-   public static final long ONE_MINUTE = 60 * 1000;
+   long ONE_MINUTE = 60 * 1000;
    
    /** time between executions of the collector, in milliseconds */
-   public static final long COLLECTION_POLLING_TIME = 60000;
+   long COLLECTION_POLLING_TIME = 60000;
    
    /** time between executions of the quality control, in milliseconds */
-   public static final long QUALITY_POLLING_TIME = 60000;
+   long QUALITY_POLLING_TIME = 60000;
 
    /** time between executions of the derived calculation job, in milliseconds */
-   public static final long DERIVED_POLLING_TIME = 60000;
+   long DERIVED_POLLING_TIME = 60000;
+
+   /** start hour of the night period */
+   int NIGHT_START_HOUR = 0;
+   /** end hour of the night period */
+   int NIGHT_END_HOUR = 6;
+   /** start hour of the morning period */
+   int MORNING_START_HOUR = 6;
+   /** end hour of the morning period */
+   int MORNING_END_HOUR = 12;
+   /** start hour of the afternoon period */
+   int AFTERNOON_START_HOUR = 12;
+   /** end hour of the afternoon period */
+   int AFTERNOON_END_HOUR = 18;
+   /** start hour of the evening period */
+   int EVENING_START_HOUR = 18;
+   /** end hour of the evening period */
+   int EVENING_END_HOUR = 24;
    
-   /** derived variable: minimum in the hour */
-   public static final String HOUR_MINIMUM = "HourMin";
-   /** derived variable: average in the hour */
-   public static final String HOUR_AVERAGE = "HourAvg";
-   /** derived variable: maximum in the hour */
-   public static final String HOUR_MAXIMUM = "HourMax";
+   /** derived variable: minimum in the night */
+   String NIGHT_MINIMUM = "NightMin";
+   /** derived variable: average in the night */
+   String NIGHT_AVERAGE = "NightAvg";
+   /** derived variable: maximum in the night */
+   String NIGHT_MAXIMUM = "NightMax";
    /** derived variable: minimum in the morning */
-   public static final String MORNING_MINIMUM = "MorningMin";
+   String MORNING_MINIMUM = "MorningMin";
    /** derived variable: average in the morning */
-   public static final String MORNING_AVERAGE = "MorningAvg";
+   String MORNING_AVERAGE = "MorningAvg";
    /** derived variable: maximum in the morning */
-   public static final String MORNING_MAXIMUM = "MorningMax";
+   String MORNING_MAXIMUM = "MorningMax";
    /** derived variable: minimum in the afternoon */
-   public static final String AFTERNOON_MINIMUM = "AfternoonMin";
+   String AFTERNOON_MINIMUM = "AfternoonMin";
    /** derived variable: average in the afternoon */
-   public static final String AFTERNOON_AVERAGE = "AfternoonAvg";
+   String AFTERNOON_AVERAGE = "AfternoonAvg";
    /** derived variable: maximum in the afternoon */
-   public static final String AFTERNOON_MAXIMUM = "AfternoonMax";
+   String AFTERNOON_MAXIMUM = "AfternoonMax";
    /** derived variable: minimum in the evening */
-   public static final String NIGHT_MINIMUM = "EveningMin";
+   String EVENING_MINIMUM = "EveningMin";
    /** derived variable: average in the evening */
-   public static final String NIGHT_AVERAGE = "EveningAvg";
+   String EVENING_AVERAGE = "EveningAvg";
    /** derived variable: maximum in the evening */
-   public static final String NIGHT_MAXIMUM = "EveningMax";
+   String EVENING_MAXIMUM = "EveningMax";
    /** derived variable: minimum in the day */
-   public static final String DAY_MINIMUM = "DayMin";
+   String DAY_MINIMUM = "DayMin";
    /** derived variable: average in the day */
-   public static final String DAY_AVERAGE = "DayAvg";
+   String DAY_AVERAGE = "DayAvg";
    /** derived variable: maximum in the day */
-   public static final String DAY_MAXIMUM = "DayMax";
+   String DAY_MAXIMUM = "DayMax";
    /** derived variable: minimum in the month */
-   public static final String MONTH_MINIMUM = "MonthMin";
+   String MONTH_MINIMUM = "MonthMin";
    /** derived variable: average in the month */
-   public static final String MONTH_AVERAGE = "MonthAvg";
+   String MONTH_AVERAGE = "MonthAvg";
    /** derived variable: maximum in the month */
-   public static final String MONTH_MAXIMUM = "MonthMax";
+   String MONTH_MAXIMUM = "MonthMax";
 }

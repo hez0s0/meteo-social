@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.uned.grc.pfc.meteo.server.collector.station.IStationPlugin;
+import es.uned.grc.pfc.meteo.server.dto.DerivedRangeDTO;
+import es.uned.grc.pfc.meteo.server.dto.DerivedVariableDTO;
 import es.uned.grc.pfc.meteo.server.dto.ObservationBlockDTO;
 import es.uned.grc.pfc.meteo.server.dto.VariableObservationsDTO;
 import es.uned.grc.pfc.meteo.server.model.Observation;
@@ -259,5 +261,37 @@ public class ObservationServiceHelper {
       public int compare (Observation o1, Observation o2) {
          return new Integer (o1.getVariable ().getPosition ()).compareTo (new Integer (o2.getVariable ().getPosition ()));
       }
+   }
+   
+   public DerivedRangeDTO fillAndGroupAsRange (Station station, List <Observation> observations, Date [] range) {
+      List <DerivedVariableDTO> derivedVariableDTOs = new ArrayList <DerivedVariableDTO> ();
+      List <Variable> derivedVariables = null;
+      Map <String, List <Observation>> groupedRange = new HashMap <String, List <Observation>> ();
+      DerivedRangeDTO result = new DerivedRangeDTO ();
+      SimpleDateFormat sdf = new SimpleDateFormat ("yyyyMMddHH");
+      String key = null;
+      
+      //fill all the variables (observed)
+      derivedVariables = new ArrayList <Variable> (variablePersistence.getStationVariables (null, station.getId (), false, true));
+      
+      //group by range
+      for (Observation observation : observations) {
+         key = sdf.format (observation.getRangeIni ()) + "_" + sdf.format (observation.getRangeEnd ());
+         
+         if (groupedRange.get (key) == null) {
+            groupedRange.put (key, new ArrayList <Observation> ());
+         }
+         groupedRange.get (key).add (observation);
+      }
+
+      //fill all the variables (derived)
+      
+      //build the result object
+      result.setStation (station);
+      result.setIni (range [0]);
+      result.setEnd (range [1]);
+      result.setDerivedVariables (derivedVariableDTOs);
+      
+      return result;
    }
 }

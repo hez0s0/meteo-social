@@ -93,17 +93,43 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
 
    @SuppressWarnings ("unchecked")
    @Override
-   public List <Observation> getUncontrolled () {
+   public List <Observation> getUncontrolled (int max) {
+      if (max <= 0) {
+         max = Integer.MAX_VALUE;
+      }
       return getBaseCriteria ().add (Restrictions.isNull ("quality"))
+                               .add (Restrictions.isNull ("rangeIni"))
+                               .addOrder (Order.asc ("observed"))
+                               .setMaxResults (max)
+                               .list ();
+   }
+
+   @SuppressWarnings ("unchecked")
+   @Override
+   public List <Observation> getUnderived (int max) {
+      if (max <= 0) {
+         max = Integer.MAX_VALUE;
+      }
+      return getBaseCriteria ().add (Restrictions.isNull ("derived"))
+                               .add (Restrictions.isNull ("rangeIni"))
+                               .addOrder (Order.asc ("observed"))
+                               .setMaxResults (max)
+                               .list ();
+   }
+
+   @SuppressWarnings ("unchecked")
+   @Override
+   public List <Observation> getObservedInRange (Date ini, Date end) {
+      return getBaseCriteria ().add (Restrictions.between ("observed", ini, end))
                                .addOrder (Order.asc ("observed"))
                                .list ();
    }
 
    @SuppressWarnings ("unchecked")
    @Override
-   public List <Observation> getUnderived () {
-      return getBaseCriteria ().add (Restrictions.isNull ("derived"))
-                               .addOrder (Order.asc ("observed"))
+   public List <Observation> getDerivedInRange (Date ini, Date end) {
+      return getBaseCriteria ().add (Restrictions.between ("rangeIni", ini, end))
+                               .add (Restrictions.between ("rangeEnd", ini, end))
                                .list ();
    }
 }

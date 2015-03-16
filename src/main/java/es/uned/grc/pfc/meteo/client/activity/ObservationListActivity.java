@@ -17,16 +17,19 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 import es.uned.grc.pfc.meteo.client.event.MessageChangeEvent;
+import es.uned.grc.pfc.meteo.client.model.IDerivedRangeProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamFilterProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableObservationsProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableProxy;
 import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
+import es.uned.grc.pfc.meteo.client.place.ObservationListPlace.ObservationType;
 import es.uned.grc.pfc.meteo.client.request.IObservationRequestContext;
 import es.uned.grc.pfc.meteo.client.util.PortableStringUtils;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
+import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
 
 public class ObservationListActivity extends AbstractAsyncDataActivity <IObservationBlockProxy, IObservationListView, ObservationListPlace> {
 
@@ -59,6 +62,8 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
 
       listView.setTextVisible (false);
       listView.setGraphVisible (false);
+      listView.setDerivedVisible (false);
+      listView.clear ();
       
       registerHandler (listView.getSearchHandler (), new ClickHandler () {
          @Override
@@ -133,7 +138,25 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
          requestParamProxy.setAscending (sortList.get (0).isAscending ());
       }
 
-      if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) {
+      if (listPlace.getObservationType ().equals (ObservationType.DERIVED)) {
+         //search for derived variables
+         for (final DerivedRangeType derivedRangeType : DerivedRangeType.values ()) {
+            observationRequestContext.getDerivedInRange (derivedRangeType, listView.getStartDate (), null)
+                                     .with ("station", "variables", "variables.variable")
+                                     .fire (new Receiver <IDerivedRangeProxy> () {
+               @Override
+               public void onSuccess (IDerivedRangeProxy response) {
+                  listView.setDerivedVisible (true);
+                  listView.appendDerived (derivedRangeType, response);
+               }
+      
+               @Override
+               public void onFailure (ServerFailure serverFailure) {
+                  eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Derived Observation"), serverFailure));
+               }
+            });
+         }
+      } else if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) {
          //search for table representation
          observationRequestContext.getObservationBlocks (requestParamProxy)
                                   .with ("station", "observations", "observations.variable")
