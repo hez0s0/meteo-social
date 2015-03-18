@@ -141,6 +141,18 @@ public class ObservationServiceHelper {
       return observation;
    }
 
+   private Observation createEmptyObservation (Date rangeIni, Date rangeEnd, Variable variable, Variable derivedVariable, Station station) {
+      Observation observation = new Observation ();
+      
+      observation.setStation (station);
+      observation.setVariable (variable);
+      observation.setRangeIni (rangeIni);
+      observation.setRangeEnd (rangeEnd);
+      observation.setDerivedVariable (derivedVariable);
+      
+      return observation;
+   }
+
    private Observation findObservation (List <Observation> observations, long observed, int variableId) {
       for (Observation observation : observations) {
          if (observation.getObserved ().getTime () == observed && observation.getVariable ().getId () == variableId) {
@@ -150,6 +162,17 @@ public class ObservationServiceHelper {
       return null;
    }
 
+   private Observation findDerivedObservation (List <Observation> observations, int variableId, int originalVariableId) {
+      for (Observation observation : observations) {
+         if (observation.getVariable ().getId () == variableId 
+               && observation.getDerivedVariable () != null 
+               && observation.getDerivedVariable ().getId () == originalVariableId) {
+            return observation;
+         }
+      }
+      return null;
+   }
+   
    private Date getStartDate (RequestParam requestParam) throws ParseException {
       String value = findFilterValue (requestParam, ISharedConstants.ObservationFilter.START_DATE);
       return !StringUtils.isEmpty (value) ? new SimpleDateFormat (ISharedConstants.SHARED_SHORT_DATE_FORMAT).parse (value) : null;
@@ -263,35 +286,47 @@ public class ObservationServiceHelper {
       }
    }
    
-   public DerivedRangeDTO fillAndGroupAsRange (Station station, List <Observation> observations, Date [] range) {
-      List <DerivedVariableDTO> derivedVariableDTOs = new ArrayList <DerivedVariableDTO> ();
-      List <Variable> derivedVariables = null;
-      Map <String, List <Observation>> groupedRange = new HashMap <String, List <Observation>> ();
-      DerivedRangeDTO result = new DerivedRangeDTO ();
-      SimpleDateFormat sdf = new SimpleDateFormat ("yyyyMMddHH");
-      String key = null;
+   public DerivedRangeDTO fillAndGroupAsRange (Station station, 
+                                               List <Observation> observations, 
+                                               Date [] range, 
+                                               Variable minimum,
+                                               Variable average,
+                                               Variable maximum) {
+      DerivedVariableDTO derivedVariableDTO = null;
+      List <Variable> variables = null;
+      List <DerivedVariableDTO> derivedVariableDTOs = null;
+      DerivedRangeDTO result = null;
       
-      //fill all the variables (observed)
-      derivedVariables = new ArrayList <Variable> (variablePersistence.getStationVariables (null, station.getId (), false, true));
+      //find all the observed variables
+      variables = new ArrayList <Variable> (variablePersistence.getStationVariables (null, station.getId (), true, false));
       
-      //group by range
-      for (Observation observation : observations) {
-         key = sdf.format (observation.getRangeIni ()) + "_" + sdf.format (observation.getRangeEnd ());
-         
-         if (groupedRange.get (key) == null) {
-            groupedRange.put (key, new ArrayList <Observation> ());
-         }
-         groupedRange.get (key).add (observation);
+      //build the results for every observed variable
+      derivedVariableDTOs = new ArrayList <DerivedVariableDTO> (variables.size ());
+      for (Variable variable : variables) {
+         derivedVariableDTO = new DerivedVariableDTO ();
+         derivedVariableDTO.setVariable (variable);
+         derivedVariableDTO.setMinimum (getDerivedObservation (range, station, observations, variable, minimum).getValue ());
+         derivedVariableDTO.setAverage (getDerivedObservation (range, station, observations, variable, average).getValue ());
+         derivedVariableDTO.setMaximum (getDerivedObservation (range, station, observations, variable, maximum).getValue ());
+         derivedVariableDTOs.add (derivedVariableDTO);
       }
-
-      //fill all the variables (derived)
       
       //build the result object
+      result = new DerivedRangeDTO ();
       result.setStation (station);
       result.setIni (range [0]);
       result.setEnd (range [1]);
       result.setDerivedVariables (derivedVariableDTOs);
       
       return result;
+   }
+
+   private Observation getDerivedObservation (Date [] range, Station station, List<Observation> observations, Variable variable, Variable internalVariable) {
+      Observation observation = findDerivedObservation (observations, internalVariable.getId (), variable.getId ());
+      if (observation == null) {
+         //this derivation did not exist, we must create a dummy version
+         observation = createEmptyObservation (range [0], range [1], internalVariable, variable, station);
+      }
+      return observation;
    }
 }

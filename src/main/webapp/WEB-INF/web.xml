@@ -33,7 +33,7 @@
       <servlet-class>es.uned.grc.pfc.meteo.server.servlet.CustomRequestFactoryServlet</servlet-class>
       <init-param>
          <param-name>logAudit</param-name>
-         <param-value>false</param-value>
+         <param-value>true</param-value>
       </init-param>
       <init-param>
          <param-name>logTime</param-name>

@@ -53,7 +53,7 @@ public class DerivedRangePanel extends Composite {
 
    public void setInput (DerivedRangeType derivedRangeType, IDerivedRangeProxy derivedRange) {
       DateTimeFormat df = DateTimeFormat.getFormat (PredefinedFormat.DATE_TIME_SHORT);
-      title.setText (derivedRangeType.toString () + " (" + df.format (derivedRange.getIni ()) + "-" + df.format (derivedRange.getEnd ()));
+      title.setText (derivedRangeType.toString () + " (" + df.format (derivedRange.getIni ()) + "-" + df.format (derivedRange.getEnd ()) + ")");
 
       observationDataGrid.setRowCount (0);
       observationDataGrid.setRowCount (derivedRange.getDerivedVariables ().size ());

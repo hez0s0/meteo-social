@@ -34,4 +34,11 @@ public class VariablePersistence extends AbstractPersistence <Integer, Variable>
       
       return criteria.list ();
    }
+
+   @Override
+   public Variable getByAcronym (String acronym) {
+      return (Variable) getBaseCriteria ()
+                           .add (Restrictions.eq ("acronym", acronym))
+                           .uniqueResult ();
+   }
 }

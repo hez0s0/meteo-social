@@ -6,8 +6,8 @@
    ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator" 
    ui:generateLocales="default">
 
-   <g:VerticalPanel>
-      <g:HTMLPanel>
+   <g:VerticalPanel width="100%">
+      <g:HTMLPanel width="100%">
          <h3>
             <g:Label ui:field="title"/>
          </h3>

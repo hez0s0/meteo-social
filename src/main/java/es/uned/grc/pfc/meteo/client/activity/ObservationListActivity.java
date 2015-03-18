@@ -143,7 +143,7 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
          for (final DerivedRangeType derivedRangeType : DerivedRangeType.values ()) {
             observationRequestContext.getDerivedInRange (derivedRangeType, listView.getStartDate (), null)
                                      .with ("station", "variables", "variables.variable")
-                                     .fire (new Receiver <IDerivedRangeProxy> () {
+                                     .to (new Receiver <IDerivedRangeProxy> () {
                @Override
                public void onSuccess (IDerivedRangeProxy response) {
                   listView.setDerivedVisible (true);
@@ -156,6 +156,7 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
                }
             });
          }
+         observationRequestContext.fire ();
       } else if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) {
          //search for table representation
          observationRequestContext.getObservationBlocks (requestParamProxy)

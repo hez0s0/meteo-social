@@ -17,6 +17,7 @@
     <%-- 
     <meta name="gwt:property" content="locale=en_EN">
     --%>
+    <meta name="gwt:property" content="locale=es_ES">
     <meta name="author" content="Gustavo Rodriguez" />
     <link rel="stylesheet" href="css/style.css" type="text/css" />
     <title>Meteo Social - PFC</title>

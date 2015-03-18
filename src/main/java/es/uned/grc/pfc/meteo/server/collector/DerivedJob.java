@@ -291,7 +291,7 @@ public class DerivedJob {
                }
                break;
             case MAXIMUM:
-               if ( (value != null) && (result == null || value < result) ) {
+               if ( (value != null) && (result == null || value > result) ) {
                   result = value;
                }
                break;
