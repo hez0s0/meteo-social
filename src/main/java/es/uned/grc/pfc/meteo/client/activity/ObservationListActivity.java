@@ -140,9 +140,10 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
 
       if (listPlace.getObservationType ().equals (ObservationType.DERIVED)) {
          //search for derived variables
+         listView.clear ();
          for (final DerivedRangeType derivedRangeType : DerivedRangeType.values ()) {
             observationRequestContext.getDerivedInRange (derivedRangeType, listView.getStartDate (), null)
-                                     .with ("station", "variables", "variables.variable")
+                                     .with ("station", "derivedVariables", "derivedVariables.variable")
                                      .to (new Receiver <IDerivedRangeProxy> () {
                @Override
                public void onSuccess (IDerivedRangeProxy response) {

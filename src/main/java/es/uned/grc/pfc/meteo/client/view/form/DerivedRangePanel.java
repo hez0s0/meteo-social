@@ -7,7 +7,7 @@ import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -18,6 +18,7 @@ import com.google.gwt.view.client.SelectionModel;
 
 import es.uned.grc.pfc.meteo.client.model.IDerivedRangeProxy;
 import es.uned.grc.pfc.meteo.client.model.IDerivedVariableProxy;
+import es.uned.grc.pfc.meteo.client.util.IClientConstants;
 import es.uned.grc.pfc.meteo.client.view.util.ColumnAppender;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
 
@@ -36,7 +37,10 @@ public class DerivedRangePanel extends Composite {
    @UiField
    protected Label title = null;
    @UiField (provided = true)
-   protected DataGrid <IDerivedVariableProxy> observationDataGrid = new DataGrid <IDerivedVariableProxy> (Integer.MAX_VALUE);
+   protected CellTable <IDerivedVariableProxy> observationCellTable = new CellTable <IDerivedVariableProxy> (Integer.MAX_VALUE);
+   
+   private DerivedRangeType derivedRangeType = null;
+   private IDerivedRangeProxy derivedRange = null;
    
    @UiConstructor
    public DerivedRangePanel () {
@@ -48,16 +52,19 @@ public class DerivedRangePanel extends Composite {
 
       // Add a selection model so we can select cells
       selectionModel = new MultiSelectionModel <IDerivedVariableProxy> (keyProvider);
-      observationDataGrid.setSelectionModel (selectionModel, DefaultSelectionEventManager.<IDerivedVariableProxy> createCheckboxManager ());
+      observationCellTable.setSelectionModel (selectionModel, DefaultSelectionEventManager.<IDerivedVariableProxy> createCheckboxManager ());
    }
 
    public void setInput (DerivedRangeType derivedRangeType, IDerivedRangeProxy derivedRange) {
+      this.derivedRangeType = derivedRangeType;
+      this.derivedRange = derivedRange;
+      
       DateTimeFormat df = DateTimeFormat.getFormat (PredefinedFormat.DATE_TIME_SHORT);
       title.setText (derivedRangeType.toString () + " (" + df.format (derivedRange.getIni ()) + "-" + df.format (derivedRange.getEnd ()) + ")");
 
-      observationDataGrid.setRowCount (0);
-      observationDataGrid.setRowCount (derivedRange.getDerivedVariables ().size ());
-      observationDataGrid.setRowData (0, derivedRange.getDerivedVariables ());
+      observationCellTable.setRowCount (0);
+      observationCellTable.setRowCount (derivedRange.getDerivedVariables ().size ());
+      observationCellTable.setRowData (0, derivedRange.getDerivedVariables ());
    }
    
    /**
@@ -65,32 +72,40 @@ public class DerivedRangePanel extends Composite {
     */
    public void initTableColumns () {
       // name of the variable
-      new ColumnAppender <String, IDerivedVariableProxy> ().addColumn (observationDataGrid, new TextCell (), "Variable", null, new ColumnAppender.GetValue <String, IDerivedVariableProxy> () {
+      new ColumnAppender <String, IDerivedVariableProxy> ().addColumn (observationCellTable, new TextCell (), "Variable", null, new ColumnAppender.GetValue <String, IDerivedVariableProxy> () {
          @Override
          public String getValue (IDerivedVariableProxy o) {
             return o.getVariable ().getName ();
          }
       }, null, false, 40);
       // minimum value
-      new ColumnAppender <String, IDerivedVariableProxy> ().addColumn (observationDataGrid, new TextCell (), "Minimum", null, new ColumnAppender.GetValue <String, IDerivedVariableProxy> () {
+      new ColumnAppender <String, IDerivedVariableProxy> ().addColumn (observationCellTable, new TextCell (), "Minimum", null, new ColumnAppender.GetValue <String, IDerivedVariableProxy> () {
          @Override
          public String getValue (IDerivedVariableProxy o) {
-            return o.getMinimum ();
+            return o.getMinimum () != null ? o.getMinimum () : IClientConstants.textConstants.emptyValue ();
          }
       }, null, false, 20);
       // average value
-      new ColumnAppender <String, IDerivedVariableProxy> ().addColumn (observationDataGrid, new TextCell (), "Average", null, new ColumnAppender.GetValue <String, IDerivedVariableProxy> () {
+      new ColumnAppender <String, IDerivedVariableProxy> ().addColumn (observationCellTable, new TextCell (), "Average", null, new ColumnAppender.GetValue <String, IDerivedVariableProxy> () {
          @Override
          public String getValue (IDerivedVariableProxy o) {
-            return o.getAverage ();
+            return o.getAverage () != null ? o.getAverage () : IClientConstants.textConstants.emptyValue ();
          }
       }, null, false, 20);
       // maximum value
-      new ColumnAppender <String, IDerivedVariableProxy> ().addColumn (observationDataGrid, new TextCell (), "Maximum", null, new ColumnAppender.GetValue <String, IDerivedVariableProxy> () {
+      new ColumnAppender <String, IDerivedVariableProxy> ().addColumn (observationCellTable, new TextCell (), "Maximum", null, new ColumnAppender.GetValue <String, IDerivedVariableProxy> () {
          @Override
          public String getValue (IDerivedVariableProxy o) {
-            return o.getMaximum ();
+            return o.getMaximum () != null ? o.getMaximum () : IClientConstants.textConstants.emptyValue ();
          }
       }, null, false, 20);
+   }
+
+   public DerivedRangeType getDerivedRangeType () {
+      return derivedRangeType;
+   }
+
+   public IDerivedRangeProxy getDerivedRange () {
+      return derivedRange;
    }
 }

@@ -31,7 +31,7 @@ public class DerivedUtils {
    public static final Date getEveningIni (Date observed) {
       Calendar calendar = Calendar.getInstance ();
       calendar.setTime (observed);
-      calendar.set (Calendar.HOUR_OF_DAY, IServerConstants.NIGHT_START_HOUR);
+      calendar.set (Calendar.HOUR_OF_DAY, IServerConstants.EVENING_START_HOUR);
       calendar.set (Calendar.MINUTE, 0);
       calendar.set (Calendar.SECOND, 0);
       return calendar.getTime ();
@@ -40,7 +40,7 @@ public class DerivedUtils {
    public static final Date getEveningEnd (Date observed) {
       Calendar calendar = Calendar.getInstance ();
       calendar.setTime (observed);
-      calendar.set (Calendar.HOUR_OF_DAY, IServerConstants.NIGHT_END_HOUR - 1);
+      calendar.set (Calendar.HOUR_OF_DAY, IServerConstants.EVENING_END_HOUR - 1);
       calendar.set (Calendar.MINUTE, 59);
       calendar.set (Calendar.SECOND, 59);
       return calendar.getTime ();

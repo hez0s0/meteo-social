@@ -17,12 +17,13 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.AbstractCellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.AsyncHandler;
-import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
@@ -78,7 +79,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    PlaceController placeController = null;
 
    @UiField (provided = true)
-   protected DataGrid <IObservationBlockProxy> observationDataGrid = new DataGrid <IObservationBlockProxy> (Integer.MAX_VALUE);
+   protected CellTable <IObservationBlockProxy> observationCellTable = new CellTable <IObservationBlockProxy> (Integer.MAX_VALUE);
    @UiField
    protected DateBox startDateBox = null;
    @UiField
@@ -96,7 +97,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @UiField
    protected Panel graphPanel = null;
    @UiField
-   protected Panel derivedPanel = null;
+   protected VerticalPanel derivedPanel = null;
 
    public static final ProvidesKey <IObservationBlockProxy> keyProvider = new ProvidesKey <IObservationBlockProxy> () {
       @Override
@@ -111,7 +112,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
 
    @Override
    public AbstractCellTable <IObservationBlockProxy> getDataTable () {
-      return observationDataGrid;
+      return observationCellTable;
    }
 
    /**
@@ -125,7 +126,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
 
       // Add a selection model so we can select cells
       selectionModel = new MultiSelectionModel <IObservationBlockProxy> (keyProvider);
-      observationDataGrid.setSelectionModel (selectionModel, DefaultSelectionEventManager.<IObservationBlockProxy> createCheckboxManager ());
+      observationCellTable.setSelectionModel (selectionModel, DefaultSelectionEventManager.<IObservationBlockProxy> createCheckboxManager ());
    }
 
    @Override
@@ -151,12 +152,12 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
       int col = 0;
 
       //clear all the columns
-      while (observationDataGrid.getColumnCount () > 0) {
-         observationDataGrid.removeColumn (0);
+      while (observationCellTable.getColumnCount () > 0) {
+         observationCellTable.removeColumn (0);
       }
 
       // date observed
-      new ColumnAppender <Date, IObservationBlockProxy> ().addColumn (observationDataGrid, new DateCell (dateFormat), "observed", null, new ColumnAppender.GetValue <Date, IObservationBlockProxy> () {
+      new ColumnAppender <Date, IObservationBlockProxy> ().addColumn (observationCellTable, new DateCell (dateFormat), "observed", null, new ColumnAppender.GetValue <Date, IObservationBlockProxy> () {
          @Override
          public Date getValue (IObservationBlockProxy o) {
             return o.getObserved ();
@@ -168,14 +169,14 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
          for (IObservationProxy observation : firstRow) {
             indexedObservationColumn = new IndexedObservationColumn (col++);
 
-            observationDataGrid.addColumn (indexedObservationColumn, observation != null ? observation.getVariable ().getAcronym () : "???");
-            observationDataGrid.setColumnWidth (indexedObservationColumn, leftWidth / firstRow.size (), Unit.PCT);
+            observationCellTable.addColumn (indexedObservationColumn, observation != null ? observation.getVariable ().getAcronym () : "???");
+            observationCellTable.setColumnWidth (indexedObservationColumn, leftWidth / firstRow.size (), Unit.PCT);
          }
       }
 
-      columnSortHandler = new AsyncHandler (observationDataGrid);
-      observationDataGrid.addColumnSortHandler (columnSortHandler);
-      observationDataGrid.getColumnSortList ().push (nameColumn);
+      columnSortHandler = new AsyncHandler (observationCellTable);
+      observationCellTable.addColumnSortHandler (columnSortHandler);
+      observationCellTable.getColumnSortList ().push (nameColumn);
    }
 
    @Override
@@ -341,14 +342,41 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
 
    @Override
    public void appendDerived (DerivedRangeType derivedRangeType, IDerivedRangeProxy derivedRange) {
+      int i = 0;
+      int order = getOrder (derivedRangeType);
+      int count = derivedPanel.getWidgetCount ();
       DerivedRangePanel panel = GWT.create (DerivedRangePanel.class);
       panel.setInput (derivedRangeType, derivedRange);
-      derivedPanel.add (panel);
+      
+      for (i = 0; i < count; i ++) {
+         if (order < getOrder (((DerivedRangePanel) derivedPanel.getWidget (i)).getDerivedRangeType ())) {
+            break;
+         }
+      }
+      derivedPanel.insert (panel, i);
    }
 
    @Override
    public void clear () {
       derivedPanel.clear ();
       graphPanel.clear ();
+   }
+   
+   private int getOrder (DerivedRangeType derivedRangeType) {
+      switch (derivedRangeType) {
+         case MONTH:
+            return 0;
+         case DAY:
+            return 1;
+         case NIGHT:
+            return 2;
+         case MORNING:
+            return 3;
+         case AFTERNOON:
+            return 4;
+         case EVENING:
+            return 5;
+      }
+      return Integer.MAX_VALUE;
    }
 }
