@@ -1,3 +1,4 @@
 /.gwt/
 /target/
 /.apt_generated
+/.sonar/

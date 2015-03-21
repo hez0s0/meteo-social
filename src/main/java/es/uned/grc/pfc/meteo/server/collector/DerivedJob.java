@@ -1,5 +1,6 @@
 package es.uned.grc.pfc.meteo.server.collector;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -303,7 +304,7 @@ public class DerivedJob {
                break;
          }
       }
-      return result != null ? String.valueOf (result) : null;
+      return result != null ?  new DecimalFormat ("#.##").format (result).replace (",", ".") : null;
    }
 
    private Double getAsDouble (String value) {

@@ -72,7 +72,7 @@ public class Station extends AbstractVersionable <Integer> {
    }
 
    @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
-   @JoinColumn (name = "stationId",
+   @JoinColumn (name = "stationModelId",
                 foreignKey = @ForeignKey (name = "fk1Station"))
    public StationModel getStationModel () {
       return stationModel;
