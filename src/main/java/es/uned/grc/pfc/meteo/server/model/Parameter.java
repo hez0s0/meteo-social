@@ -23,7 +23,7 @@ import es.uned.grc.pfc.meteo.server.model.base.AbstractVersionable;
         indexes = {@Index (name = "ix1Parameter", columnList = "name")})
 public class Parameter extends AbstractVersionable <Integer> {
 
-   public enum ParameterType {Communication, Social};
+   public enum ParameterType {COMMUNICATION, SOCIAL};
    
    private Integer id = null;
    private Station station = null;
