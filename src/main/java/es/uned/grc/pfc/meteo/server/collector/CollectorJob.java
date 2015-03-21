@@ -184,7 +184,7 @@ public class CollectorJob {
             return variable;
          }
       }
-      throw new RuntimeException (String.format ("Variable '%' not found in the station", acronym));
+      throw new RuntimeException (String.format ("Variable '%s' not found in the station", acronym));
    }
 
    private Date getNextObservationPeriod (Station station) {

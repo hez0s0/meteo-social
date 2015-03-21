@@ -146,7 +146,7 @@ public class QualityJob {
       } catch (Exception e) {
          //if not a double, it should not have limits, so this is suspicious (sensor data corruption)
          ok = false;
-         addWarning (String.format ("Value '%s' is not a number", value, physicalMaximum), warning);
+         addWarning (String.format ("Value '%s' is not a number", value), warning);
       }
       
       return ok;
