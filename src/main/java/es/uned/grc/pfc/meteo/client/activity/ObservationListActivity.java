@@ -10,6 +10,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.cellview.client.ColumnSortList;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -43,12 +44,14 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
    
    @Override
    public void start (final AcceptsOneWidget panel, final EventBus eventBus) {
+      listView.setDerived (listPlace.getObservationType ().equals (ObservationType.DERIVED));
       getRequestFactory (eventBus).getObservationContext ().getTodayStart ().fire (new Receiver <Date> () {
 
          @Override
          public void onSuccess (Date response) {
           //set default interval between 00 and 24 of today
             listView.setStartDate (response);
+            listView.setExactDate (response);
             listView.setEndDate (new Date (response.getTime () + ISharedConstants.ONE_DAY_MILLIS));
             
             ObservationListActivity.super.start (panel, eventBus);
@@ -97,105 +100,113 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
       paramFilter.setValue ("true");
       requestParamProxy.getFilters ().add (paramFilter);
 
-      //start date filter, if present
-      if (listView.getStartDate () != null) {
-         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
-         paramFilter.setParam (ISharedConstants.ObservationFilter.START_DATE.toString ());
-         paramFilter.setValue (dateTimeFormat.format (listView.getStartDate ()));
-         requestParamProxy.getFilters ().add (paramFilter);
-      }
-      //end date filter, if present
-      if (listView.getEndDate () != null) {
-         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
-         paramFilter.setParam (ISharedConstants.ObservationFilter.END_DATE.toString ());
-         paramFilter.setValue (dateTimeFormat.format (listView.getEndDate ()));
-         requestParamProxy.getFilters ().add (paramFilter);
-      }
-      //variable list filter, if present
-      if (listView.getVariables () != null && !listView.getVariables ().isEmpty ()) {
-         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
-         paramFilter.setParam (ISharedConstants.ObservationFilter.VARIABLE_IDS.toString ());
-         paramFilter.setValue (getVariableIdList (listView.getVariables ()));
-         requestParamProxy.getFilters ().add (paramFilter);
-      }
-      //only measured filter, if active
-      if (listView.getOnlyMeasured ()) {
-         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
-         paramFilter.setParam (ISharedConstants.ObservationFilter.MEASURED_ONLY.toString ());
-         paramFilter.setValue ("true");
-         requestParamProxy.getFilters ().add (paramFilter);
-      }
-      //only derived filter, if active
-      if (listView.getOnlyDerived ()) {
-         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
-         paramFilter.setParam (ISharedConstants.ObservationFilter.DERIVED_ONLY.toString ());
-         paramFilter.setValue ("true");
-         requestParamProxy.getFilters ().add (paramFilter);
-      }
-      
-      if ((sortList != null) && (sortList.size () > 0) && (sortList.get (0) != null) && (sortList.get (0).getColumn () != null)) {
-         requestParamProxy.setSortField (sortList.get (0).getColumn ().getDataStoreName ());
-         requestParamProxy.setAscending (sortList.get (0).isAscending ());
+      if (!listPlace.getObservationType ().equals (ObservationType.DERIVED)) {
+         //start date filter, if present
+         if (listView.getStartDate () != null) {
+            paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+            paramFilter.setParam (ISharedConstants.ObservationFilter.START_DATE.toString ());
+            paramFilter.setValue (dateTimeFormat.format (listView.getStartDate ()));
+            requestParamProxy.getFilters ().add (paramFilter);
+         }
+         //end date filter, if present
+         if (listView.getEndDate () != null) {
+            paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+            paramFilter.setParam (ISharedConstants.ObservationFilter.END_DATE.toString ());
+            paramFilter.setValue (dateTimeFormat.format (listView.getEndDate ()));
+            requestParamProxy.getFilters ().add (paramFilter);
+         }
+         //variable list filter, if present
+         if (listView.getVariables () != null && !listView.getVariables ().isEmpty ()) {
+            paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+            paramFilter.setParam (ISharedConstants.ObservationFilter.VARIABLE_IDS.toString ());
+            paramFilter.setValue (getVariableIdList (listView.getVariables ()));
+            requestParamProxy.getFilters ().add (paramFilter);
+         }
+         //only measured filter, if active
+         if (listView.getOnlyMeasured ()) {
+            paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+            paramFilter.setParam (ISharedConstants.ObservationFilter.MEASURED_ONLY.toString ());
+            paramFilter.setValue ("true");
+            requestParamProxy.getFilters ().add (paramFilter);
+         }
+         //only derived filter, if active
+         if (listView.getOnlyDerived ()) {
+            paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+            paramFilter.setParam (ISharedConstants.ObservationFilter.DERIVED_ONLY.toString ());
+            paramFilter.setValue ("true");
+            requestParamProxy.getFilters ().add (paramFilter);
+         }
+         
+         if ((sortList != null) && (sortList.size () > 0) && (sortList.get (0) != null) && (sortList.get (0).getColumn () != null)) {
+            requestParamProxy.setSortField (sortList.get (0).getColumn ().getDataStoreName ());
+            requestParamProxy.setAscending (sortList.get (0).isAscending ());
+         }
       }
 
       if (listPlace.getObservationType ().equals (ObservationType.DERIVED)) {
-         //search for derived variables
-         listView.clear ();
-         for (final DerivedRangeType derivedRangeType : DerivedRangeType.values ()) {
-            observationRequestContext.getDerivedInRange (derivedRangeType, listView.getStartDate (), null)
-                                     .with ("station", "derivedVariables", "derivedVariables.variable")
-                                     .to (new Receiver <IDerivedRangeProxy> () {
+         if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) { 
+            //search for derived variables
+            listView.clear ();
+            for (final DerivedRangeType derivedRangeType : DerivedRangeType.values ()) {
+               observationRequestContext.getDerivedInRange (derivedRangeType, listView.getExactDate (), null)
+                                        .with ("station", "derivedVariables", "derivedVariables.variable")
+                                        .to (new Receiver <IDerivedRangeProxy> () {
+                  @Override
+                  public void onSuccess (IDerivedRangeProxy response) {
+                     listView.setDerivedVisible (true);
+                     listView.appendDerived (derivedRangeType, response);
+                  }
+         
+                  @Override
+                  public void onFailure (ServerFailure serverFailure) {
+                     eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Derived Observation"), serverFailure));
+                  }
+               });
+            }
+            observationRequestContext.fire ();
+         } else {
+            Window.alert ("GRAPHIC representation of derived variables is still not supported");
+         }
+      } else {
+         if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) {
+            //search for table representation
+            observationRequestContext.getObservationBlocks (requestParamProxy)
+                                     .with ("station", "observations", "observations.variable")
+                                     .fire (new Receiver <List <IObservationBlockProxy>> () {
                @Override
-               public void onSuccess (IDerivedRangeProxy response) {
-                  listView.setDerivedVisible (true);
-                  listView.appendDerived (derivedRangeType, response);
+               public void onSuccess (List <IObservationBlockProxy> response) {
+                  listView.setTextVisible (true);
+                  listView.setGraphVisible (false);
+                  listView.initTableColumns (response);
+                  listView.getDataTable ().setRowCount (0);
+                  listView.getDataTable ().setRowCount (response.size ());
+                  listView.getDataTable ().setRowData (0, response);
                }
       
                @Override
                public void onFailure (ServerFailure serverFailure) {
-                  eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Derived Observation"), serverFailure));
+                  eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
+               }
+            });
+         } else {
+            //search for graphic representation
+            observationRequestContext.getVariableObservations (requestParamProxy)
+                                     .with ("station", "observations", "observations.variable")
+                                     .fire (new Receiver <List <IVariableObservationsProxy>> () {
+               @Override
+               public void onSuccess (List <IVariableObservationsProxy> response) {
+                  listView.setTextVisible (false);
+                  listView.setGraphVisible (true);
+                  
+                  listView.generateGraphics (response);
+               }
+      
+               @Override
+               public void onFailure (ServerFailure serverFailure) {
+                  eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
                }
             });
          }
-         observationRequestContext.fire ();
-      } else if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) {
-         //search for table representation
-         observationRequestContext.getObservationBlocks (requestParamProxy)
-                                  .with ("station", "observations", "observations.variable")
-                                  .fire (new Receiver <List <IObservationBlockProxy>> () {
-            @Override
-            public void onSuccess (List <IObservationBlockProxy> response) {
-               listView.setTextVisible (true);
-               listView.setGraphVisible (false);
-               listView.initTableColumns (response);
-               listView.getDataTable ().setRowCount (0);
-               listView.getDataTable ().setRowCount (response.size ());
-               listView.getDataTable ().setRowData (0, response);
-            }
-   
-            @Override
-            public void onFailure (ServerFailure serverFailure) {
-               eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
-            }
-         });
-      } else {
-         //search for graphic representation
-         observationRequestContext.getVariableObservations (requestParamProxy)
-                                  .with ("station", "observations", "observations.variable")
-                                  .fire (new Receiver <List <IVariableObservationsProxy>> () {
-            @Override
-            public void onSuccess (List <IVariableObservationsProxy> response) {
-               listView.setTextVisible (false);
-               listView.setGraphVisible (true);
-               
-               listView.generateGraphics (response);
-            }
-   
-            @Override
-            public void onFailure (ServerFailure serverFailure) {
-               eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
-            }
-         });
       }
    }
 

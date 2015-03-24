@@ -19,6 +19,7 @@ import com.google.gwt.view.client.SelectionModel;
 import es.uned.grc.pfc.meteo.client.model.IDerivedRangeProxy;
 import es.uned.grc.pfc.meteo.client.model.IDerivedVariableProxy;
 import es.uned.grc.pfc.meteo.client.util.IClientConstants;
+import es.uned.grc.pfc.meteo.client.util.PortableStringUtils;
 import es.uned.grc.pfc.meteo.client.view.util.ColumnAppender;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
 
@@ -35,7 +36,7 @@ public class DerivedRangePanel extends Composite {
    };
    
    @UiField
-   protected Label title = null;
+   protected Label titleLabel = null;
    @UiField (provided = true)
    protected CellTable <IDerivedVariableProxy> observationCellTable = new CellTable <IDerivedVariableProxy> (Integer.MAX_VALUE);
    
@@ -60,7 +61,7 @@ public class DerivedRangePanel extends Composite {
       this.derivedRange = derivedRange;
       
       DateTimeFormat df = DateTimeFormat.getFormat (PredefinedFormat.DATE_TIME_SHORT);
-      title.setText (derivedRangeType.toString () + " (" + df.format (derivedRange.getIni ()) + "-" + df.format (derivedRange.getEnd ()) + ")");
+      titleLabel.setText (derivedRangeType.toString () + " (" + df.format (derivedRange.getIni ()) + "-" + df.format (derivedRange.getEnd ()) + ")");
 
       observationCellTable.setRowCount (0);
       observationCellTable.setRowCount (derivedRange.getDerivedVariables ().size ());
@@ -82,21 +83,33 @@ public class DerivedRangePanel extends Composite {
       new ColumnAppender <String, IDerivedVariableProxy> ().addColumn (observationCellTable, new TextCell (), "Minimum", null, new ColumnAppender.GetValue <String, IDerivedVariableProxy> () {
          @Override
          public String getValue (IDerivedVariableProxy o) {
-            return o.getMinimum () != null ? o.getMinimum () : IClientConstants.textConstants.emptyValue ();
+            if (o.getMinimum () != null) {
+               return PortableStringUtils.format ("%s (%s used, %s ignored, %s expected)", o.getMinimum (), o.getMinimumDeriveBase (), o.getMinimumDeriveIgnored (), o.getMinimumDeriveExpected ());
+            } else {
+               return IClientConstants.textConstants.emptyValue ();
+            }
          }
       }, null, false, 20);
       // average value
       new ColumnAppender <String, IDerivedVariableProxy> ().addColumn (observationCellTable, new TextCell (), "Average", null, new ColumnAppender.GetValue <String, IDerivedVariableProxy> () {
          @Override
          public String getValue (IDerivedVariableProxy o) {
-            return o.getAverage () != null ? o.getAverage () : IClientConstants.textConstants.emptyValue ();
+            if (o.getAverage () != null) {
+               return PortableStringUtils.format ("%s (%s used, %s ignored, %s expected)", o.getAverage (), o.getAverageDeriveBase (), o.getAverageDeriveIgnored (), o.getAverageDeriveExpected ());
+            } else {
+               return IClientConstants.textConstants.emptyValue ();
+            }
          }
       }, null, false, 20);
       // maximum value
       new ColumnAppender <String, IDerivedVariableProxy> ().addColumn (observationCellTable, new TextCell (), "Maximum", null, new ColumnAppender.GetValue <String, IDerivedVariableProxy> () {
          @Override
          public String getValue (IDerivedVariableProxy o) {
-            return o.getMaximum () != null ? o.getMaximum () : IClientConstants.textConstants.emptyValue ();
+            if (o.getMaximum () != null) {
+               return PortableStringUtils.format ("%s (%s used, %s ignored, %s expected)", o.getMaximum (), o.getMaximumDeriveBase (), o.getMaximumDeriveIgnored (), o.getMaximumDeriveExpected ());
+            } else {
+               return IClientConstants.textConstants.emptyValue ();
+            }
          }
       }, null, false, 20);
    }

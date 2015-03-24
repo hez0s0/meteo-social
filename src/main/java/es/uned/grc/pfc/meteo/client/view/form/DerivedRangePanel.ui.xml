@@ -13,7 +13,7 @@
    <g:VerticalPanel width="100%">
       <g:HTMLPanel width="100%">
          <h3>
-            <g:Label ui:field="title"/>
+            <g:Label ui:field="titleLabel"/>
          </h3>
       </g:HTMLPanel>
       <g:HorizontalPanel width="100%">

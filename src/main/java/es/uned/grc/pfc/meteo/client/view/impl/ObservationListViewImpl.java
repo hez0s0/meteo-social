@@ -85,6 +85,8 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @UiField
    protected DateBox endDateBox = null;
    @UiField
+   protected DateBox exactDateBox = null;
+   @UiField
    protected VariableSuggestInputListBox variableSuggestInputListBox = null;
    @UiField
    protected CheckBox onlyMeasuredCheckBox = null;
@@ -98,6 +100,10 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    protected Panel graphPanel = null;
    @UiField
    protected VerticalPanel derivedPanel = null;
+   @UiField
+   protected Panel observedFilterPanel = null;
+   @UiField
+   protected Panel derivedFilterPanel = null;
 
    public static final ProvidesKey <IObservationBlockProxy> keyProvider = new ProvidesKey <IObservationBlockProxy> () {
       @Override
@@ -180,6 +186,11 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    }
 
    @Override
+   public Date getExactDate () {
+      return exactDateBox.getValue ();
+   }
+
+   @Override
    public Date getStartDate () {
       //TODO consider hour
       return startDateBox.getValue ();
@@ -188,6 +199,11 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @Override
    public void setStartDate (Date date) {
       startDateBox.setValue (date);
+   }
+
+   @Override
+   public void setExactDate (Date date) {
+      exactDateBox.setValue (date);
    }
 
    @Override
@@ -378,5 +394,11 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
             return 5;
       }
       return Integer.MAX_VALUE;
+   }
+
+   @Override
+   public void setDerived (boolean derived) {
+      observedFilterPanel.setVisible (!derived);
+      derivedFilterPanel.setVisible (derived);
    }
 }

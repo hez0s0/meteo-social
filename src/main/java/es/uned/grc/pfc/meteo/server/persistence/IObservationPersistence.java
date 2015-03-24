@@ -12,7 +12,7 @@ public interface IObservationPersistence extends IPersistence <Integer, Observat
    /** obtains the observations of the own station whose derived calculations have not yet been conducted */ 
    List <Observation> getUnderived (int max);
    /** obtains the observations of the own station whose observed date is within given range */ 
-   List <Observation> getObservedInRange (Date ini, Date end);
+   List <Observation> getObservedInRange (Date ini, Date end, boolean qualityControlled);
    /** obtains the observations of the own station whose derived range contains the given range */ 
    List <Observation> getDerivedInRange (Date ini, Date end);
 }

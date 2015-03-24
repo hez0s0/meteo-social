@@ -15,4 +15,22 @@ public interface IDerivedVariableProxy extends ValueProxy {
    void setMaximum (String maximum);
    String getAverage ();
    void setAverage (String average);
+   Integer getMinimumDeriveBase ();
+   void setMinimumDeriveBase (Integer minimumDeriveBase);
+   Integer getMinimumDeriveIgnored ();
+   void setMinimumDeriveIgnored (Integer minimumDeriveIgnored);
+   Integer getMinimumDeriveExpected ();
+   void setMinimumDeriveExpected (Integer minimumDeriveExpected);
+   Integer getMaximumDeriveBase ();
+   void setMaximumDeriveBase (Integer maximumDeriveBase);
+   Integer getMaximumDeriveIgnored ();
+   void setMaximumDeriveIgnored (Integer maximumDeriveIgnored);
+   Integer getMaximumDeriveExpected ();
+   void setMaximumDeriveExpected (Integer maximumDeriveExpected);
+   Integer getAverageDeriveBase ();
+   void setAverageDeriveBase (Integer averageDeriveBase);
+   Integer getAverageDeriveIgnored ();
+   void setAverageDeriveIgnored (Integer averageDeriveIgnored);
+   Integer getAverageDeriveExpected ();
+   void setAverageDeriveExpected (Integer averageDeriveExpected);
 }

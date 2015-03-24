@@ -17,12 +17,14 @@ public interface IObservationListView extends IAsyncCellTableView <IObservationB
    void initTableColumns (List <IObservationBlockProxy> observationBlock);
    Date getStartDate ();
    Date getEndDate ();
+   Date getExactDate ();
    List <IVariableProxy> getVariables ();
    void setInput (IRequestFactory requestFactory);
    boolean getOnlyMeasured ();
    boolean getOnlyDerived ();
    HasClickHandlers getSearchHandler ();
    void setStartDate (Date date);
+   void setExactDate (Date date);
    void setEndDate (Date date);
    void setTextVisible (boolean visible);
    void setGraphVisible (boolean visible);
@@ -30,4 +32,5 @@ public interface IObservationListView extends IAsyncCellTableView <IObservationB
    void generateGraphics (List <IVariableObservationsProxy> variableObservations);
    void appendDerived (DerivedRangeType derivedRangeType, IDerivedRangeProxy derivedRange);
    void clear ();
+   void setDerived (boolean derived);
 }

@@ -12,45 +12,59 @@
 
    <g:HTMLPanel styleName="left_box">
       <g:HTMLPanel styleName="formulaire" ui:field="searchPanel">
-         <g:VerticalPanel width="100%">
-            <g:HorizontalPanel>
+         <g:HorizontalPanel width="100%">
+            <g:cell width="95%">
                <g:VerticalPanel>
-                  <g:Label>
-                     <ui:msg meaning="init date filter" description="label for observations filter">Start date</ui:msg>
-                  </g:Label>
-                  <dp:DateBox ui:field="startDateBox" />
+                  <g:VerticalPanel ui:field="observedFilterPanel" width="100%">
+                     <g:HorizontalPanel>
+                        <g:VerticalPanel>
+                           <g:Label>
+                              <ui:msg meaning="init date filter" description="label for observations filter">Start date</ui:msg>
+                           </g:Label>
+                           <dp:DateBox ui:field="startDateBox" />
+                        </g:VerticalPanel>
+                        <g:VerticalPanel>
+                           <g:Label>
+                              <ui:msg meaning="end date filter" description="label for observations filter">End date</ui:msg>
+                           </g:Label>
+                           <dp:DateBox ui:field="endDateBox" />
+                        </g:VerticalPanel>
+                     </g:HorizontalPanel>
+                     <g:HorizontalPanel>
+                        <g:VerticalPanel>
+                           <g:Label>
+                              <ui:msg meaning="variable filter" description="label for observations filter">Variable</ui:msg>
+                           </g:Label>
+                           <meteo-suggest:VariableSuggestInputListBox ui:field="variableSuggestInputListBox" />
+                        </g:VerticalPanel>
+                        <g:VerticalPanel>
+                           <g:Label>
+                              <ui:msg meaning="only measured filter" description="label for observations filter">Only measured</ui:msg>
+                           </g:Label>
+                           <g:CheckBox ui:field="onlyMeasuredCheckBox" />
+                        </g:VerticalPanel>
+                        <g:VerticalPanel>
+                           <g:Label>
+                              <ui:msg meaning="only derived filter" description="label for observations filter">Only derived</ui:msg>
+                           </g:Label>
+                           <g:CheckBox ui:field="onlyDerivedCheckBox" />
+                        </g:VerticalPanel>
+                     </g:HorizontalPanel>
+                  </g:VerticalPanel>
+                  <g:VerticalPanel ui:field="derivedFilterPanel" width="100%">
+                     <g:Label>
+                        <ui:msg meaning="exact date filter" description="label for observations filter">Date</ui:msg>
+                     </g:Label>
+                     <dp:DateBox ui:field="exactDateBox" />
+                  </g:VerticalPanel>
                </g:VerticalPanel>
-               <g:VerticalPanel>
-                  <g:Label>
-                     <ui:msg meaning="end date filter" description="label for observations filter">End date</ui:msg>
-                  </g:Label>
-                  <dp:DateBox ui:field="endDateBox" />
-               </g:VerticalPanel>
-            </g:HorizontalPanel>
-            <g:HorizontalPanel>
-               <g:VerticalPanel>
-                  <g:Label>
-                     <ui:msg meaning="variable filter" description="label for observations filter">Variable</ui:msg>
-                  </g:Label>
-                  <meteo-suggest:VariableSuggestInputListBox ui:field="variableSuggestInputListBox" />
-               </g:VerticalPanel>
-               <g:VerticalPanel>
-                  <g:Label>
-                     <ui:msg meaning="only measured filter" description="label for observations filter">Only measured</ui:msg>
-                  </g:Label>
-                  <g:CheckBox ui:field="onlyMeasuredCheckBox" />
-               </g:VerticalPanel>
-               <g:VerticalPanel>
-                  <g:Label>
-                     <ui:msg meaning="only derived filter" description="label for observations filter">Only derived</ui:msg>
-                  </g:Label>
-                  <g:CheckBox ui:field="onlyDerivedCheckBox" />
-               </g:VerticalPanel>
+            </g:cell>
+            <g:cell width="5%">
                <g:Button ui:field="searchButton" styleName="submit">
                   <ui:msg meaning="sync button" description="Title for search button">Search</ui:msg>
                </g:Button>
-            </g:HorizontalPanel>
-         </g:VerticalPanel>
+            </g:cell>
+         </g:HorizontalPanel>
       </g:HTMLPanel>
       <g:HorizontalPanel ui:field="textPanel" width="100%">
          <c:CellTable ui:field="observationCellTable" pageSize="1000" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false"  width="100%"/>

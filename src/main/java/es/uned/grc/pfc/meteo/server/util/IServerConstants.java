@@ -10,6 +10,10 @@ public interface IServerConstants {
    
    /** convenience variable */
    long ONE_MINUTE = 60 * 1000;
+   /** convenience variable */
+   int ONE_HOUR_MINUTES = 60;
+   /** convenience variable */
+   int ONE_DAY_HOURS = 24;
    
    /** time between executions of the collector, in milliseconds */
    long COLLECTION_POLLING_TIME = 60000;

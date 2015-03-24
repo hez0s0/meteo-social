@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.mutable.MutableInt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ibm.icu.util.Calendar;
+
 import es.uned.grc.pfc.meteo.client.util.DerivedUtils;
+import es.uned.grc.pfc.meteo.server.collector.station.IStationPlugin;
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.Station;
 import es.uned.grc.pfc.meteo.server.model.Variable;
@@ -30,7 +34,7 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 @Component
 public class DerivedJob {
 
-   private static final int UNDERIVED_BLOCK = 20;
+   private static final int UNDERIVED_BLOCK = 100;
    
    protected static Logger logger = LoggerFactory.getLogger (DerivedJob.class);
 
@@ -42,6 +46,8 @@ public class DerivedJob {
    private IObservationPersistence observationPersistence = null;
    @Autowired
    private IVariablePersistence variablePersistence = null;
+   @Autowired
+   private IStationPlugin stationPlugin = null;
 
    /**
     * To be executed periodically
@@ -79,6 +85,9 @@ public class DerivedJob {
    @Transactional (propagation = Propagation.REQUIRED)
    private void createUpdateDerived (Station station, List <Observation> observations, Date now) {
       DeriveType deriveType = null;
+      int deriveExpected = -1;
+      int monthDays = -1;
+      Calendar calendar = null;
       Date [] range = new Date [2];
       Map <String, List <Observation>> existingObservationsMap = new HashMap <String, List <Observation>> ();
       
@@ -95,103 +104,134 @@ public class DerivedJob {
                      deriveType = DeriveType.MINIMUM;
                      range [0] = DerivedUtils.getNightIni (observation.getObserved ());
                      range [1] = DerivedUtils.getNightEnd (observation.getObserved ());
+                     deriveExpected = getExpected (Integer.valueOf (IServerConstants.NIGHT_END_HOUR) - Integer.valueOf (IServerConstants.NIGHT_START_HOUR));
                      break;
                   case IServerConstants.NIGHT_MAXIMUM:
                      deriveType = DeriveType.MAXIMUM;
                      range [0] = DerivedUtils.getNightIni (observation.getObserved ());
                      range [1] = DerivedUtils.getNightEnd (observation.getObserved ());
+                     deriveExpected = getExpected (Integer.valueOf (IServerConstants.NIGHT_END_HOUR) - Integer.valueOf (IServerConstants.NIGHT_START_HOUR));
                      break;
                   case IServerConstants.NIGHT_AVERAGE:
                      deriveType = DeriveType.AVERAGE;
                      range [0] = DerivedUtils.getNightIni (observation.getObserved ());
                      range [1] = DerivedUtils.getNightEnd (observation.getObserved ());
+                     deriveExpected = getExpected (Integer.valueOf (IServerConstants.NIGHT_END_HOUR) - Integer.valueOf (IServerConstants.NIGHT_START_HOUR));
                      break;
                   case IServerConstants.MORNING_MINIMUM:
                      deriveType = DeriveType.MINIMUM;
                      range [0] = DerivedUtils.getMorningIni (observation.getObserved ());
                      range [1] = DerivedUtils.getMorningEnd (observation.getObserved ());
+                     deriveExpected = getExpected (Integer.valueOf (IServerConstants.MORNING_END_HOUR) - Integer.valueOf (IServerConstants.MORNING_START_HOUR));
                      break;
                   case IServerConstants.MORNING_MAXIMUM:
                      deriveType = DeriveType.MAXIMUM;
                      range [0] = DerivedUtils.getMorningIni (observation.getObserved ());
                      range [1] = DerivedUtils.getMorningEnd (observation.getObserved ());
+                     deriveExpected = getExpected (Integer.valueOf (IServerConstants.MORNING_END_HOUR) - Integer.valueOf (IServerConstants.MORNING_START_HOUR));
                      break;
                   case IServerConstants.MORNING_AVERAGE:
                      deriveType = DeriveType.AVERAGE;
                      range [0] = DerivedUtils.getMorningIni (observation.getObserved ());
                      range [1] = DerivedUtils.getMorningEnd (observation.getObserved ());
+                     deriveExpected = getExpected (Integer.valueOf (IServerConstants.MORNING_END_HOUR) - Integer.valueOf (IServerConstants.MORNING_START_HOUR));
                      break;
                   case IServerConstants.AFTERNOON_MINIMUM:
                      deriveType = DeriveType.MINIMUM;
                      range [0] = DerivedUtils.getAfternoonIni (observation.getObserved ());
                      range [1] = DerivedUtils.getAfternoonEnd (observation.getObserved ());
+                     deriveExpected = getExpected (Integer.valueOf (IServerConstants.AFTERNOON_END_HOUR) - Integer.valueOf (IServerConstants.AFTERNOON_START_HOUR));
                      break;
                   case IServerConstants.AFTERNOON_MAXIMUM:
                      deriveType = DeriveType.MAXIMUM;
                      range [0] = DerivedUtils.getAfternoonIni (observation.getObserved ());
                      range [1] = DerivedUtils.getAfternoonEnd (observation.getObserved ());
+                     deriveExpected = getExpected (Integer.valueOf (IServerConstants.AFTERNOON_END_HOUR) - Integer.valueOf (IServerConstants.AFTERNOON_START_HOUR));
                      break;
                   case IServerConstants.AFTERNOON_AVERAGE:
                      deriveType = DeriveType.AVERAGE;
                      range [0] = DerivedUtils.getAfternoonIni (observation.getObserved ());
                      range [1] = DerivedUtils.getAfternoonEnd (observation.getObserved ());
+                     deriveExpected = getExpected (Integer.valueOf (IServerConstants.AFTERNOON_END_HOUR) - Integer.valueOf (IServerConstants.AFTERNOON_START_HOUR));
                      break;
                   case IServerConstants.EVENING_MINIMUM:
                      deriveType = DeriveType.MINIMUM;
                      range [0] = DerivedUtils.getEveningIni (observation.getObserved ());
                      range [1] = DerivedUtils.getEveningEnd (observation.getObserved ());
+                     deriveExpected = getExpected (Integer.valueOf (IServerConstants.EVENING_END_HOUR) - Integer.valueOf (IServerConstants.EVENING_START_HOUR));
                      break;
                   case IServerConstants.EVENING_MAXIMUM:
                      deriveType = DeriveType.MAXIMUM;
                      range [0] = DerivedUtils.getEveningIni (observation.getObserved ());
                      range [1] = DerivedUtils.getEveningEnd (observation.getObserved ());
+                     deriveExpected = getExpected (Integer.valueOf (IServerConstants.EVENING_END_HOUR) - Integer.valueOf (IServerConstants.EVENING_START_HOUR));
                      break;
                   case IServerConstants.EVENING_AVERAGE:
                      deriveType = DeriveType.AVERAGE;
                      range [0] = DerivedUtils.getEveningIni (observation.getObserved ());
                      range [1] = DerivedUtils.getEveningEnd (observation.getObserved ());
+                     deriveExpected = getExpected (Integer.valueOf (IServerConstants.EVENING_END_HOUR) - Integer.valueOf (IServerConstants.EVENING_START_HOUR));
                      break;
                   case IServerConstants.DAY_MINIMUM:
                      deriveType = DeriveType.MINIMUM;
                      range [0] = DerivedUtils.getDayIni (observation.getObserved ());
                      range [1] = DerivedUtils.getDayEnd (observation.getObserved ());
+                     deriveExpected = getExpected (IServerConstants.ONE_DAY_HOURS);
                      break;
                   case IServerConstants.DAY_MAXIMUM:
                      deriveType = DeriveType.MAXIMUM;
                      range [0] = DerivedUtils.getDayIni (observation.getObserved ());
                      range [1] = DerivedUtils.getDayEnd (observation.getObserved ());
+                     deriveExpected = getExpected (IServerConstants.ONE_DAY_HOURS);
                      break;
                   case IServerConstants.DAY_AVERAGE:
                      deriveType = DeriveType.AVERAGE;
                      range [0] = DerivedUtils.getDayIni (observation.getObserved ());
                      range [1] = DerivedUtils.getDayEnd (observation.getObserved ());
+                     deriveExpected = getExpected (IServerConstants.ONE_DAY_HOURS);
                      break;
                   case IServerConstants.MONTH_MINIMUM:
                      deriveType = DeriveType.MINIMUM;
                      range [0] = DerivedUtils.getMonthIni (observation.getObserved ());
                      range [1] = DerivedUtils.getMonthEnd (observation.getObserved ());
+                     calendar = Calendar.getInstance ();
+                     calendar.setTime (range [1]);
+                     monthDays = calendar.get (Calendar.DAY_OF_MONTH);
+                     deriveExpected = getExpected (monthDays * IServerConstants.ONE_DAY_HOURS);
                      break;
                   case IServerConstants.MONTH_MAXIMUM:
                      deriveType = DeriveType.MAXIMUM;
                      range [0] = DerivedUtils.getMonthIni (observation.getObserved ());
                      range [1] = DerivedUtils.getMonthEnd (observation.getObserved ());
+                     calendar = Calendar.getInstance ();
+                     calendar.setTime (range [1]);
+                     monthDays = calendar.get (Calendar.DAY_OF_MONTH);
+                     deriveExpected = getExpected (monthDays * IServerConstants.ONE_DAY_HOURS);
                      break;
                   case IServerConstants.MONTH_AVERAGE:
                      deriveType = DeriveType.AVERAGE;
                      range [0] = DerivedUtils.getMonthIni (observation.getObserved ());
                      range [1] = DerivedUtils.getMonthEnd (observation.getObserved ());
+                     calendar = Calendar.getInstance ();
+                     calendar.setTime (range [1]);
+                     monthDays = calendar.get (Calendar.DAY_OF_MONTH);
+                     deriveExpected = getExpected (monthDays * IServerConstants.ONE_DAY_HOURS);
                      break;
                }
                
                //actually create and save the derived observation
                if (range [0] != null && range [1] != null && isInRange (observation, range)) {
-                  derive (observation, variable, range, deriveType, existingObservationsMap, now);
+                  derive (observation, variable, range, deriveType, deriveExpected, existingObservationsMap, now);
                }
             }
          }
          observation.setDerived (now);
          observation = observationPersistence.saveOrMerge (observation);
       }
+   }
+
+   private int getExpected (int hours) {
+      return (IServerConstants.ONE_HOUR_MINUTES / stationPlugin.getObservationPeriod ()) * hours;
    }
 
    /**
@@ -244,9 +284,17 @@ public class DerivedJob {
    }
 
    @Transactional (propagation = Propagation.REQUIRED)
-   private void derive (Observation observation, Variable variable, Date [] range, DeriveType deriveType, Map <String, List <Observation>> existingObservationsMap, Date now) {
+   private void derive (Observation observation, 
+                        Variable variable, 
+                        Date [] range, 
+                        DeriveType deriveType,
+                        int deriveExpected,
+                        Map <String, List <Observation>> existingObservationsMap, 
+                        Date now) {
       List <Observation> rangeObservations = null;
       Observation derivedObservation = null;
+      MutableInt deriveBase = new MutableInt ();
+      MutableInt deriveIgnored = new MutableInt ();
       SimpleDateFormat sdf = new SimpleDateFormat ("yyyyMMdd");
       String monthObservedKey = sdf.format (observation.getObserved ());
       String monthDerivedKey = sdf.format (observation.getObserved ()) + "_range";
@@ -254,7 +302,7 @@ public class DerivedJob {
       List <Observation> monthDerivedObservations = existingObservationsMap.get (monthDerivedKey);
       
       if (monthObservations == null) {
-         monthObservations = observationPersistence.getObservedInRange (DerivedUtils.getMonthIni (observation.getObserved ()), DerivedUtils.getMonthEnd (observation.getObserved ()));
+         monthObservations = observationPersistence.getObservedInRange (DerivedUtils.getMonthIni (observation.getObserved ()), DerivedUtils.getMonthEnd (observation.getObserved ()), true);
          existingObservationsMap.put (monthObservedKey, monthObservations);
       }
       if (monthDerivedObservations == null) {
@@ -275,33 +323,43 @@ public class DerivedJob {
          derivedObservation.setReceived (now);
       }
       derivedObservation.setObserved (now);
-      derivedObservation.setValue (calculate (rangeObservations, deriveType));
+      derivedObservation.setValue (calculate (rangeObservations, deriveType, deriveBase, deriveIgnored));
+      derivedObservation.setDeriveBase (deriveBase.intValue ());
+      derivedObservation.setDeriveIgnored (deriveIgnored.intValue ());
+      derivedObservation.setDeriveExpected (deriveExpected);
       derivedObservation = observationPersistence.saveOrMerge (derivedObservation);
    }
    
-   private String calculate (List <Observation> rangeObservations, DeriveType deriveType) {
+   private String calculate (List <Observation> rangeObservations, DeriveType deriveType, MutableInt deriveBase, MutableInt deriveIgnored) {
       Double result = null;
       Double value = null;
       double total = 0.0;
       for (Observation observation : rangeObservations) {
-         value = getAsDouble (observation.getValue ());
-         switch (deriveType) {
-            case MINIMUM:
-               if ( (value != null) && (result == null || value < result) ) {
-                  result = value;
-               }
-               break;
-            case MAXIMUM:
-               if ( (value != null) && (result == null || value > result) ) {
-                  result = value;
-               }
-               break;
-            case AVERAGE:
-               if (value != null) {
-                  total += value;
-                  result = total / rangeObservations.size ();
-               }
-               break;
+         if (observation.getQuality ()) {
+            //if the quality is passed, consider it
+            deriveBase.setValue (deriveBase.intValue () + 1);
+            value = getAsDouble (observation.getValue ());
+            switch (deriveType) {
+               case MINIMUM:
+                  if ( (value != null) && (result == null || value < result) ) {
+                     result = value;
+                  }
+                  break;
+               case MAXIMUM:
+                  if ( (value != null) && (result == null || value > result) ) {
+                     result = value;
+                  }
+                  break;
+               case AVERAGE:
+                  if (value != null) {
+                     total += value;
+                     result = total / rangeObservations.size ();
+                  }
+                  break;
+            }
+         } else {
+            //if the quality is not passed, ignore it
+            deriveIgnored.setValue (deriveIgnored.intValue () + 1);
          }
       }
       return result != null ?  new DecimalFormat ("#.##").format (result).replace (",", ".") : null;

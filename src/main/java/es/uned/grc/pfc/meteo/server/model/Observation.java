@@ -37,6 +37,9 @@ public class Observation extends AbstractVersionable <Integer> {
    private String warning = null;
    private Boolean quality = null;
    private Variable derivedVariable = null;
+   private Integer deriveBase = null;
+   private Integer deriveIgnored = null;
+   private Integer deriveExpected = null;
 
    @Id
    @GeneratedValue (strategy = GenerationType.AUTO, generator = "metObservationID_gen")
@@ -71,7 +74,7 @@ public class Observation extends AbstractVersionable <Integer> {
       this.station = station;
    }
    
-   @Column (nullable = false, length = 64)
+   @Column (length = 64)
    public String getValue () {
       return value;
    }
@@ -159,5 +162,29 @@ public class Observation extends AbstractVersionable <Integer> {
    }
    public void setRangeEnd (Date rangeEnd) {
       this.rangeEnd = rangeEnd;
+   }
+   
+   @Column
+   public Integer getDeriveBase () {
+      return deriveBase;
+   }
+   public void setDeriveBase (Integer deriveBase) {
+      this.deriveBase = deriveBase;
+   }
+   
+   @Column
+   public Integer getDeriveIgnored () {
+      return deriveIgnored;
+   }
+   public void setDeriveIgnored (Integer deriveIgnored) {
+      this.deriveIgnored = deriveIgnored;
+   }
+   
+   @Column
+   public Integer getDeriveExpected () {
+      return deriveExpected;
+   }
+   public void setDeriveExpected (Integer deriveExpected) {
+      this.deriveExpected = deriveExpected;
    }
 }

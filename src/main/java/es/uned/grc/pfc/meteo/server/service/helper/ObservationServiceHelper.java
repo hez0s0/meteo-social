@@ -306,8 +306,17 @@ public class ObservationServiceHelper {
          derivedVariableDTO = new DerivedVariableDTO ();
          derivedVariableDTO.setVariable (variable);
          derivedVariableDTO.setMinimum (getDerivedObservation (range, station, observations, variable, minimum).getValue ());
+         derivedVariableDTO.setMinimumDeriveBase (getDerivedObservation (range, station, observations, variable, minimum).getDeriveBase ());
+         derivedVariableDTO.setMinimumDeriveIgnored (getDerivedObservation (range, station, observations, variable, minimum).getDeriveIgnored ());
+         derivedVariableDTO.setMinimumDeriveExpected (getDerivedObservation (range, station, observations, variable, minimum).getDeriveExpected ());
          derivedVariableDTO.setAverage (getDerivedObservation (range, station, observations, variable, average).getValue ());
+         derivedVariableDTO.setAverageDeriveBase (getDerivedObservation (range, station, observations, variable, average).getDeriveBase ());
+         derivedVariableDTO.setAverageDeriveIgnored (getDerivedObservation (range, station, observations, variable, average).getDeriveIgnored ());
+         derivedVariableDTO.setAverageDeriveExpected (getDerivedObservation (range, station, observations, variable, average).getDeriveExpected ());
          derivedVariableDTO.setMaximum (getDerivedObservation (range, station, observations, variable, maximum).getValue ());
+         derivedVariableDTO.setMaximumDeriveBase (getDerivedObservation (range, station, observations, variable, maximum).getDeriveBase ());
+         derivedVariableDTO.setMaximumDeriveIgnored (getDerivedObservation (range, station, observations, variable, maximum).getDeriveIgnored ());
+         derivedVariableDTO.setMaximumDeriveExpected (getDerivedObservation (range, station, observations, variable, maximum).getDeriveExpected ());
          derivedVariableDTOs.add (derivedVariableDTO);
       }
       

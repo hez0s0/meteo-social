@@ -22,7 +22,7 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 @Component
 public class QualityJob {
 
-   private static final int UNCONTROLLED_BLOCK = 20;
+   private static final int UNCONTROLLED_BLOCK = 100;
 
    protected static Logger logger = LoggerFactory.getLogger (QualityJob.class);
 

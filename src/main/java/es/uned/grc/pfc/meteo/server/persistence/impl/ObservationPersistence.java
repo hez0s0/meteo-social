@@ -112,6 +112,7 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
       }
       return getBaseCriteria ().add (Restrictions.isNull ("derived"))
                                .add (Restrictions.isNull ("rangeIni"))
+                               .add (Restrictions.isNotNull ("quality"))
                                .addOrder (Order.asc ("observed"))
                                .setMaxResults (max)
                                .list ();
@@ -119,10 +120,13 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
 
    @SuppressWarnings ("unchecked")
    @Override
-   public List <Observation> getObservedInRange (Date ini, Date end) {
-      return getBaseCriteria ().add (Restrictions.between ("observed", ini, end))
-                               .addOrder (Order.asc ("observed"))
-                               .list ();
+   public List <Observation> getObservedInRange (Date ini, Date end, boolean qualityControlled) {
+      Criteria criteria = getBaseCriteria ().add (Restrictions.between ("observed", ini, end));
+      if (qualityControlled) {
+         criteria.add (Restrictions.isNotNull ("quality"));
+      }
+      return criteria.addOrder (Order.asc ("observed"))
+                     .list ();
    }
 
    @SuppressWarnings ("unchecked")
