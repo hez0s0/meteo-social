@@ -35,6 +35,18 @@ public class StationService {
    }
    
    /**
+    * Get the station by id
+    */
+   public Station getStationById (int stationId) {
+      try {
+         return stationPersistence.findById (stationId);
+      } catch (Exception e) {
+         logger.error ("Error getting station by id", e);
+         throw new RuntimeException ("Could not get station by id. See server logs.");
+      }
+   }
+   
+   /**
     * Obtained the list of stations contained within a rectagle
     */
    public List <Station> getStationsInArea (double minLatitude, double minLongitude, double maxLatitude, double maxLongitude) {

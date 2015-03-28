@@ -15,12 +15,14 @@ import es.uned.grc.pfc.meteo.shared.locators.SpringServiceLocator;
  */
 @Service (value = StationService.class, locator = SpringServiceLocator.class)
 public interface IStationRequestContext extends RequestContext {
-
    /**
     * Obtain the own station
     */
    Request <IStationProxy> getOwnStation ();
-
+   /**
+    * Obtain the own station
+    */
+   Request <IStationProxy> getStationById (int stationId);
    /**
     * Obtained the list of stations contained within a rectagle
     */

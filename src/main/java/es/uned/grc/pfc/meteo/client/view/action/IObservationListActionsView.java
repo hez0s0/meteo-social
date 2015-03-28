@@ -12,11 +12,14 @@ public interface IObservationListActionsView extends IView {
    IHasActionHandlers getGraphicsHandler ();
    /** get the element that the user clicks to display derived variables */
    IHasActionHandlers getDerivedHandler ();
+   /** get the element that the user clicks to display graphics of the derived variables */
+   IHasActionHandlers getDerivedGraphicsHandler ();
    /** get the element that the user clicks to display the station map */
    IHasActionHandlers getMapHandler ();
 
    UIObject getTablePanel ();
    UIObject getGraphicsPanel ();
    UIObject getDerivedPanel ();
+   UIObject getDerivedGraphicsPanel ();
    UIObject getMapPanel ();
 }

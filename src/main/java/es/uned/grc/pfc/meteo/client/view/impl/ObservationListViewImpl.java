@@ -15,9 +15,9 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.AbstractCellTable;
+import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.AsyncHandler;
-import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -50,6 +50,7 @@ import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractPage;
 import es.uned.grc.pfc.meteo.client.view.form.DerivedRangePanel;
 import es.uned.grc.pfc.meteo.client.view.table.IndexedObservationColumn;
+import es.uned.grc.pfc.meteo.client.view.util.ChartUtils;
 import es.uned.grc.pfc.meteo.client.view.util.ColumnAppender;
 import es.uned.grc.pfc.meteo.client.view.widget.suggest.impl.VariableSuggestInputListBox;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
@@ -59,10 +60,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    }
    private static ObservationListViewUiBinder uiBinder = GWT.create (ObservationListViewUiBinder.class);
 
-   private static final int GRAPH_WIDTH = 500;
-   private static final int GRAPH_HEIGHT = 380;
-
-   /** global text constants */
+   /** text constants */
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
@@ -71,7 +69,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
       @DefaultStringValue ("Value") @Meaning ("Observation column")
       String valueColumn ();
    }
-   public static TextConstants textConstants = GWT.create (TextConstants.class);
+   public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);
    
    @Inject
    EventBus eventBus = null;
@@ -265,19 +263,19 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
                AbstractDataTable data = createDataTable (variableObservation.getObservations ());
                switch (variableObservation.getVariable ().getGraphType ()) {
                   case AREA:
-                     AreaChart.Options areaOptions = createAreaOptions (variableObservation.getVariable ());
+                     AreaChart.Options areaOptions = ChartUtils.createAreaOptions (variableObservation.getVariable ());
                      chart = new AreaChart (data, areaOptions);
                      break;
                   case BAR:
-                     BarChart.Options barOptions = createBarOptions (variableObservation.getVariable ());
+                     BarChart.Options barOptions = ChartUtils.createBarOptions (variableObservation.getVariable ());
                      chart = new BarChart (data, barOptions);
                      break;
                   case COLUMN:
-                     ColumnChart.Options columnOptions = createColumnOptions (variableObservation.getVariable ());
+                     ColumnChart.Options columnOptions = ChartUtils.createColumnOptions (variableObservation.getVariable ());
                      chart = new ColumnChart (data, columnOptions);
                      break;
                   case LINE:
-                     LineChart.Options lineOptions = createLineOptions (variableObservation.getVariable ());
+                     LineChart.Options lineOptions = ChartUtils.createLineOptions (variableObservation.getVariable ());
                      chart = new LineChart (data, lineOptions);
                      break;
                   case NONE:
@@ -302,56 +300,18 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
          }
       };
       VisualizationUtils.loadVisualizationApi (onLoadCallback, LineChart.PACKAGE);
-
    }
-
-   private ColumnChart.Options createColumnOptions (IVariableProxy variable) {
-      ColumnChart.Options options = ColumnChart.Options.create ();
-      options.setWidth (GRAPH_WIDTH);
-      options.setHeight (GRAPH_HEIGHT);
-      options.setTitle (variable.getName ());
-//      options.setEnableTooltip (true);
-      return options;
-   }
-
-   private BarChart.Options createBarOptions (IVariableProxy variable) {
-      BarChart.Options options = BarChart.Options.create ();
-      options.setWidth (GRAPH_WIDTH);
-      options.setHeight (GRAPH_HEIGHT);
-      options.setTitle (variable.getName ());
-//      options.setEnableTooltip (true);
-      return options;
-   }
-
-   private AreaChart.Options createAreaOptions (IVariableProxy variable) {
-      AreaChart.Options options = AreaChart.Options.create ();
-      options.setWidth (GRAPH_WIDTH);
-      options.setHeight (GRAPH_HEIGHT);
-      options.setTitle (variable.getName ());
-//      options.setEnableTooltip (true);
-      return options;
-   }
-
-   private LineChart.Options createLineOptions (IVariableProxy variable) {
-      LineChart.Options options = LineChart.Options.create ();
-      options.setWidth (GRAPH_WIDTH);
-      options.setHeight (GRAPH_HEIGHT);
-      options.setTitle (variable.getName ());
-//      options.setEnableTooltip (true);
-      options.setSmoothLine (true);
-      return options;
-   }
-
+   
    private AbstractDataTable createDataTable (List <IObservationProxy> observations) {
       int row = 0;
       DateTimeFormat representationDateFormat = DateTimeFormat.getFormat (PredefinedFormat.DATE_TIME_SHORT);
       DataTable data = DataTable.create ();
-      data.addColumn (ColumnType.STRING, textConstants.observedColumn ());
-      data.addColumn (ColumnType.NUMBER, textConstants.valueColumn ());
+      data.addColumn (ColumnType.STRING, TEXT_CONSTANTS.observedColumn ());
+      data.addColumn (ColumnType.NUMBER, TEXT_CONSTANTS.valueColumn ());
       data.addRows (observations.size ());
       for (IObservationProxy observation : observations) {
          data.setValue (row, 0, representationDateFormat.format (observation.getObserved ()));
-         data.setValue (row++, 1, observation.getValue ());
+         data.setValue (row ++, 1, observation.getValue ());
       }
       return data;
    }
@@ -363,6 +323,22 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
       int count = derivedPanel.getWidgetCount ();
       DerivedRangePanel panel = GWT.create (DerivedRangePanel.class);
       panel.setInput (derivedRangeType, derivedRange);
+      
+      for (i = 0; i < count; i ++) {
+         if (order < getOrder (((DerivedRangePanel) derivedPanel.getWidget (i)).getDerivedRangeType ())) {
+            break;
+         }
+      }
+      derivedPanel.insert (panel, i);
+   }
+
+   @Override
+   public void appendDerivedGraphics (DerivedRangeType derivedRangeType, List <IDerivedRangeProxy> observations) {
+      int i = 0;
+      int order = getOrder (derivedRangeType);
+      int count = derivedPanel.getWidgetCount ();
+      DerivedRangePanel panel = GWT.create (DerivedRangePanel.class);
+      panel.setInput (derivedRangeType, observations);
       
       for (i = 0; i < count; i ++) {
          if (order < getOrder (((DerivedRangePanel) derivedPanel.getWidget (i)).getDerivedRangeType ())) {

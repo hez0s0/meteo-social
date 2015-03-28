@@ -10,7 +10,6 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.cellview.client.ColumnSortList;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -49,7 +48,7 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
 
          @Override
          public void onSuccess (Date response) {
-          //set default interval between 00 and 24 of today
+            //set default interval between 00 and 24 of today
             listView.setStartDate (response);
             listView.setExactDate (response);
             listView.setEndDate (new Date (response.getTime () + ISharedConstants.ONE_DAY_MILLIS));
@@ -144,28 +143,20 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
       }
 
       if (listPlace.getObservationType ().equals (ObservationType.DERIVED)) {
-         if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) { 
+         if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) {
             //search for derived variables
             listView.clear ();
-            for (final DerivedRangeType derivedRangeType : DerivedRangeType.values ()) {
-               observationRequestContext.getDerivedInRange (derivedRangeType, listView.getExactDate (), null)
-                                        .with ("station", "derivedVariables", "derivedVariables.variable")
-                                        .to (new Receiver <IDerivedRangeProxy> () {
-                  @Override
-                  public void onSuccess (IDerivedRangeProxy response) {
-                     listView.setDerivedVisible (true);
-                     listView.appendDerived (derivedRangeType, response);
-                  }
-         
-                  @Override
-                  public void onFailure (ServerFailure serverFailure) {
-                     eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Derived Observation"), serverFailure));
-                  }
-               });
+            for (DerivedRangeType derivedRangeType : DerivedRangeType.values ()) {
+               getDerivedText (derivedRangeType, observationRequestContext, eventBus);
             }
             observationRequestContext.fire ();
          } else {
-            Window.alert ("GRAPHIC representation of derived variables is still not supported");
+            //search for derived variables
+            listView.clear ();
+            for (final DerivedRangeType derivedRangeType : DerivedRangeType.values ()) {
+               getDerivedGraphic (derivedRangeType, observationRequestContext, eventBus);
+            }
+            observationRequestContext.fire ();
          }
       } else {
          if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) {
@@ -208,6 +199,41 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
             });
          }
       }
+   }
+
+   private void getDerivedGraphic (final DerivedRangeType derivedRangeType, IObservationRequestContext observationRequestContext, final EventBus eventBus) {
+      observationRequestContext.getDerivedInRangeForGraphics (derivedRangeType, listView.getExactDate (), null)
+            .with ("station", "derivedVariables", "derivedVariables.variable")
+            .to (new Receiver <List <IDerivedRangeProxy>> () {
+         @Override
+         public void onSuccess (List <IDerivedRangeProxy> response) {
+            listView.setDerivedVisible (true);
+            
+            listView.appendDerivedGraphics (derivedRangeType, response);
+         }
+         
+         @Override
+         public void onFailure (ServerFailure serverFailure) {
+            eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Derived Observation"), serverFailure));
+         }
+      });
+   }
+
+   private void getDerivedText (final DerivedRangeType derivedRangeType, IObservationRequestContext observationRequestContext, final EventBus eventBus) {
+      observationRequestContext.getDerivedInRange (derivedRangeType, listView.getExactDate (), null)
+            .with ("station", "derivedVariables", "derivedVariables.variable")
+            .to (new Receiver <IDerivedRangeProxy> () {
+         @Override
+         public void onSuccess (IDerivedRangeProxy response) {
+            listView.setDerivedVisible (true);
+            listView.appendDerived (derivedRangeType, response);
+         }
+         
+         @Override
+         public void onFailure (ServerFailure serverFailure) {
+            eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Derived Observation"), serverFailure));
+         }
+      });
    }
 
    private String getVariableIdList (List <IVariableProxy> variables) {

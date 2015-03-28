@@ -1,5 +1,6 @@
 package es.uned.grc.pfc.meteo.server.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.uned.grc.pfc.meteo.client.util.DerivedUtils;
 import es.uned.grc.pfc.meteo.server.dto.DerivedRangeDTO;
 import es.uned.grc.pfc.meteo.server.dto.ObservationBlockDTO;
 import es.uned.grc.pfc.meteo.server.dto.VariableObservationsDTO;
@@ -26,6 +26,7 @@ import es.uned.grc.pfc.meteo.server.persistence.IVariablePersistence;
 import es.uned.grc.pfc.meteo.server.service.helper.ObservationServiceHelper;
 import es.uned.grc.pfc.meteo.server.util.IServerConstants;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
+import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
 
 /**
  * Service to manage observations.
@@ -121,7 +122,7 @@ public class ObservationService {
     * Obtains a list of derivedRange objects of given type referred to the given date 
     */
    public DerivedRangeDTO getDerivedInRange (ISharedConstants.DerivedRangeType derivedRangeType, Date searched, Integer stationId) {
-      Date [] range = new Date [2];
+      Date [] range = null;
       List <Observation> observations = null;
       Station station = null;
       Variable minimum = null;
@@ -130,52 +131,41 @@ public class ObservationService {
 
       try {
          station = stationId == null ? stationPersistence.getOwnStation () : stationPersistence.findById (stationId);
-         
+
+         range = observationServiceHelper.getRange (derivedRangeType, searched);
          switch (derivedRangeType) {
             case AFTERNOON:
-               range [0] = DerivedUtils.getAfternoonIni (searched);
-               range [1] = DerivedUtils.getAfternoonEnd (searched);
                minimum = variablePersistence.getByAcronym (IServerConstants.AFTERNOON_MINIMUM);
                average = variablePersistence.getByAcronym (IServerConstants.AFTERNOON_AVERAGE);
                maximum = variablePersistence.getByAcronym (IServerConstants.AFTERNOON_MAXIMUM);
                break;
             case DAY:
-               range [0] = DerivedUtils.getDayIni (searched);
-               range [1] = DerivedUtils.getDayEnd (searched);
                minimum = variablePersistence.getByAcronym (IServerConstants.DAY_MINIMUM);
                average = variablePersistence.getByAcronym (IServerConstants.DAY_AVERAGE);
                maximum = variablePersistence.getByAcronym (IServerConstants.DAY_MAXIMUM);
                break;
             case EVENING:
-               range [0] = DerivedUtils.getEveningIni (searched);
-               range [1] = DerivedUtils.getEveningEnd (searched);
                minimum = variablePersistence.getByAcronym (IServerConstants.EVENING_MINIMUM);
                average = variablePersistence.getByAcronym (IServerConstants.EVENING_AVERAGE);
                maximum = variablePersistence.getByAcronym (IServerConstants.EVENING_MAXIMUM);
                break;
             case MONTH:
-               range [0] = DerivedUtils.getMonthIni (searched);
-               range [1] = DerivedUtils.getMonthEnd (searched);
                minimum = variablePersistence.getByAcronym (IServerConstants.MONTH_MINIMUM);
                average = variablePersistence.getByAcronym (IServerConstants.MONTH_AVERAGE);
                maximum = variablePersistence.getByAcronym (IServerConstants.MONTH_MAXIMUM);
                break;
             case MORNING:
-               range [0] = DerivedUtils.getMorningIni (searched);
-               range [1] = DerivedUtils.getMorningEnd (searched);
                minimum = variablePersistence.getByAcronym (IServerConstants.MORNING_MINIMUM);
                average = variablePersistence.getByAcronym (IServerConstants.MORNING_AVERAGE);
                maximum = variablePersistence.getByAcronym (IServerConstants.MORNING_MAXIMUM);
                break;
             case NIGHT:
-               range [0] = DerivedUtils.getNightIni (searched);
-               range [1] = DerivedUtils.getNightEnd (searched);
                minimum = variablePersistence.getByAcronym (IServerConstants.NIGHT_MINIMUM);
                average = variablePersistence.getByAcronym (IServerConstants.NIGHT_AVERAGE);
                maximum = variablePersistence.getByAcronym (IServerConstants.NIGHT_MAXIMUM);
                break;
          }
-         observations = observationPersistence.getDerivedInRange (range [0], range [1]);
+         observations = observationPersistence.getDerivedInRange (range [0], range [1], minimum, average, maximum);
          
          return observationServiceHelper.fillAndGroupAsRange (station, observations, range, minimum, average, maximum);
       } catch (Exception e) {
@@ -183,6 +173,83 @@ public class ObservationService {
          throw new RuntimeException ("Could not list derived observations in range. See server logs.");
       }
    }
+
+   /**
+    * Obtains a list of derivedRange objects of given type referred to the given date for graphic display
+    * The difference is basically, that a wider range of observations is obtained: for example, for graphical
+    * display of a month derivation, the month derived variables from the whole year shall be obtained
+    */
+   public List <DerivedRangeDTO> getDerivedInRangeForGraphics (ISharedConstants.DerivedRangeType derivedRangeType, Date searched, Integer stationId) {
+      Date [] range = null;
+      List <Observation> observations = null;
+      Station station = null;
+      Variable minimum = null;
+      Variable average = null;
+      Variable maximum = null;
+      Calendar current = null;
+      Date [] wideRange = new Date [2];
+      List <DerivedRangeDTO> result = new ArrayList <DerivedRangeDTO> ();
+      
+      try {
+         station = stationId == null ? stationPersistence.getOwnStation () : stationPersistence.findById (stationId);
+         
+         wideRange = observationServiceHelper.getWideRange (derivedRangeType, searched);
+         logger.info ("Wide range for {}: {}-{}: ", derivedRangeType, wideRange [0], wideRange [1]);
+         current = Calendar.getInstance ();
+         current.setTime (wideRange [0]);
+         
+         while (current.getTimeInMillis () < wideRange [1].getTime ()) {
+            range = observationServiceHelper.getRange (derivedRangeType, current.getTime ());
+            switch (derivedRangeType) {
+               case AFTERNOON:
+                  minimum = variablePersistence.getByAcronym (IServerConstants.AFTERNOON_MINIMUM);
+                  average = variablePersistence.getByAcronym (IServerConstants.AFTERNOON_AVERAGE);
+                  maximum = variablePersistence.getByAcronym (IServerConstants.AFTERNOON_MAXIMUM);
+                  break;
+               case DAY:
+                  minimum = variablePersistence.getByAcronym (IServerConstants.DAY_MINIMUM);
+                  average = variablePersistence.getByAcronym (IServerConstants.DAY_AVERAGE);
+                  maximum = variablePersistence.getByAcronym (IServerConstants.DAY_MAXIMUM);
+                  break;
+               case EVENING:
+                  minimum = variablePersistence.getByAcronym (IServerConstants.EVENING_MINIMUM);
+                  average = variablePersistence.getByAcronym (IServerConstants.EVENING_AVERAGE);
+                  maximum = variablePersistence.getByAcronym (IServerConstants.EVENING_MAXIMUM);
+                  break;
+               case MONTH:
+                  minimum = variablePersistence.getByAcronym (IServerConstants.MONTH_MINIMUM);
+                  average = variablePersistence.getByAcronym (IServerConstants.MONTH_AVERAGE);
+                  maximum = variablePersistence.getByAcronym (IServerConstants.MONTH_MAXIMUM);
+                  break;
+               case MORNING:
+                  minimum = variablePersistence.getByAcronym (IServerConstants.MORNING_MINIMUM);
+                  average = variablePersistence.getByAcronym (IServerConstants.MORNING_AVERAGE);
+                  maximum = variablePersistence.getByAcronym (IServerConstants.MORNING_MAXIMUM);
+                  break;
+               case NIGHT:
+                  minimum = variablePersistence.getByAcronym (IServerConstants.NIGHT_MINIMUM);
+                  average = variablePersistence.getByAcronym (IServerConstants.NIGHT_AVERAGE);
+                  maximum = variablePersistence.getByAcronym (IServerConstants.NIGHT_MAXIMUM);
+                  break;
+            }
+            observations = observationPersistence.getDerivedInRange (range [0], range [1], minimum, average, maximum);
+            
+            result.add (observationServiceHelper.fillAndGroupAsRange (station, observations, range, minimum, average, maximum));
+            
+            logger.info ("Obtained derived for: " + current.getTime ());
+            if (derivedRangeType.equals (DerivedRangeType.MONTH)) {
+               current.add (Calendar.MONTH, 1);
+            } else {
+               current.add (Calendar.DAY_OF_YEAR, 1);
+            }
+         }
+      } catch (Exception e) {
+         logger.error ("Error listing derived observations in range", e);
+         throw new RuntimeException ("Could not list derived observations in range. See server logs.");
+      }
+      return result;
+   }
+   
    /**
     * Obtain the start of the current day
     */
