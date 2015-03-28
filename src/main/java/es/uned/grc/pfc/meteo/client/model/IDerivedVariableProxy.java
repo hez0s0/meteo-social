@@ -1,5 +1,7 @@
 package es.uned.grc.pfc.meteo.client.model;
 
+import java.util.Date;
+
 import com.google.web.bindery.requestfactory.shared.ProxyFor;
 import com.google.web.bindery.requestfactory.shared.ValueProxy;
 
@@ -7,6 +9,8 @@ import es.uned.grc.pfc.meteo.server.dto.DerivedVariableDTO;
 
 @ProxyFor (DerivedVariableDTO.class)
 public interface IDerivedVariableProxy extends ValueProxy {
+   Date getDisplayDate ();
+   void setDisplayDate (Date displayDate);
    IVariableProxy getVariable ();
    void setVariable (IVariableProxy variable);
    String getMinimum ();

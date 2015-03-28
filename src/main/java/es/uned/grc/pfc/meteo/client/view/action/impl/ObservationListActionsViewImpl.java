@@ -39,6 +39,8 @@ public class ObservationListActionsViewImpl extends Composite implements IObserv
    @UiField
    protected HTMLPanel viewDerivedPanel = null;
    @UiField
+   protected HTMLPanel viewDerivedGraphicsPanel = null;
+   @UiField
    protected HTMLPanel viewMapPanel = null;
 
    @UiField
@@ -47,6 +49,8 @@ public class ObservationListActionsViewImpl extends Composite implements IObserv
    protected ImageLabel viewGraphics = null;
    @UiField
    protected ImageLabel viewDerived = null;
+   @UiField
+   protected ImageLabel viewDerivedGraphics = null;
    @UiField
    protected ImageLabel viewMap = null;
 
@@ -75,6 +79,11 @@ public class ObservationListActionsViewImpl extends Composite implements IObserv
    }
    
    @Override
+   public UIObject getDerivedGraphicsPanel () {
+      return viewDerivedGraphicsPanel;
+   }
+   
+   @Override
    public UIObject getMapPanel () {
       return viewMapPanel;
    }
@@ -92,6 +101,11 @@ public class ObservationListActionsViewImpl extends Composite implements IObserv
    @Override
    public IHasActionHandlers getDerivedHandler () {
       return viewDerived;
+   }
+
+   @Override
+   public IHasActionHandlers getDerivedGraphicsHandler () {
+      return viewDerivedGraphics;
    }
 
    @Override

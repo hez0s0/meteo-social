@@ -31,6 +31,7 @@ public interface IObservationListView extends IAsyncCellTableView <IObservationB
    void setDerivedVisible (boolean visible);
    void generateGraphics (List <IVariableObservationsProxy> variableObservations);
    void appendDerived (DerivedRangeType derivedRangeType, IDerivedRangeProxy derivedRange);
+   void appendDerivedGraphics (DerivedRangeType derivedRangeType, List <IDerivedRangeProxy> observations);
    void clear ();
    void setDerived (boolean derived);
 }

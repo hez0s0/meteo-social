@@ -33,8 +33,19 @@ public class ObservationListActionsActivity extends AbstractBaseActivity {
    public void start (AcceptsOneWidget panel, final EventBus eventBus) {
       panel.setWidget (observationListActionsView.asWidget ());
       applyRoleVisibility ();
-      observationListActionsView.getTablePanel ().setVisible (!observationListPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT));
-      observationListActionsView.getGraphicsPanel ().setVisible (!observationListPlace.getRepresentation ().equals (ObservationListPlace.Representation.GRAPHIC));
+      observationListActionsView.getTablePanel ().setVisible (false);
+      observationListActionsView.getGraphicsPanel ().setVisible (false);
+      observationListActionsView.getDerivedPanel ().setVisible (false);
+      observationListActionsView.getDerivedGraphicsPanel ().setVisible (false);
+      if (observationListPlace.getObservationType ().equals (ObservationListPlace.ObservationType.NORMAL)) {
+         observationListActionsView.getTablePanel ().setVisible (!observationListPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT));
+         observationListActionsView.getGraphicsPanel ().setVisible (!observationListPlace.getRepresentation ().equals (ObservationListPlace.Representation.GRAPHIC));
+         observationListActionsView.getDerivedPanel ().setVisible (true);
+      } else {
+         observationListActionsView.getDerivedPanel ().setVisible (!observationListPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT));
+         observationListActionsView.getDerivedGraphicsPanel ().setVisible (!observationListPlace.getRepresentation ().equals (ObservationListPlace.Representation.GRAPHIC));
+         observationListActionsView.getTablePanel ().setVisible (true);
+      }
       bind (eventBus);
    }
 
@@ -63,6 +74,14 @@ public class ObservationListActionsActivity extends AbstractBaseActivity {
          @Override
          public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
             placeController.goTo (new ObservationListPlace (ObservationListPlace.ObservationType.DERIVED, ObservationListPlace.Representation.TEXT));
+            source.setCompleted ();
+         }
+      });
+      /** handle click on view derived */ 
+      registerHandler (observationListActionsView.getDerivedGraphicsHandler (), new IActionHandler () {
+         @Override
+         public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
+            placeController.goTo (new ObservationListPlace (ObservationListPlace.ObservationType.DERIVED, ObservationListPlace.Representation.GRAPHIC));
             source.setCompleted ();
          }
       });

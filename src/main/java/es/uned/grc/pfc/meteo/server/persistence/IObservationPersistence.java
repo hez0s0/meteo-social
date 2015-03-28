@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import es.uned.grc.pfc.meteo.server.model.Observation;
+import es.uned.grc.pfc.meteo.server.model.Variable;
 
 public interface IObservationPersistence extends IPersistence <Integer, Observation> {
    
@@ -14,5 +15,5 @@ public interface IObservationPersistence extends IPersistence <Integer, Observat
    /** obtains the observations of the own station whose observed date is within given range */ 
    List <Observation> getObservedInRange (Date ini, Date end, boolean qualityControlled);
    /** obtains the observations of the own station whose derived range contains the given range */ 
-   List <Observation> getDerivedInRange (Date ini, Date end);
+   List <Observation> getDerivedInRange (Date ini, Date end, Variable ... variables);
 }

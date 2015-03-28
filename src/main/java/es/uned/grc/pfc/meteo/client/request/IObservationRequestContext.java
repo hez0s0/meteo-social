@@ -55,4 +55,8 @@ public interface IObservationRequestContext extends RequestContext {
     * Obtains a list of derivedRange objects of given type referred to the given date 
     */
    Request <IDerivedRangeProxy> getDerivedInRange (ISharedConstants.DerivedRangeType derivedRangeType, Date searched, Integer stationId);
+   /**
+    * Obtains a list of derivedRange objects of given type referred to the given date for graphic display 
+    */
+   Request <List <IDerivedRangeProxy>> getDerivedInRangeForGraphics (ISharedConstants.DerivedRangeType derivedRangeType, Date searched, Integer stationId);
 }

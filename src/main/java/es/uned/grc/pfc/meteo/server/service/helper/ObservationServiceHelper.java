@@ -3,6 +3,7 @@ package es.uned.grc.pfc.meteo.server.service.helper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.uned.grc.pfc.meteo.client.util.DerivedUtils;
 import es.uned.grc.pfc.meteo.server.collector.station.IStationPlugin;
 import es.uned.grc.pfc.meteo.server.dto.DerivedRangeDTO;
 import es.uned.grc.pfc.meteo.server.dto.DerivedVariableDTO;
@@ -31,6 +33,7 @@ import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IVariablePersistence;
 import es.uned.grc.pfc.meteo.server.util.IServerConstants;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
+import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
 
 /**
  * Supports non-client invokable actions of the AdminService module
@@ -317,6 +320,7 @@ public class ObservationServiceHelper {
          derivedVariableDTO.setMaximumDeriveBase (getDerivedObservation (range, station, observations, variable, maximum).getDeriveBase ());
          derivedVariableDTO.setMaximumDeriveIgnored (getDerivedObservation (range, station, observations, variable, maximum).getDeriveIgnored ());
          derivedVariableDTO.setMaximumDeriveExpected (getDerivedObservation (range, station, observations, variable, maximum).getDeriveExpected ());
+         derivedVariableDTO.setDisplayDate (range [0]);
          derivedVariableDTOs.add (derivedVariableDTO);
       }
       
@@ -337,5 +341,62 @@ public class ObservationServiceHelper {
          observation = createEmptyObservation (range [0], range [1], internalVariable, variable, station);
       }
       return observation;
+   }
+
+   /**
+    * For a given variable and time, calculate the overall range
+    * required to obtain observations for graphical display
+    */
+   public Date [] getWideRange (DerivedRangeType derivedRangeType, Date searched) {
+      Calendar ini = Calendar.getInstance ();
+      Calendar end = Calendar.getInstance ();
+      if (derivedRangeType.equals (DerivedRangeType.MONTH)) {
+         ini.setTime (searched);
+         ini.set (Calendar.HOUR_OF_DAY, 0);
+         ini.set (Calendar.MINUTE, 0);
+         ini.set (Calendar.SECOND, 0);
+         end.setTimeInMillis (ini.getTimeInMillis ());
+         
+         ini.set (Calendar.DAY_OF_YEAR, 1);
+         ini.set (Calendar.MONTH, 0);
+
+         end.set (Calendar.DAY_OF_YEAR, end.getActualMaximum (Calendar.DAY_OF_YEAR));
+         end.set (Calendar.MONTH, end.getActualMaximum (Calendar.MONTH));
+      } else {
+         ini.setTimeInMillis (DerivedUtils.getMonthIni (searched).getTime ());
+         end.setTimeInMillis (DerivedUtils.getMonthEnd (searched).getTime ());
+      }
+      return new Date [] {ini.getTime (), end.getTime ()};
+   }
+
+   public Date [] getRange (DerivedRangeType derivedRangeType, Date searched) {
+      Date [] range = new Date [2];
+      switch (derivedRangeType) {
+         case AFTERNOON:
+            range [0] = DerivedUtils.getAfternoonIni (searched);
+            range [1] = DerivedUtils.getAfternoonEnd (searched);
+            break;
+         case DAY:
+            range [0] = DerivedUtils.getDayIni (searched);
+            range [1] = DerivedUtils.getDayEnd (searched);
+            break;
+         case EVENING:
+            range [0] = DerivedUtils.getEveningIni (searched);
+            range [1] = DerivedUtils.getEveningEnd (searched);
+            break;
+         case MONTH:
+            range [0] = DerivedUtils.getMonthIni (searched);
+            range [1] = DerivedUtils.getMonthEnd (searched);
+            break;
+         case MORNING:
+            range [0] = DerivedUtils.getMorningIni (searched);
+            range [1] = DerivedUtils.getMorningEnd (searched);
+            break;
+         case NIGHT:
+            range [0] = DerivedUtils.getNightIni (searched);
+            range [1] = DerivedUtils.getNightEnd (searched);
+            break;
+      }
+      return range;
    }
 }

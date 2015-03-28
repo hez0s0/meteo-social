@@ -12,16 +12,21 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
 import com.google.maps.gwt.client.GoogleMap;
+import com.google.maps.gwt.client.InfoWindow;
+import com.google.maps.gwt.client.InfoWindowOptions;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
 import com.google.maps.gwt.client.MapTypeId;
 import com.google.maps.gwt.client.Marker;
+import com.google.maps.gwt.client.Marker.ClickHandler;
 import com.google.maps.gwt.client.MarkerOptions;
+import com.google.maps.gwt.client.MouseEvent;
 
 import es.uned.grc.pfc.meteo.client.event.MapLoadedEvent;
 import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.view.IStationMapView;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractPage;
+import es.uned.grc.pfc.meteo.client.view.form.StationTooltipPanel;
 import es.uned.grc.pfc.meteo.client.view.util.IMapsContants;
 
 public class StationMapViewImpl extends AbstractPage implements IStationMapView {
@@ -62,7 +67,7 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
       eventBus.fireEvent (new MapLoadedEvent ());
    }
    
-   private void addMarker (IStationProxy station, boolean own) {
+   private void addMarker (final IStationProxy station, boolean own) {
       LatLng stationPosition = LatLng.create (station.getLatitude (), station.getLongitude ());
       MarkerOptions stationMarkerOptions = MarkerOptions.create ();
       if (!own) {
@@ -71,7 +76,12 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
       stationMarkerOptions.setPosition (stationPosition);
       stationMarkerOptions.setMap (map);
       stationMarkerOptions.setTitle (station.getName ());
-      Marker.create (stationMarkerOptions);
+      final Marker marker = Marker.create (stationMarkerOptions);
+      marker.addClickListener (new ClickHandler () {
+         public void handle (MouseEvent event) {
+            getStationInfoWindow (station).open (map, marker);
+         }
+      });
    }
 
    @Override
@@ -90,5 +100,17 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
       for (IStationProxy station : stations) {
          addMarker (station, false);
       }
+   }
+   
+   private InfoWindow getStationInfoWindow (IStationProxy station) {
+      InfoWindowOptions infowindowOpts = null;
+      StationTooltipPanel stationTooltipPanel = null;
+      
+      stationTooltipPanel = GWT.create (StationTooltipPanel.class);
+      stationTooltipPanel.setInput (station);
+      
+      infowindowOpts = InfoWindowOptions.create ();
+      infowindowOpts.setContent (stationTooltipPanel.getHtml ());
+      return InfoWindow.create(infowindowOpts);
    }
 }

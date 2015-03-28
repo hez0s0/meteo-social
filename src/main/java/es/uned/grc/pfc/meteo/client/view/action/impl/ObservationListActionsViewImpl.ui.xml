@@ -36,6 +36,16 @@
         <ui:msg description="Detail text to view derived observations">Display derived observations of the period, such as averages, minimums, maximums, etc.</ui:msg>
       </p>
     </g:HTMLPanel>
+    <g:HTMLPanel ui:field="viewDerivedGraphicsPanel" styleName="right_articles">
+      <p>
+        <b>
+          <meteo-widget:ImageLabel ui:field="viewDerivedGraphics" imageUrl="images/icons/chart_curve.png">
+            <ui:msg meaning="the observation action" description="Title to view the graphic of the derived observations">View derived graphics</ui:msg>
+          </meteo-widget:ImageLabel>
+        </b>
+        <ui:msg description="Detail text to view derived observations">Display graphics of the derived observations of the period, such as averages, minimums, maximums, etc.</ui:msg>
+      </p>
+    </g:HTMLPanel>
     <g:HTMLPanel ui:field="viewMapPanel" styleName="right_articles">
       <p>
         <b>

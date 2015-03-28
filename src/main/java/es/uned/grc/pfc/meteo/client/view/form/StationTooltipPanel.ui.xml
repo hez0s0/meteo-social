@@ -10,15 +10,16 @@
    ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
    ui:generateLocales="default">
 
-   <g:VerticalPanel width="100%">
-      <g:HTMLPanel width="100%">
-         <h3>
-            <g:Label ui:field="titleLabel"/>
-         </h3>
-      </g:HTMLPanel>
-      <g:HorizontalPanel ui:field="tablePanel" width="100%">
-         <c:CellTable ui:field="observationCellTable" pageSize="1000" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false" width="100%" />
-      </g:HorizontalPanel>
-      <g:VerticalPanel ui:field="graphPanel" width="100%"/>
-   </g:VerticalPanel>
+   <g:HTMLPanel ui:field="mainPanel" width="100%">
+      <h1>
+         <g:Label ui:field="titleLabel"/>
+      </h1>
+      <g:VerticalPanel>
+          <g:HorizontalPanel>
+              <g:Label ui:field="latitudeLabel"/>
+              <g:Label ui:field="longitudeLabel"/>
+          </g:HorizontalPanel>
+          <g:VerticalPanel ui:field="observationsPanel"/>
+      </g:VerticalPanel>
+   </g:HTMLPanel>
 </ui:UiBinder>

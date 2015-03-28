@@ -1,5 +1,7 @@
 package es.uned.grc.pfc.meteo.server.dto;
 
+import java.util.Date;
+
 import es.uned.grc.pfc.meteo.server.model.Variable;
 
 public class DerivedVariableDTO {
@@ -16,6 +18,7 @@ public class DerivedVariableDTO {
    private Integer averageDeriveBase = null;
    private Integer averageDeriveIgnored = null;
    private Integer averageDeriveExpected = null;
+   private Date displayDate = null;
    
    public Variable getVariable () {
       return variable;
@@ -94,5 +97,11 @@ public class DerivedVariableDTO {
    }
    public void setAverageDeriveExpected (Integer averageDeriveExpected) {
       this.averageDeriveExpected = averageDeriveExpected;
+   }
+   public Date getDisplayDate () {
+      return displayDate;
+   }
+   public void setDisplayDate (Date displayDate) {
+      this.displayDate = displayDate;
    }
 }

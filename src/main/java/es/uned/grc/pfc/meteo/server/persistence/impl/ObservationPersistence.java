@@ -2,6 +2,7 @@ package es.uned.grc.pfc.meteo.server.persistence.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,19 +11,25 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.RequestParamFilter;
+import es.uned.grc.pfc.meteo.server.model.Variable;
 import es.uned.grc.pfc.meteo.server.persistence.AbstractPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
+import es.uned.grc.pfc.meteo.server.persistence.IVariablePersistence;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
 @Repository
 @Transactional (propagation = Propagation.REQUIRED)
 public class ObservationPersistence extends AbstractPersistence <Integer, Observation> implements IObservationPersistence {
+   
+   @Autowired
+   private IVariablePersistence variablePersistence = null;
    
    @Override
    protected void applyDefaultSort (Criteria criteria, Map <String, Object> contextParams) {
@@ -131,9 +138,17 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
 
    @SuppressWarnings ("unchecked")
    @Override
-   public List <Observation> getDerivedInRange (Date ini, Date end) {
-      return getBaseCriteria ().add (Restrictions.between ("rangeIni", ini, end))
-                               .add (Restrictions.between ("rangeEnd", ini, end))
-                               .list ();
+   public List <Observation> getDerivedInRange (Date ini, Date end, Variable ... variables) {
+      if (variables != null && variables.length > 0){
+         return getBaseCriteria ().add (Restrictions.between ("rangeIni", ini, end))
+                                  .add (Restrictions.between ("rangeEnd", ini, end))
+                                  .createCriteria ("variable")
+                                     .add (Restrictions.in ("id", variablePersistence.getIdList (Arrays.asList (variables))))
+                                  .list ();
+      } else {
+         return getBaseCriteria ().add (Restrictions.between ("rangeIni", ini, end))
+               .add (Restrictions.between ("rangeEnd", ini, end))
+               .list ();
+      }
    }
 }
