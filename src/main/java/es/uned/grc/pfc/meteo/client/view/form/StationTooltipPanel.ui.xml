@@ -11,15 +11,53 @@
    ui:generateLocales="default">
 
    <g:HTMLPanel ui:field="mainPanel" width="100%">
-      <h1>
-         <g:Label ui:field="titleLabel"/>
-      </h1>
       <g:VerticalPanel>
-          <g:HorizontalPanel>
+         <g:HorizontalPanel>
+            <g:cell>
+               <g:HTMLPanel>
+                  <h1>
+                     <g:Label ui:field="titleLabel"/>
+                  </h1>
+               </g:HTMLPanel>
+            </g:cell>
+            <g:cell verticalAlignment="ALIGN_BOTTOM">
+               <g:HorizontalPanel>
+                  <g:Label styleName="meteo-form-field-label"><ui:msg meaning="station model" description="label for station tooltip">Model: </ui:msg></g:Label>
+                  <g:Label ui:field="modelLabel"/>
+               </g:HorizontalPanel>
+            </g:cell>
+         </g:HorizontalPanel>
+         <g:HTMLPanel>
+            <br/>
+         </g:HTMLPanel>
+         <g:HorizontalPanel>
+              <g:Label styleName="meteo-form-field-label"><ui:msg meaning="latitude" description="label for station tooltip">Latitude: </ui:msg></g:Label>
               <g:Label ui:field="latitudeLabel"/>
+              <g:Label styleName="meteo-form-field-label"><ui:msg meaning="longitude" description="label for station tooltip">Longitude: </ui:msg></g:Label>
               <g:Label ui:field="longitudeLabel"/>
+              <g:Label styleName="meteo-form-field-label"><ui:msg meaning="height" description="label for station tooltip">Height: </ui:msg></g:Label>
+              <g:Label ui:field="heightLabel"/>
           </g:HorizontalPanel>
-          <g:VerticalPanel ui:field="observationsPanel"/>
+         <g:HTMLPanel>
+            <hr class="style-one"/>
+         </g:HTMLPanel>
+      </g:VerticalPanel>
+      <g:VerticalPanel>
+          <g:VerticalPanel ui:field="observationsPanel">
+             <g:cell horizontalAlignment="ALIGN_LEFT">
+               <g:VerticalPanel width="100%">
+                  <g:cell>
+                     <g:FlexTable ui:field="observationFlexTable" borderWidth="0" />
+                  </g:cell>
+                  <g:cell horizontalAlignment="ALIGN_CENTER">
+                     <g:Label ui:field="viewAllLabel" visible="false" styleName="link-label"><ui:msg meaning="list all observations" description="label for station tooltip">List all observations</ui:msg></g:Label>
+                  </g:cell>
+               </g:VerticalPanel>
+             </g:cell>
+             <g:cell horizontalAlignment="ALIGN_CENTER">
+               <g:Label ui:field="noResultsLabel" visible="false"><ui:msg meaning="no results" description="label for station tooltip">No observations received</ui:msg></g:Label>
+             </g:cell>
+          </g:VerticalPanel>
       </g:VerticalPanel>
    </g:HTMLPanel>
 </ui:UiBinder>

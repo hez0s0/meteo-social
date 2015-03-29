@@ -40,7 +40,7 @@ public class DisplayUtils {
     * Gets the given String if not null or EMPTY.
     */
    public static String getString (String input) {
-      return (!PortableStringUtils.isEmpty (input)) ? input : IClientConstants.textConstants.emptyValue ();
+      return (!PortableStringUtils.isEmpty (input)) ? input : IClientConstants.TEXT_CONSTANTS.emptyValue ();
    }
    
    /**
@@ -66,7 +66,7 @@ public class DisplayUtils {
     * Gets a date formatted with dgiven format, or EMPTY.
     */
    public static String getFormattedDate (Date date, DateTimeFormat dateTimeFormat) {
-      return (date != null) ? dateTimeFormat.format (date) : IClientConstants.textConstants.emptyValue ();
+      return (date != null) ? dateTimeFormat.format (date) : IClientConstants.TEXT_CONSTANTS.emptyValue ();
    }
       
    /**

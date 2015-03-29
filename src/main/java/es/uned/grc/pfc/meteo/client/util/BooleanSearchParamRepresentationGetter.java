@@ -4,6 +4,6 @@ public class BooleanSearchParamRepresentationGetter extends SearchParamRepresent
    
    @Override
    public String getRepresentationGetter (Boolean value) {
-      return (value != null && value) ? IClientConstants.textConstants.trueValue () : IClientConstants.textConstants.falseValue ();
+      return (value != null && value) ? IClientConstants.TEXT_CONSTANTS.trueValue () : IClientConstants.TEXT_CONSTANTS.falseValue ();
    }
 }

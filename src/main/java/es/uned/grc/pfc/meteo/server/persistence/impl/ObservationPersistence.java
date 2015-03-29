@@ -2,6 +2,7 @@ package es.uned.grc.pfc.meteo.server.persistence.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -108,6 +109,8 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
                                .add (Restrictions.isNull ("rangeIni"))
                                .addOrder (Order.asc ("observed"))
                                .setMaxResults (max)
+                               .createCriteria ("station")
+                                  .add (Restrictions.eq ("own", true))
                                .list ();
    }
 
@@ -122,6 +125,8 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
                                .add (Restrictions.isNotNull ("quality"))
                                .addOrder (Order.asc ("observed"))
                                .setMaxResults (max)
+                               .createCriteria ("station")
+                                  .add (Restrictions.eq ("own", true))
                                .list ();
    }
 
@@ -132,6 +137,9 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
       if (qualityControlled) {
          criteria.add (Restrictions.isNotNull ("quality"));
       }
+
+      criteria.createCriteria ("station")
+              .add (Restrictions.eq ("own", true));
       return criteria.addOrder (Order.asc ("observed"))
                      .list ();
    }
@@ -140,15 +148,40 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
    @Override
    public List <Observation> getDerivedInRange (Date ini, Date end, Variable ... variables) {
       if (variables != null && variables.length > 0){
-         return getBaseCriteria ().add (Restrictions.between ("rangeIni", ini, end))
-                                  .add (Restrictions.between ("rangeEnd", ini, end))
-                                  .createCriteria ("variable")
-                                     .add (Restrictions.in ("id", variablePersistence.getIdList (Arrays.asList (variables))))
-                                  .list ();
+         Criteria criteria = getBaseCriteria ().add (Restrictions.between ("rangeIni", ini, end))
+                                               .add (Restrictions.between ("rangeEnd", ini, end));
+         criteria.createCriteria ("station")
+                 .add (Restrictions.eq ("own", true));
+         criteria.createCriteria ("variable")
+                 .add (Restrictions.in ("id", variablePersistence.getIdList (Arrays.asList (variables))));
+         return criteria.list ();
       } else {
          return getBaseCriteria ().add (Restrictions.between ("rangeIni", ini, end))
                .add (Restrictions.between ("rangeEnd", ini, end))
+               .createCriteria ("station")
+                  .add (Restrictions.eq ("own", true))
                .list ();
+      }
+   }
+
+   @SuppressWarnings ("unchecked")
+   @Override
+   public List <Observation> getLastReceived (Integer stationId) {
+      Observation last = (Observation) getBaseCriteria ().add (Restrictions.isNull ("rangeIni"))
+                                                         .addOrder (Order.desc ("observed"))
+                                                         .setMaxResults (1)
+                                                         .createCriteria ("station")
+                                                            .add (Restrictions.idEq (stationId))
+                                                         .uniqueResult ();
+      if (last != null) {
+         return getBaseCriteria ().add (Restrictions.isNull ("rangeIni"))
+                                  .add (Restrictions.eq ("observed", last.getObserved ()))
+                                  .addOrder (Order.asc ("observed"))
+                                  .createCriteria ("station")
+                                     .add (Restrictions.idEq (stationId))
+                                  .list ();
+      } else {
+        return new ArrayList <Observation> (0);
       }
    }
 }

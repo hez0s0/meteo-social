@@ -1,6 +1,7 @@
 package es.uned.grc.pfc.meteo.client.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import com.google.web.bindery.requestfactory.shared.ProxyFor;
@@ -32,9 +33,15 @@ public interface IStationProxy extends IEntityProxy {
    Double getLongitude ();
    void setLongitude (Double longitude);
    
+   Integer getHeight ();
+   void setHeight (Integer height);
+   
    Date getLastCollectedPeriod ();
    void setLastCollectedPeriod (Date lastCollectedPeriod);
    
    Boolean getOwn ();
    void setOwn (Boolean own);
+   
+   List <IObservationProxy> getTransientLastObservations ();
+   void setTransientLastObservations (List <IObservationProxy> transientLastObservations);
 }

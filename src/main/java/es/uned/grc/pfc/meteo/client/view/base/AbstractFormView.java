@@ -253,7 +253,7 @@ public abstract class AbstractFormView <E extends IEntityProxy> extends Abstract
             
             span = pathToSpanMap.get (property);
 //            sb.append (property + "\\n");
-            DisplayUtils.showSpan (span, IClientConstants.textMessages.fieldMessage (violationWrapper.getViolation ().getMessage ()));
+            DisplayUtils.showSpan (span, IClientConstants.TEXT_MESSAGES.fieldMessage (violationWrapper.getViolation ().getMessage ()));
             
             if (firstSpan == null) {
                firstSpan = span;

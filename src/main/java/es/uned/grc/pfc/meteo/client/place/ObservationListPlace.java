@@ -17,7 +17,9 @@ public class ObservationListPlace extends AbstractPlace {
 
    private static final String TYPE_PARAM = "type";
    private static final String REPRESENTATION_PARAM = "representation";
+   private static final String STATION_ID_PARAM = "stationId";
    
+   private Integer stationId = null;
    private ObservationType observationType = null;
    private Representation representation = null;
 
@@ -32,6 +34,12 @@ public class ObservationListPlace extends AbstractPlace {
    public ObservationListPlace (ObservationType observationType, Representation representation) {
       this.observationType = observationType;
       this.representation = representation;
+   }
+   
+   public ObservationListPlace (ObservationType observationType, Representation representation, Integer stationId) {
+      this.observationType = observationType;
+      this.representation = representation;
+      this.stationId = stationId;
    }
    
    /**
@@ -63,7 +71,16 @@ public class ObservationListPlace extends AbstractPlace {
                //silent
             }
          }
-         return new ObservationListPlace (obsTypeParam, repParam);
+         String stationIdString = params.get (STATION_ID_PARAM);
+         Integer stationIdParam = null;
+         if (!PortableStringUtils.isEmpty (stationIdString)) {
+            try {
+               stationIdParam = Integer.valueOf (stationIdString);
+            } catch (Exception e) {
+               //silent
+            }
+         }
+         return new ObservationListPlace (obsTypeParam, repParam, stationIdParam);
       }
 
       /**
@@ -71,8 +88,25 @@ public class ObservationListPlace extends AbstractPlace {
        */
       @Override
       public String getToken (ObservationListPlace place) {
-         return TYPE_PARAM + ISharedConstants.PARAM_VALUE_SEP + place.getObservationType ().toString ()
-                + ISharedConstants.PARAM_SEP + REPRESENTATION_PARAM + ISharedConstants.PARAM_VALUE_SEP + place.getRepresentation ().toString ();
+         StringBuilder builder = new StringBuilder ();
+         
+         builder.append (TYPE_PARAM);
+         builder.append (ISharedConstants.PARAM_VALUE_SEP);
+         builder.append (place.getObservationType ().toString ());
+
+         builder.append (ISharedConstants.PARAM_SEP);
+         builder.append (REPRESENTATION_PARAM);
+         builder.append (ISharedConstants.PARAM_VALUE_SEP);
+         builder.append (place.getRepresentation ().toString ());
+
+         if (place.getStationId () != null) {
+            builder.append (ISharedConstants.PARAM_SEP);
+            builder.append (STATION_ID_PARAM);
+            builder.append (ISharedConstants.PARAM_VALUE_SEP);
+            builder.append (place.getStationId ().toString ());
+         }
+         
+         return builder.toString ();
       }
    }
 
@@ -90,5 +124,13 @@ public class ObservationListPlace extends AbstractPlace {
 
    public void setObservationType (ObservationType observationType) {
       this.observationType = observationType;
+   }
+
+   public Integer getStationId () {
+      return stationId;
+   }
+
+   public void setStationId (Integer stationId) {
+      this.stationId = stationId;
    }
 }

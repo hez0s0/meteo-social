@@ -51,7 +51,7 @@ public class MenuActivity extends AbstractBaseActivity {
             public void execute () {
                if (mainActivityMapper.isMainViewDirty ()) { 
                   //if there are unsaved changes, confirmation is needed to proceed
-                  ConfirmationDialogBox.askConfirmation (IClientConstants.textConstants.pendingChangesQuestion ()).addClickHandler (ActionDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
+                  ConfirmationDialogBox.askConfirmation (IClientConstants.TEXT_CONSTANTS.pendingChangesQuestion ()).addClickHandler (ActionDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
                      @Override
                      public void onActionClicked (ActionDialogBoxClickEvent event) {
                         refreshView (eventBus);

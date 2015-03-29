@@ -24,7 +24,9 @@ public class StationMapActivity extends AbstractBaseActivity {
       this.eventBus = eventBus;
       panel.setWidget (mapView.asWidget ());
             
-      getRequestFactory (eventBus).getStationContext ().getOwnStation ().fire (new Receiver <IStationProxy> () {
+      getRequestFactory (eventBus).getStationContext ().getOwnStation (true)
+                                                       .with ("stationModel", "transientLastObservations", "transientLastObservations.variable")
+                                                       .fire (new Receiver <IStationProxy> () {
 
          @Override
          public void onSuccess (IStationProxy response) {

@@ -138,7 +138,7 @@ public class ActionDialogBox extends DialogBox {
    public void displayValidationErrors (Set <ConstraintViolation <Object>> violations) {
       if (pathToSpanMap != null) {
          for (ConstraintViolation <Object> violation : violations) {
-            DisplayUtils.showSpan (pathToSpanMap.get (violation.getPropertyPath ().toString ()), IClientConstants.textMessages.fieldMessage (violation.getMessage ()));
+            DisplayUtils.showSpan (pathToSpanMap.get (violation.getPropertyPath ().toString ()), IClientConstants.TEXT_MESSAGES.fieldMessage (violation.getMessage ()));
          }
       }
    }

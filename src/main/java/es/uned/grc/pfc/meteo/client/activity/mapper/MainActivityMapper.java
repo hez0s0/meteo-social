@@ -116,7 +116,7 @@ public class MainActivityMapper implements ActivityMapper {
    }
    
    private void bindGeneralViewEvents () {
-      mainLayoutView.getBackToList ().addClickHandler (new ClickHandler() {
+      mainLayoutView.getBackToList ().addClickHandler (new ClickHandler () {
          @Override
          public void onClick (ClickEvent event) {
             goToList ();
@@ -130,7 +130,9 @@ public class MainActivityMapper implements ActivityMapper {
          @Override
          public void onMapLoaded (MapLoadedEvent event) {
             //TODO obtain display rectangle
-            getRequestFactory (eventBus).getStationContext ().getStationsInArea (0.0, 0.0, 0.0, 0.0).fire (new Receiver <List <IStationProxy>> () {
+            getRequestFactory (eventBus).getStationContext ().getStationsInArea (Double.MAX_VALUE * -1, Double.MAX_VALUE * -1, Double.MAX_VALUE, Double.MAX_VALUE)
+                                                             .with ("stationModel", "transientLastObservations", "transientLastObservations.variable")
+                                                             .fire (new Receiver <List <IStationProxy>> () {
 
                @Override
                public void onSuccess (List <IStationProxy> response) {
@@ -151,7 +153,7 @@ public class MainActivityMapper implements ActivityMapper {
    private void goToList () {
       if (configuredListPlace != null) {
          if ( (configuredFormView != null) && (configuredFormView.isDirty ()) ) {
-            ConfirmationDialogBox.askConfirmation (IClientConstants.textConstants.pendingChangesQuestion ()).addClickHandler (ConfirmationDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
+            ConfirmationDialogBox.askConfirmation (IClientConstants.TEXT_CONSTANTS.pendingChangesQuestion ()).addClickHandler (ConfirmationDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
                @Override
                public void onActionClicked (ActionDialogBoxClickEvent event) {
                   placeController.goTo (configuredListPlace);

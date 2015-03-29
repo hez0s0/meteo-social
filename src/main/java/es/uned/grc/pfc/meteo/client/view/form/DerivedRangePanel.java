@@ -215,7 +215,7 @@ public class DerivedRangePanel extends Composite {
             if (o.getMinimum () != null) {
                return PortableStringUtils.format ("%s (%s used, %s ignored, %s expected)", o.getMinimum (), o.getMinimumDeriveBase (), o.getMinimumDeriveIgnored (), o.getMinimumDeriveExpected ());
             } else {
-               return IClientConstants.textConstants.emptyValue ();
+               return IClientConstants.TEXT_CONSTANTS.emptyValue ();
             }
          }
       }, null, false, 20);
@@ -226,7 +226,7 @@ public class DerivedRangePanel extends Composite {
             if (o.getAverage () != null) {
                return PortableStringUtils.format ("%s (%s used, %s ignored, %s expected)", o.getAverage (), o.getAverageDeriveBase (), o.getAverageDeriveIgnored (), o.getAverageDeriveExpected ());
             } else {
-               return IClientConstants.textConstants.emptyValue ();
+               return IClientConstants.TEXT_CONSTANTS.emptyValue ();
             }
          }
       }, null, false, 20);
@@ -237,7 +237,7 @@ public class DerivedRangePanel extends Composite {
             if (o.getMaximum () != null) {
                return PortableStringUtils.format ("%s (%s used, %s ignored, %s expected)", o.getMaximum (), o.getMaximumDeriveBase (), o.getMaximumDeriveIgnored (), o.getMaximumDeriveExpected ());
             } else {
-               return IClientConstants.textConstants.emptyValue ();
+               return IClientConstants.TEXT_CONSTANTS.emptyValue ();
             }
          }
       }, null, false, 20);

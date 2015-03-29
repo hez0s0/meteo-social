@@ -35,6 +35,18 @@ public class StationService {
    }
    
    /**
+    * Get the own station with or without the last observations
+    */
+   public Station getOwnStation (boolean includeLastObservations) {
+      try {
+         return stationPersistence.getOwnStation (includeLastObservations);
+      } catch (Exception e) {
+         logger.error ("Error getting own station", e);
+         throw new RuntimeException ("Could not get own station. See server logs.");
+      }
+   }
+   
+   /**
     * Get the station by id
     */
    public Station getStationById (int stationId) {
@@ -51,9 +63,8 @@ public class StationService {
     */
    public List <Station> getStationsInArea (double minLatitude, double minLongitude, double maxLatitude, double maxLongitude) {
       try {
-         //TODO: consider geo rectangle
-         Station own = stationPersistence.getOwnStation ();
-         List <Station> stations = stationPersistence.findAll ();
+         Station own = stationPersistence.getOwnStation (true);
+         List <Station> stations = stationPersistence.getStationsInArea (minLatitude, minLongitude, maxLatitude, maxLongitude, true);
          stations.remove (own);
          return stations;
       } catch (Exception e) {

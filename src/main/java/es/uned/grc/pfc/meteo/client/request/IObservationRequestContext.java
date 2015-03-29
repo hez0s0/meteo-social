@@ -10,6 +10,7 @@ import com.google.web.bindery.requestfactory.shared.Service;
 
 import es.uned.grc.pfc.meteo.client.model.IDerivedRangeProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
+import es.uned.grc.pfc.meteo.client.model.IObservationProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamFilterProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableObservationsProxy;
@@ -59,4 +60,8 @@ public interface IObservationRequestContext extends RequestContext {
     * Obtains a list of derivedRange objects of given type referred to the given date for graphic display 
     */
    Request <List <IDerivedRangeProxy>> getDerivedInRangeForGraphics (ISharedConstants.DerivedRangeType derivedRangeType, Date searched, Integer stationId);
+   /**
+    * Obtain the last observations received for a given station
+    */
+   public Request <List <IObservationProxy>> getLastReceived (Integer stationId);
 }

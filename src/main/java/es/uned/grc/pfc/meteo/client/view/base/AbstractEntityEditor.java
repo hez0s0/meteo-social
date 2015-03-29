@@ -149,7 +149,7 @@ public abstract class AbstractEntityEditor <T extends IEntityProxy> extends Comp
       if (pathToSpanMap != null) {
          for (ConstraintViolation <?> violation : violations) {
             DisplayUtils.showSpan (pathToSpanMap.get (violation.getPropertyPath ().toString ()), 
-                                   IClientConstants.textMessages.fieldMessage (violation.getMessage ()));
+                                   IClientConstants.TEXT_MESSAGES.fieldMessage (violation.getMessage ()));
          }
       }
    } //end of displayValidationErrors

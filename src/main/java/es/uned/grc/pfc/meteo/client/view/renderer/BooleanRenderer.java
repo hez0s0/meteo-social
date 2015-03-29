@@ -11,7 +11,7 @@ public class BooleanRenderer extends AbstractRenderer <Boolean> implements ILoca
    
    @Override
    public String render (Boolean value) {
-      return (value != null && value) ? IClientConstants.textConstants.trueValue () : IClientConstants.textConstants.falseValue ();
+      return (value != null && value) ? IClientConstants.TEXT_CONSTANTS.trueValue () : IClientConstants.TEXT_CONSTANTS.falseValue ();
    }
 
    @Override

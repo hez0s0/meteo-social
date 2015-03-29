@@ -504,7 +504,7 @@ public class FormUtils {
    public static void reloadConditionally (MainActivityMapper mainActivityMapper) {
       if (mainActivityMapper.isMainViewDirty ()) {
          //if there are unsaved changes, confirmation is needed to proceed
-         ConfirmationDialogBox.askConfirmation (IClientConstants.textConstants.pendingChangesQuestion ()).addClickHandler (ActionDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
+         ConfirmationDialogBox.askConfirmation (IClientConstants.TEXT_CONSTANTS.pendingChangesQuestion ()).addClickHandler (ActionDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
             @Override
             public void onActionClicked (ActionDialogBoxClickEvent event) {
                Window.Location.reload ();
@@ -518,7 +518,7 @@ public class FormUtils {
    public static void goConditionallyToUrl (MainActivityMapper mainActivityMapper, final String url) {
       if (mainActivityMapper.isMainViewDirty ()) {
          //if there are unsaved changes, confirmation is needed to proceed
-         ConfirmationDialogBox.askConfirmation (IClientConstants.textConstants.pendingChangesQuestion ()).addClickHandler (ActionDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
+         ConfirmationDialogBox.askConfirmation (IClientConstants.TEXT_CONSTANTS.pendingChangesQuestion ()).addClickHandler (ActionDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
             @Override
             public void onActionClicked (ActionDialogBoxClickEvent event) {
                Window.Location.assign (url);
@@ -532,7 +532,7 @@ public class FormUtils {
    public static void goConditionallyToPlace (MainActivityMapper mainActivityMapper, final Place place, final PlaceController placeController) {
       if (mainActivityMapper.isMainViewDirty ()) {
          //if there are unsaved changes, confirmation is needed to proceed
-         ConfirmationDialogBox.askConfirmation (IClientConstants.textConstants.pendingChangesQuestion ()).addClickHandler (ActionDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
+         ConfirmationDialogBox.askConfirmation (IClientConstants.TEXT_CONSTANTS.pendingChangesQuestion ()).addClickHandler (ActionDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
             @Override
             public void onActionClicked (ActionDialogBoxClickEvent event) {
                placeController.goTo (place);

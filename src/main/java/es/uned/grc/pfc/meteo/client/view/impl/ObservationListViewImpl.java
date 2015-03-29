@@ -161,7 +161,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
       }
 
       // date observed
-      new ColumnAppender <Date, IObservationBlockProxy> ().addColumn (observationCellTable, new DateCell (dateFormat), "observed", null, new ColumnAppender.GetValue <Date, IObservationBlockProxy> () {
+      new ColumnAppender <Date, IObservationBlockProxy> ().addColumn (observationCellTable, new DateCell (dateFormat), TEXT_CONSTANTS.observedColumn (), null, new ColumnAppender.GetValue <Date, IObservationBlockProxy> () {
          @Override
          public Date getValue (IObservationBlockProxy o) {
             return o.getObserved ();

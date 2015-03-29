@@ -251,6 +251,21 @@ public class ObservationService {
    }
    
    /**
+    * Obtain the last observations received for a given station
+    */
+   public List <Observation> getLastReceived (Integer stationId) {
+      try {
+         if (stationId == null) {
+            stationId = stationPersistence.getOwnStation ().getId ();
+         }
+         return observationPersistence.getLastReceived (stationId);
+      } catch (Exception e) {
+         logger.error ("Error listing last observations", e);
+         throw new RuntimeException ("Could not list last observations of a station. See server logs.");
+      }
+   }
+   
+   /**
     * Obtain the start of the current day
     */
    public Date getTodayStart () {

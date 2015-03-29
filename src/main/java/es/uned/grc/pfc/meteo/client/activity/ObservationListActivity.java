@@ -92,12 +92,21 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
       requestParamProxy.setStart (0);
       requestParamProxy.setLength (Integer.MAX_VALUE);
 
-      //own station
       requestParamProxy.setFilters (new ArrayList <IRequestParamFilterProxy> ());
-      paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
-      paramFilter.setParam (ISharedConstants.ObservationFilter.OWN.toString ());
-      paramFilter.setValue ("true");
-      requestParamProxy.getFilters ().add (paramFilter);
+      
+      if (listPlace.getStationId () == null) {
+         //own station
+         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+         paramFilter.setParam (ISharedConstants.ObservationFilter.OWN.toString ());
+         paramFilter.setValue ("true");
+         requestParamProxy.getFilters ().add (paramFilter);
+      } else {
+         //a given station
+         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+         paramFilter.setParam (ISharedConstants.ObservationFilter.STATION_ID.toString ());
+         paramFilter.setValue (String.valueOf (listPlace.getStationId ()));
+         requestParamProxy.getFilters ().add (paramFilter);
+      }
 
       if (!listPlace.getObservationType ().equals (ObservationType.DERIVED)) {
          //start date filter, if present

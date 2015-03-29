@@ -1111,3 +1111,34 @@ li.meteo-token-input-input-token {
 	min-height: 100px;
 	width: 100%;
 }
+
+.meteo-form-field-label {
+	text-shadow: 1px 1px 0px rgb(221, 221, 255);
+	font: bold !important;
+}
+
+.meteo-table-header {
+	color: #4b4a4a;
+	font: bold;
+	text-shadow: 1px 1px 0px rgb(221, 221, 255);
+	border-bottom: 2px solid #6f7277;
+	padding: 3px 15px;
+}
+
+hr.style-one {
+    border: 0;
+    height: 1px;
+    background: #333;
+    background-image: -webkit-linear-gradient(left, #ccc, #333, #ccc);
+    background-image:    -moz-linear-gradient(left, #ccc, #333, #ccc);
+    background-image:     -ms-linear-gradient(left, #ccc, #333, #ccc);
+    background-image:      -o-linear-gradient(left, #ccc, #333, #ccc);
+}
+
+.link-label {
+   cursor: pointer;
+   cursor: hand;
+   text-shadow: 1px 1px 0px rgb(221, 221, 255);
+   font-weight: bold;
+   color: #4a4a4a;
+}

@@ -20,6 +20,10 @@ public interface IStationRequestContext extends RequestContext {
     */
    Request <IStationProxy> getOwnStation ();
    /**
+    * Obtain the own station with or without its last observatiosn
+    */
+   Request <IStationProxy> getOwnStation (boolean includeLastObservations);
+   /**
     * Obtain the own station
     */
    Request <IStationProxy> getStationById (int stationId);

@@ -1,6 +1,8 @@
 package es.uned.grc.pfc.meteo.server.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -17,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import es.uned.grc.pfc.meteo.server.model.base.AbstractVersionable;
 
@@ -35,6 +38,9 @@ public class Station extends AbstractVersionable <Integer> {
    private Integer height = null;
    private Date lastCollectedPeriod = null;
    private Boolean own = false;
+   
+   //transient property!
+   private List <Observation> transientLastObservations = new ArrayList <Observation> ();
 
    @Id
    @GeneratedValue (strategy = GenerationType.AUTO, generator = "metStationID_gen")
@@ -119,5 +125,13 @@ public class Station extends AbstractVersionable <Integer> {
    }
    public void setOwn (Boolean own) {
       this.own = own;
+   }
+   
+   @Transient
+   public List <Observation> getTransientLastObservations () {
+      return transientLastObservations;
+   }
+   public void setTransientLastObservations (List <Observation> transientLastObservations) {
+      this.transientLastObservations = transientLastObservations;
    }
 }
