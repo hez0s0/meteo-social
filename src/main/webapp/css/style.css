@@ -1107,6 +1107,10 @@ li.meteo-token-input-input-token {
    background-color: #F7EBD2;
 }
 
+.meteo-cellTableBadQuality {
+   background-color: #FFE24B;
+}
+
 .meteo-replace-result-cell-list {
 	min-height: 100px;
 	width: 100%;
@@ -1135,7 +1139,7 @@ hr.style-one {
     background-image:      -o-linear-gradient(left, #ccc, #333, #ccc);
 }
 
-.link-label {
+.meteo-link-label {
    cursor: pointer;
    cursor: hand;
    text-shadow: 1px 1px 0px rgb(221, 221, 255);

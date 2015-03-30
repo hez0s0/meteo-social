@@ -3,9 +3,7 @@ package es.uned.grc.pfc.meteo.client.view.impl;
 import java.util.Date;
 import java.util.List;
 
-import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.client.Constants;
@@ -16,8 +14,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.AbstractCellTable;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.ColumnSortEvent.AsyncHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -49,9 +45,8 @@ import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractPage;
 import es.uned.grc.pfc.meteo.client.view.form.DerivedRangePanel;
-import es.uned.grc.pfc.meteo.client.view.table.IndexedObservationColumn;
+import es.uned.grc.pfc.meteo.client.view.table.ObservationTableBuilder;
 import es.uned.grc.pfc.meteo.client.view.util.ChartUtils;
-import es.uned.grc.pfc.meteo.client.view.util.ColumnAppender;
 import es.uned.grc.pfc.meteo.client.view.widget.suggest.impl.VariableSuggestInputListBox;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
 
@@ -146,41 +141,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
     */
    @Override
    public void initTableColumns (List <IObservationBlockProxy> observationBlock) {
-      AsyncHandler columnSortHandler = null;
-      Column <IObservationBlockProxy, String> nameColumn = null;
-      DateTimeFormat dateFormat = DateTimeFormat.getFormat (PredefinedFormat.DATE_TIME_SHORT);
-      int observedWidth = 15;
-      int leftWidth = 100 - observedWidth;
-      List <IObservationProxy> firstRow = null;
-      IndexedObservationColumn indexedObservationColumn = null;
-      int col = 0;
-
-      //clear all the columns
-      while (observationCellTable.getColumnCount () > 0) {
-         observationCellTable.removeColumn (0);
-      }
-
-      // date observed
-      new ColumnAppender <Date, IObservationBlockProxy> ().addColumn (observationCellTable, new DateCell (dateFormat), TEXT_CONSTANTS.observedColumn (), null, new ColumnAppender.GetValue <Date, IObservationBlockProxy> () {
-         @Override
-         public Date getValue (IObservationBlockProxy o) {
-            return o.getObserved ();
-         }
-      }, null, false, observedWidth);
-
-      if (!observationBlock.isEmpty ()) {
-         firstRow = observationBlock.get (0).getObservations ();
-         for (IObservationProxy observation : firstRow) {
-            indexedObservationColumn = new IndexedObservationColumn (col++);
-
-            observationCellTable.addColumn (indexedObservationColumn, observation != null ? observation.getVariable ().getAcronym () : "???");
-            observationCellTable.setColumnWidth (indexedObservationColumn, leftWidth / firstRow.size (), Unit.PCT);
-         }
-      }
-
-      columnSortHandler = new AsyncHandler (observationCellTable);
-      observationCellTable.addColumnSortHandler (columnSortHandler);
-      observationCellTable.getColumnSortList ().push (nameColumn);
+      observationCellTable.setTableBuilder (new ObservationTableBuilder (observationCellTable, observationBlock));
    }
 
    @Override

@@ -50,7 +50,7 @@
                      <g:FlexTable ui:field="observationFlexTable" borderWidth="0" />
                   </g:cell>
                   <g:cell horizontalAlignment="ALIGN_CENTER">
-                     <g:Label ui:field="viewAllLabel" visible="false" styleName="link-label"><ui:msg meaning="list all observations" description="label for station tooltip">List all observations</ui:msg></g:Label>
+                     <g:Label ui:field="viewAllLabel" visible="false" styleName="meteo-link-label"><ui:msg meaning="list all observations" description="label for station tooltip">List all observations</ui:msg></g:Label>
                   </g:cell>
                </g:VerticalPanel>
              </g:cell>

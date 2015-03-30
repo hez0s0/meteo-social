@@ -87,6 +87,8 @@ public interface IStyleConstants {
    String EVEN_ROW = APP_PREFIX + "cellTableEvenRowBg";
    /** style for even rows within tables */
    String ODD_ROW = APP_PREFIX + "cellTableOddRowBg";
+   /** style for observation rows with bad quality */
+   String BAD_QUALITY_ROW = APP_PREFIX + "cellTableBadQuality";
    
    /** header of a table */
    String TABLE_HEADER = APP_PREFIX + "table-header";
