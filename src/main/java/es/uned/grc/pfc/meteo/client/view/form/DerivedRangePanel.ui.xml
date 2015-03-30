@@ -17,7 +17,7 @@
          </h3>
       </g:HTMLPanel>
       <g:HorizontalPanel ui:field="tablePanel" width="100%">
-         <c:CellTable ui:field="observationCellTable" pageSize="1000" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false" width="100%" />
+         <c:CellTable ui:field="derivedCellTable" pageSize="1000" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false" width="100%" />
       </g:HorizontalPanel>
       <g:VerticalPanel ui:field="graphPanel" width="100%"/>
    </g:VerticalPanel>
