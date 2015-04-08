@@ -7,8 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.uned.grc.pfc.meteo.server.model.RequestParam;
 import es.uned.grc.pfc.meteo.server.model.Station;
+import es.uned.grc.pfc.meteo.server.model.paged.StationPagedList;
+import es.uned.grc.pfc.meteo.server.model.paged.StringPagedList;
 import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
+import es.uned.grc.pfc.meteo.server.service.helper.StationServiceHelper;
+import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
 /**
  * Service to manage stations
@@ -21,6 +26,9 @@ public class StationService {
    
    @Autowired
    private IStationPersistence stationPersistence = null;
+
+   @Autowired
+   private StationServiceHelper stationServiceHelper = null;
    
    /**
     * Get the own station
@@ -71,5 +79,31 @@ public class StationService {
          logger.error ("Error listin stations in an area", e);
          throw new RuntimeException ("Could not list stations in an area. See server logs.");
       }
+   }
+   
+   /**
+    * Obtains a list of stations for the given filter
+    */
+   public StationPagedList getStations (RequestParam requestParam) {
+      try {
+         return new StationPagedList (stationPersistence.getList (requestParam));
+      } catch (Exception e) {
+         logger.error ("Error listing stations", e);
+         throw new RuntimeException ("Could not list stations. See server logs.");
+      }
+   }
+   
+   /**
+    * Obtains a list of cities for the given filter
+    */
+   public StringPagedList getCities (String filter) {
+      return stationServiceHelper.getStationProperties (filter, ISharedConstants.StationFilter.CITY);
+   }
+   
+   /**
+    * Obtains a list of countries for the given filter
+    */
+   public StringPagedList getCountries (String filter) {
+      return stationServiceHelper.getStationProperties (filter, ISharedConstants.StationFilter.COUNTRY);
    }
 }

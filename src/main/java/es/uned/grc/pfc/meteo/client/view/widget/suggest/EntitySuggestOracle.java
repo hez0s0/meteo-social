@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.web.bindery.requestfactory.shared.BaseProxy;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
@@ -18,7 +17,7 @@ import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 /**
  * Implements a generic suggest oracle for any entity of the system.
  */
-public abstract class EntitySuggestOracle <E extends BaseProxy, R extends RequestContext, P extends IPagedListProxy <E>> extends MultiWordSuggestOracle {
+public abstract class EntitySuggestOracle <E extends Object, R extends RequestContext, P extends IPagedListProxy <E>> extends MultiWordSuggestOracle {
 
    /** Number of suggestions to request from the server. */
    protected static final int MAX_SUGGESTIONS = 20;

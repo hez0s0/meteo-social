@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.google.web.bindery.requestfactory.shared.BaseProxy;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 
 import es.uned.grc.pfc.meteo.client.model.base.IPagedListProxy;
@@ -25,7 +24,7 @@ import es.uned.grc.pfc.meteo.client.util.ClientGlobals;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractEntityEditor.EditorMode;
 import es.uned.grc.pfc.meteo.client.view.util.FormUtils;
 
-public abstract class EntitySuggestListBox <E extends BaseProxy, R extends RequestContext, P extends IPagedListProxy <E>> extends AbstractEntitySuggestListBox <E> {
+public abstract class EntitySuggestListBox <E extends Object, R extends RequestContext, P extends IPagedListProxy <E>> extends AbstractEntitySuggestListBox <E> {
    
    interface EntitySuggestListBoxUiBinder extends UiBinder <VerticalPanel, EntitySuggestListBox <?, ?, ?>> {
    }

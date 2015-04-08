@@ -36,7 +36,7 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
 
 /**
- * Supports non-client invokable actions of the AdminService module
+ * Supports non-client invokable actions of the ObservationService module
  */
 @Service
 public class ObservationServiceHelper {

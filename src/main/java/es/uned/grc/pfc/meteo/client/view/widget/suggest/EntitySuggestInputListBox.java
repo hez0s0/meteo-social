@@ -24,7 +24,6 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.SuggestBox.DefaultSuggestionDisplay;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.web.bindery.requestfactory.shared.BaseProxy;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 
 import es.uned.grc.pfc.meteo.client.model.base.IPagedListProxy;
@@ -34,7 +33,7 @@ import es.uned.grc.pfc.meteo.client.view.base.IEnterOnEmptyFieldHandler;
 import es.uned.grc.pfc.meteo.client.view.util.DisplayUtils;
 import es.uned.grc.pfc.meteo.client.view.widget.dialog.AlertDialogBox;
 
-public abstract class EntitySuggestInputListBox <E extends BaseProxy, R extends RequestContext, P extends IPagedListProxy <E>> extends AbstractEntitySuggestListBox <E> {
+public abstract class EntitySuggestInputListBox <E extends Object, R extends RequestContext, P extends IPagedListProxy <E>> extends AbstractEntitySuggestListBox <E> {
    
    private final static int CURSOR_LEFT = 37; 
    private final static int CURSOR_UP = 38; 

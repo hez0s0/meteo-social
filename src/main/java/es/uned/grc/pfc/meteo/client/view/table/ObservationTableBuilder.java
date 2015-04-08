@@ -263,4 +263,3 @@ public class ObservationTableBuilder extends AbstractCellTableBuilder <IObservat
       return false;
    }
 }
-

@@ -2,8 +2,6 @@ package es.uned.grc.pfc.meteo.client.model.base;
 
 import java.util.List;
 
-import com.google.web.bindery.requestfactory.shared.BaseProxy;
-
 /**
  * Proxy for the server-side PagedList.
  * 
@@ -11,7 +9,7 @@ import com.google.web.bindery.requestfactory.shared.BaseProxy;
  * lists by now, so it will have to be extended for every listed
  * entity (grffff).
  */
-public interface IPagedListProxy <T extends BaseProxy> {
+public interface IPagedListProxy <T extends Object> {
    List <T> getList ();
    long getRealSize ();
 }

@@ -11,7 +11,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.web.bindery.requestfactory.shared.BaseProxy;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 
 import es.uned.grc.pfc.meteo.client.model.base.IHasProxies;
@@ -20,7 +19,7 @@ import es.uned.grc.pfc.meteo.client.util.PortableStringUtils;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractEntityEditor.EditorMode;
 import es.uned.grc.pfc.meteo.client.view.base.IView;
 
-public abstract class AbstractEntitySuggestListBox <E extends BaseProxy> extends Composite implements IView, IHasProxies <E>, HasValueChangeHandlers <List <E>> {
+public abstract class AbstractEntitySuggestListBox <E extends Object> extends Composite implements IView, IHasProxies <E>, HasValueChangeHandlers <List <E>> {
 
    protected EditorMode editorMode = null;
    protected ListDataProvider <E> entityListProvider = new ListDataProvider <E> ();

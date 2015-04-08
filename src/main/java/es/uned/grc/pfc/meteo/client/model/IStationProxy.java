@@ -41,6 +41,18 @@ public interface IStationProxy extends IEntityProxy {
    
    Boolean getOwn ();
    void setOwn (Boolean own);
+
+   String getStreet ();
+   void setStreet (String street);
+   
+   String getZip ();
+   void setZip (String zip);
+   
+   String getCity ();
+   void setCity (String city);
+   
+   String getCountry ();
+   void setCountry (String country);
    
    List <IObservationProxy> getTransientLastObservations ();
    void setTransientLastObservations (List <IObservationProxy> transientLastObservations);

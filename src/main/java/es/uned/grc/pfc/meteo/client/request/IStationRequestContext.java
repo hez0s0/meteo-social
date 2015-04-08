@@ -6,7 +6,10 @@ import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.Service;
 
+import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
 import es.uned.grc.pfc.meteo.client.model.IStationProxy;
+import es.uned.grc.pfc.meteo.client.model.paged.IStationPagedListProxy;
+import es.uned.grc.pfc.meteo.client.model.paged.IStringPagedListProxy;
 import es.uned.grc.pfc.meteo.server.service.StationService;
 import es.uned.grc.pfc.meteo.shared.locators.SpringServiceLocator;
 
@@ -31,4 +34,16 @@ public interface IStationRequestContext extends RequestContext {
     * Obtained the list of stations contained within a rectagle
     */
    Request <List <IStationProxy>> getStationsInArea (double minLatitude, double minLongitude, double maxLatitude, double maxLongitude);
+   /**
+    * Obtains a list of stations for the given filter
+    */
+   Request <IStationPagedListProxy> getStations (IRequestParamProxy requestParam);
+   /**
+    * Obtains a list of cities for the given filter
+    */
+   Request <IStringPagedListProxy> getCities (String filter);
+   /**
+    * Obtains a list of countries for the given filter
+    */
+   Request <IStringPagedListProxy> getCountries (String filter);
 }

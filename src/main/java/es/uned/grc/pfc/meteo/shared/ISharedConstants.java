@@ -61,7 +61,7 @@ public interface ISharedConstants {
    String DECIMAL_SEPARATOR_RE = "\\.";
    
    /** the filters that can be applied over stations */
-   enum StationFilter {NAME, COUNTRY, CITY, ZIP};
+   enum StationFilter {OWN, NAME, COUNTRY, CITY, ZIP, LAT, LON, RADIUS};
    
    /** the filters that can be applied over observations */
    enum ObservationFilter {OWN, STATION_ID, START_DATE, END_DATE, VARIABLE_IDS, MEASURED_ONLY, DERIVED_ONLY};

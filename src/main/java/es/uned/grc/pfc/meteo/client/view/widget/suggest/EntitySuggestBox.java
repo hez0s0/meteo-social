@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.requestfactory.shared.BaseProxy;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 
 import es.uned.grc.pfc.meteo.client.model.base.IPagedListProxy;
@@ -14,7 +13,7 @@ import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractEntityEditor.EditorMode;
 import es.uned.grc.pfc.meteo.client.view.util.FormUtils;
 
-public abstract class EntitySuggestBox <E extends BaseProxy, R extends RequestContext, P extends IPagedListProxy <E>> 
+public abstract class EntitySuggestBox <E extends Object, R extends RequestContext, P extends IPagedListProxy <E>> 
    implements IsWidget, LeafValueEditor <E> {
 
    protected EntitySuggestOracle <E, R, P> entitySuggestOracle = null;
@@ -36,7 +35,7 @@ public abstract class EntitySuggestBox <E extends BaseProxy, R extends RequestCo
       } else {
          suggestBox = new ExtendedSuggestBox (entitySuggestOracle);
       }
-      suggestBox.setPlaceholder ("suggestBoxKey");
+//      suggestBox.setPlaceholder ("suggestBoxKey");
       
       entitySuggestOracle.setSuggestBox (suggestBox);
    }

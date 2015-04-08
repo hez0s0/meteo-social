@@ -38,6 +38,10 @@ public class Station extends AbstractVersionable <Integer> {
    private Integer height = null;
    private Date lastCollectedPeriod = null;
    private Boolean own = false;
+   private String street = null;
+   private String zip = null;
+   private String city = null;
+   private String country = null;
    
    //transient property!
    private List <Observation> transientLastObservations = new ArrayList <Observation> ();
@@ -125,6 +129,38 @@ public class Station extends AbstractVersionable <Integer> {
    }
    public void setOwn (Boolean own) {
       this.own = own;
+   }
+
+   @Column (length = 1024)
+   public String getStreet () {
+      return street;
+   }
+   public void setStreet (String street) {
+      this.street = street;
+   }
+
+   @Column (length = 8)
+   public String getZip () {
+      return zip;
+   }
+   public void setZip (String zip) {
+      this.zip = zip;
+   }
+
+   @Column (length = 1024)
+   public String getCity () {
+      return city;
+   }
+   public void setCity (String city) {
+      this.city = city;
+   }
+
+   @Column (length = 1024)
+   public String getCountry () {
+      return country;
+   }
+   public void setCountry (String country) {
+      this.country = country;
    }
    
    @Transient
