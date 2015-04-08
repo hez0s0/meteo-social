@@ -47,14 +47,14 @@ public class HeaderActivity extends AbstractBaseActivity {
          public void onClick (ClickEvent event) {
             setLocale (IClientConstants.LOCALE_SPANISH);
          }
-      }); //end of handler
+      });
       /** set GB locale */
       registerHandler (headerView.getEnButton (), new ClickHandler () {
          @Override
          public void onClick (ClickEvent event) {
             setLocale (IClientConstants.LOCALE_ENGLISH);
          }
-      }); //end of handler
+      });
    }
 
    private void setLocale (String locale) {

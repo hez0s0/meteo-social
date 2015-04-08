@@ -26,7 +26,7 @@ public class HeaderViewImpl extends Composite implements IHeaderView  {
    private static HeaderViewImplUiBinder uiBinder = GWT.create (HeaderViewImplUiBinder.class);
    
    @UiField
-   Image deImage = null;
+   Image esImage = null;
    @UiField
    Image enImage = null;
    
@@ -38,7 +38,7 @@ public class HeaderViewImpl extends Composite implements IHeaderView  {
    public HeaderViewImpl () {
       initWidget (uiBinder.createAndBindUi (this));
       
-      deImage.setUrl (PortableStringUtils.format (ISharedConstants.FLAG_IMAGE_URL, CommonUtils.getBaseUrl (), "de"));
+      esImage.setUrl (PortableStringUtils.format (ISharedConstants.FLAG_IMAGE_URL, CommonUtils.getBaseUrl (), "es"));
       enImage.setUrl (PortableStringUtils.format (ISharedConstants.FLAG_IMAGE_URL, CommonUtils.getBaseUrl (), "gb"));
       
       bind ();
@@ -59,12 +59,11 @@ public class HeaderViewImpl extends Composite implements IHeaderView  {
 
    @Override
    public HasClickHandlers getEsButton () {
-      return deImage;
+      return esImage;
    }
 
    @Override
    public HasClickHandlers getEnButton () {
       return enImage;
    }
-   
 }
