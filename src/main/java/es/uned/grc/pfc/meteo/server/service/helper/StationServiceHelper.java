@@ -19,7 +19,7 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 public class StationServiceHelper {
 
    private static Logger logger = LoggerFactory.getLogger (StationServiceHelper.class);
-   
+
    @Autowired
    private SessionFactory sessionFactory = null;
    

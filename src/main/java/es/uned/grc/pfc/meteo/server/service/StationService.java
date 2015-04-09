@@ -11,6 +11,7 @@ import es.uned.grc.pfc.meteo.server.model.RequestParam;
 import es.uned.grc.pfc.meteo.server.model.Station;
 import es.uned.grc.pfc.meteo.server.model.paged.StationPagedList;
 import es.uned.grc.pfc.meteo.server.model.paged.StringPagedList;
+import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
 import es.uned.grc.pfc.meteo.server.service.helper.StationServiceHelper;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
@@ -26,6 +27,8 @@ public class StationService {
    
    @Autowired
    private IStationPersistence stationPersistence = null;
+   @Autowired
+   private IObservationPersistence observationPersistence = null;
 
    @Autowired
    private StationServiceHelper stationServiceHelper = null;
@@ -84,9 +87,17 @@ public class StationService {
    /**
     * Obtains a list of stations for the given filter
     */
-   public StationPagedList getStations (RequestParam requestParam) {
+   public StationPagedList getStations (RequestParam requestParam, boolean withLastObservations) {
       try {
-         return new StationPagedList (stationPersistence.getList (requestParam));
+         StationPagedList result = new StationPagedList (stationPersistence.getList (requestParam));
+         
+         if (withLastObservations) {
+            for (Station station : result.getList ()) {
+               station.setTransientLastObservations (observationPersistence.getLastReceived (station.getId ()));
+            }
+         }
+         
+         return result;
       } catch (Exception e) {
          logger.error ("Error listing stations", e);
          throw new RuntimeException ("Could not list stations. See server logs.");

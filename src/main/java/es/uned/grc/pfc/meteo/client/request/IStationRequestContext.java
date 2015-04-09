@@ -37,7 +37,7 @@ public interface IStationRequestContext extends RequestContext {
    /**
     * Obtains a list of stations for the given filter
     */
-   Request <IStationPagedListProxy> getStations (IRequestParamProxy requestParam);
+   Request <IStationPagedListProxy> getStations (IRequestParamProxy requestParam, boolean withLastObservations);
    /**
     * Obtains a list of cities for the given filter
     */

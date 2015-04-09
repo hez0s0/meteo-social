@@ -25,7 +25,7 @@ public class ActionResultDialogBox extends DecoratedPopupPanel {
    }
    private static ActionResultDialogBoxUiBinder uiBinder = GWT.create (ActionResultDialogBoxUiBinder.class);
    
-   protected static final int FADE_OUT_MILLIS = 6000;
+   public static final int FADE_OUT_MILLIS = 6000;
 
    protected FadeAnimation fadeAnimation = null;
    protected int fadeOutMillis = -1;

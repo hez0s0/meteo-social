@@ -16,6 +16,9 @@ public interface IClientConstants {
       @DefaultStringValue ("-") @Meaning ("Empty value")
       String emptyValue ();
       
+      @DefaultStringValue ("No rows") @Meaning ("no rows value")
+      String noRows ();
+      
       @DefaultStringValue ("This field cannot be left empty") @Meaning ("Field validation message")
       String notEmpty ();
 
@@ -27,6 +30,9 @@ public interface IClientConstants {
       @DefaultStringValue ("Some unsaved changes were made on the form that will be lost. Do you still want to proceed?")
       @Meaning ("Unsaved changes being lost confirm question")
       String pendingChangesQuestion ();
+
+      @DefaultStringValue ("No results found") @Meaning ("no results found")
+      String emptySearchResult ();
    }
    public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);
    

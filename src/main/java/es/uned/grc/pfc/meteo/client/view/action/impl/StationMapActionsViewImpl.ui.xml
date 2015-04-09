@@ -49,7 +49,9 @@
          
          <g:Button ui:field="searchButton"><ui:msg meaning="station filter button" description="label for search button">Search</ui:msg></g:Button>
          
-<!--          <c:CellList ui:field="stationCellList"/> -->
+         <meteo-widget:LimitedSimplePager ui:field="pagerTop"/>
+         <c:CellList ui:field="stationCellList"/>
+         <meteo-widget:LimitedSimplePager ui:field="pagerBottom"/>
      </g:VerticalPanel>
   </g:HTMLPanel>
 </ui:UiBinder>
