@@ -51,7 +51,6 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
             //set default interval between 00 and 24 of today
             listView.setStartDate (response);
             listView.setExactDate (response);
-            listView.setEndDate (new Date (response.getTime () + ISharedConstants.ONE_DAY_MILLIS));
             
             ObservationListActivity.super.start (panel, eventBus);
          }
@@ -115,12 +114,10 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
             paramFilter.setParam (ISharedConstants.ObservationFilter.START_DATE.toString ());
             paramFilter.setValue (dateTimeFormat.format (listView.getStartDate ()));
             requestParamProxy.getFilters ().add (paramFilter);
-         }
-         //end date filter, if present
-         if (listView.getEndDate () != null) {
+            
             paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
             paramFilter.setParam (ISharedConstants.ObservationFilter.END_DATE.toString ());
-            paramFilter.setValue (dateTimeFormat.format (listView.getEndDate ()));
+            paramFilter.setValue (dateTimeFormat.format (new Date (listView.getStartDate ().getTime () + ISharedConstants.ONE_DAY_MILLIS)));
             requestParamProxy.getFilters ().add (paramFilter);
          }
          //variable list filter, if present

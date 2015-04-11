@@ -42,6 +42,7 @@ import es.uned.grc.pfc.meteo.client.model.IObservationProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableObservationsProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableProxy;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
+import es.uned.grc.pfc.meteo.client.util.IClientConstants;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractPage;
 import es.uned.grc.pfc.meteo.client.view.form.DerivedRangePanel;
@@ -75,8 +76,6 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    protected CellTable <IObservationBlockProxy> observationCellTable = new CellTable <IObservationBlockProxy> (Integer.MAX_VALUE);
    @UiField
    protected DateBox startDateBox = null;
-   @UiField
-   protected DateBox endDateBox = null;
    @UiField
    protected DateBox exactDateBox = null;
    @UiField
@@ -122,7 +121,11 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
 
       // Bind the UI with myself
       initWidget (uiBinder.createAndBindUi (this));
-
+      
+      // set date formats
+      startDateBox.setFormat (new DateBox.DefaultFormat (DateTimeFormat.getFormat (IClientConstants.DISPLAY_SHORT_DATE)));
+      exactDateBox.setFormat (new DateBox.DefaultFormat (DateTimeFormat.getFormat (IClientConstants.DISPLAY_SHORT_DATE)));
+      
       // Add a selection model so we can select cells
       selectionModel = new MultiSelectionModel <IObservationBlockProxy> (keyProvider);
       observationCellTable.setSelectionModel (selectionModel, DefaultSelectionEventManager.<IObservationBlockProxy> createCheckboxManager ());
@@ -151,7 +154,6 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
 
    @Override
    public Date getStartDate () {
-      //TODO consider hour
       return startDateBox.getValue ();
    }
 
@@ -163,17 +165,6 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @Override
    public void setExactDate (Date date) {
       exactDateBox.setValue (date);
-   }
-
-   @Override
-   public Date getEndDate () {
-      //TODO consider hour
-      return endDateBox.getValue ();
-   }
-
-   @Override
-   public void setEndDate (Date date) {
-      endDateBox.setValue (date);
    }
 
    @Override

@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="footer">
-        &nbsp;
+        <ui:msg description="footer label">Proyecto Fin de Carrera de Gustavo Rodríguez, ETSI Informática, UNED (2015)</ui:msg>
       </div>
     </div>
   </g:HTMLPanel>

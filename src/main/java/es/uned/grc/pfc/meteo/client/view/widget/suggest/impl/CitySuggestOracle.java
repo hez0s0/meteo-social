@@ -34,8 +34,8 @@ public class CitySuggestOracle extends EntitySuggestOracle <String, IStationRequ
 
    @Override
    protected boolean canMakeRequest () {
-      //always perform requests
-      return true;
+      //allow only when no value is already given (this field is for one element only)
+      return entitySuggestInputListBox.getValues () == null || entitySuggestInputListBox.getValues ().isEmpty ();
    }
 
    @Override

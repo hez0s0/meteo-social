@@ -16,7 +16,6 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
 public interface IObservationListView extends IAsyncCellTableView <IObservationBlockProxy> {
    void initTableColumns (List <IObservationBlockProxy> observationBlock);
    Date getStartDate ();
-   Date getEndDate ();
    Date getExactDate ();
    List <IVariableProxy> getVariables ();
    void setInput (IRequestFactory requestFactory);
@@ -25,7 +24,6 @@ public interface IObservationListView extends IAsyncCellTableView <IObservationB
    HasClickHandlers getSearchHandler ();
    void setStartDate (Date date);
    void setExactDate (Date date);
-   void setEndDate (Date date);
    void setTextVisible (boolean visible);
    void setGraphVisible (boolean visible);
    void setDerivedVisible (boolean visible);

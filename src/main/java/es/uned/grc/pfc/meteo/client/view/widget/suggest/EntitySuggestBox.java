@@ -40,6 +40,10 @@ public abstract class EntitySuggestBox <E extends Object, R extends RequestConte
       entitySuggestOracle.setSuggestBox (suggestBox);
    }
    
+   public void setEntitySuggestInputListBox (EntitySuggestInputListBox <E, R, P> inputListBox) {
+      entitySuggestOracle.setEntitySuggestInputListBox (inputListBox);
+   }
+   
    @Override
    public Widget asWidget () {
       return suggestBox;

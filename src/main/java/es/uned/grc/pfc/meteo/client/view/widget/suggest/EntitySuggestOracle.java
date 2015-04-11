@@ -24,6 +24,8 @@ public abstract class EntitySuggestOracle <E extends Object, R extends RequestCo
    
    /** the suggestbox that is bound with this oracle */
    protected SuggestBox suggestBox = null;
+   /** the entitySuggestBox */
+   protected EntitySuggestInputListBox <E, R, P> entitySuggestInputListBox = null;
    /** Is there a request in progress */
    protected boolean requestInProgress = false;
    /** The most recent request made by the client.  */
@@ -96,7 +98,8 @@ public abstract class EntitySuggestOracle <E extends Object, R extends RequestCo
     */
    private void makeRequest (final Request request, final Callback callback) {
       if (requestFactory == null) {
-         throw new RuntimeException ("RequestFactory not set"); //should be seen at dev time
+         //should be seen at dev time
+         throw new RuntimeException ("RequestFactory not set");
       }
       if (canMakeRequest ()) {
          requestInProgress = true;
@@ -115,13 +118,13 @@ public abstract class EntitySuggestOracle <E extends Object, R extends RequestCo
                callback.onSuggestionsReady (request, suggestResponse);
                EntitySuggestOracle.this.currentEntityPagedList = entityPagedList;
                EntitySuggestOracle.this.requestInProgress = false;
-            } //end of onSuccess
+            }
    
             @Override
             public void onFailure (ServerFailure serverFailure) {
                EntitySuggestOracle.this.currentEntityPagedList = null;
                EntitySuggestOracle.this.requestInProgress = false;
-            } //end of onFailure
+            }
          });
       }
    }
@@ -161,5 +164,9 @@ public abstract class EntitySuggestOracle <E extends Object, R extends RequestCo
    }
    public void setSuggestBox (SuggestBox suggestBox) {
       this.suggestBox = suggestBox;
+   }
+   
+   public void setEntitySuggestInputListBox (EntitySuggestInputListBox <E, R, P> entitySuggestInputListBox) {
+      this.entitySuggestInputListBox = entitySuggestInputListBox;
    }
 }

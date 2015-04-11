@@ -23,12 +23,6 @@
                            </g:Label>
                            <dp:DateBox ui:field="startDateBox" />
                         </g:VerticalPanel>
-                        <g:VerticalPanel>
-                           <g:Label>
-                              <ui:msg meaning="end date filter" description="label for observations filter">End date</ui:msg>
-                           </g:Label>
-                           <dp:DateBox ui:field="endDateBox" />
-                        </g:VerticalPanel>
                      </g:HorizontalPanel>
                      <g:HorizontalPanel>
                         <g:VerticalPanel>

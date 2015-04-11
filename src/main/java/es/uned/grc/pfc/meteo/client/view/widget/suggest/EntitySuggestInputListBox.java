@@ -86,6 +86,8 @@ public abstract class EntitySuggestInputListBox <E extends Object, R extends Req
 
    public EntitySuggestInputListBox () {
       initWidget (uiBinder.createAndBindUi (this));
+      
+      entitySuggestBox.setEntitySuggestInputListBox (this);
 
       // apply styles
       itemTextBox.setStyleName (IStyleConstants.TOKEN_SUGGEST);
