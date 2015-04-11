@@ -12,9 +12,7 @@
 
    <g:VerticalPanel width="100%">
       <g:HTMLPanel width="100%">
-         <h3>
-            <g:Label ui:field="titleLabel"/>
-         </h3>
+         <g:Label ui:field="titleLabel" styleName="subtitle" />
       </g:HTMLPanel>
       <g:HorizontalPanel ui:field="tablePanel" width="100%">
          <c:CellTable ui:field="derivedCellTable" pageSize="1000" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false" width="100%" />

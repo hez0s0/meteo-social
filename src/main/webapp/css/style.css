@@ -29,7 +29,7 @@ pre {
 }
 
 a,a:visited {
-	color: #E0691A;
+	color: #A8CD1B;
 	background: inherit;
 }
 
@@ -56,7 +56,7 @@ h1 a,h2 a {
 }
 
 h1 a:hover,h2 a:hover {
-	color: #FF6600;
+	color: #A8CD1B;
 	background: inherit;
 }
 
@@ -65,7 +65,7 @@ h2 {
    font-size: 15px;
    line-height: 15px;
    font-weight: bold;
-   color: #E0691A;
+   color: #A8CD1B;
    text-shadow: 0px 1px 1px rgba(255,255,255,0.8);
    padding: 5px 5px 5px 5px;
 }
@@ -89,12 +89,12 @@ input.search {
 	border: 0;
 	background: #FFF url(../images/input.gif) no-repeat;
 	padding: 4px;
-	color: #E0691A;
+	color: #A8CD1B;
 	font-weight: bold;
 }
 
 input.submit {
-	background: #E0691A url(../images/submit.gif) no-repeat;
+	background: #A8CD1B url(../images/submit.gif) no-repeat;
 	border: 0;
 	padding: 4px 0;
 	width: 65px;
@@ -183,7 +183,7 @@ input.login {
 
 .left h3 {
 	clear: both;
-	background: #A9C0CE url(../images/corner.gif) no-repeat top right;
+	background: #6C757A url(../images/corner.gif) no-repeat top right;
 	color: #FFF;
 	padding: 7px 0 7px 5px;
 	font: bold 1em Arial, Sans-Serif;
@@ -198,7 +198,7 @@ input.login {
 
 .left_small h3 {
    clear: both;
-   background: #A9C0CE url(../images/corner.gif) no-repeat top right;
+   background: #6C757A url(../images/corner.gif) no-repeat top right;
    color: #FFF;
    padding: 7px 0 7px 5px;
    font: bold 1em Arial, Sans-Serif;
@@ -348,7 +348,7 @@ input.login {
 	width: 100%;
 }
 .meteo-TaskList .header td {
-   background: #A9C0CE url(../images/corner.gif) no-repeat top right;
+   background: #6C757A url(../images/corner.gif) no-repeat top right;
    color: white;
    padding: 7px 0 7px 5px;
    font: bold 1em Arial, Sans-Serif;
@@ -498,15 +498,15 @@ input.login {
    font-size: 1.1em;
    height: 35px;
    color: #FFF;
-   background: #FF9148;
+   background: #A8CD1B;
    margin: 0 0 0 0px; 
 }
 
 .barItem {
    padding: 7px 12px 5px 12px;
-   color: #FFEADC;
+   color: #FFFFFF;
    font-weight: bold;
-   background: #FF9148;
+   background: #A8CD1B;
    cursor: pointer;
    cursor: hand;
 }
@@ -516,14 +516,14 @@ input.login {
    font-size: 1.1em;
    color: #FFF;
    margin: 0 0 0 0px;
-   background: #FF9148;
+   background: #A8CD1B;
 }
 
 .subBarItem { 
    margin: 0;
    padding: 3px 6px 2px 1px;
    color: #FFEADC;
-   background: #FF9148;
+   background: #A8CD1B;
    float: left;
    cursor: pointer;
    cursor: hand;
@@ -547,7 +547,7 @@ input.login {
 
 .meteo-small-link {
 	float: right;
-   color: #E0691A;
+   color: #A8CD1B;
    background: inherit;
    cursor: pointer;
    cursor: hand;
@@ -580,7 +580,7 @@ input.login {
   font-family: 'Arial Narrow', Arial, sans-serif;
   font-weight: bold;
   text-shadow: 0px 1px 1px rgba(255,255,255,0.8);
-  color: #E0691A;
+  color: #A8CD1B;
   cursor: pointer;
   cursor: hand;
   overflow: visible;
@@ -598,9 +598,9 @@ input.login {
   cursor: pointer;
   cursor: hand;
   font-size:small;
-  background: #FF9148;
+  background: #A8CD1B;
   color: #fff;
-  border: 1px solid #A9C0CE;
+  border: 1px solid #6C757A;
   border-radius: 3px;
   -moz-border-radius: 3px;
 }
@@ -612,9 +612,9 @@ button {
   cursor: pointer;
   cursor: hand;
   font-size:small;
-  background: #FF9148;
+  background: #A8CD1B;
   color: #fff;
-  border: 1px solid #A9C0CE;
+  border: 1px solid #6C757A;
   border-radius: 3px;
   -moz-border-radius: 3px;
 }
@@ -676,7 +676,7 @@ textarea {
    font-size: 13px;
    font-weight: bold;
    line-height: 33px;
-   background: #FF9148;
+   background: #A8CD1B;
    color: #fff3;
 }
 .gwt-DialogBox-contents {
@@ -717,7 +717,7 @@ textarea {
 	font-size: 13px;
 	font-weight: bold;
 	line-height: 33px;
-   background: #FF9148;
+   background: #A8CD1B;
    color: #fff3;
 }
 .gwt-DecoratedPopupPanel-contents {
@@ -732,10 +732,10 @@ textarea {
 }
 
 /* placeholder styles */
-::-moz-placeholder { color: #E0691A; font-style: italic; font-size: 10px; } /* firefox 19+ */
-::-webkit-input-placeholder { color: #E0691A; font-style: italic; font-size: 10px;}
-:-ms-input-placeholder { color: #E0691A; font-style: italic; font-size: 10px; } /* ie */
-input:-moz-placeholder { color: #E0691A; font-style: italic; font-size: 10px; }
+::-moz-placeholder { color: #A8CD1B; font-style: italic; font-size: 10px; } /* firefox 19+ */
+::-webkit-input-placeholder { color: #A8CD1B; font-style: italic; font-size: 10px;}
+:-ms-input-placeholder { color: #A8CD1B; font-style: italic; font-size: 10px; } /* ie */
+input:-moz-placeholder { color: #A8CD1B; font-style: italic; font-size: 10px; }
 
 
 /* all the input except checkbox */
@@ -822,7 +822,7 @@ fieldset {
    border: 1px solid;
    border-radius: 2px;
    border-color: #ccc;
-   color: #E0691A; 
+   color: #A8CD1B; 
    -moz-border-radius: 2px; /* Old Firefox */
    padding: 2px 2px 2px 2px;
 }
@@ -830,31 +830,6 @@ fieldset {
 .meteo-no-wrap-element {
   white-space: nowrap;
 }
-.meteo-compare-header-cell {
-   background: #FF9148;
-   color: #FFF;
-   padding: 2px 0 2px 1px;
-   white-space:nowrap;
-/*    text-align: right; */
-}
-
-.meteo-compare-eq-cell {
-   background: #98FB98 !important;
-}
-
-.meteo-compare-diff-cell {
-   background: #F08080 !important;
-}
-
-.meteo-compare-comments-cell {
-	background: #A9C0CE;
-   color: white;
-}
-
-.meteo-compare-header-main-cell {
-	font-weight: bold;
-}
-
 .meteo-outdated {
    background: #B3EEBB !important;
    border: 0px !important;
@@ -1026,15 +1001,6 @@ li.meteo-token-input-input-token {
 	font-style: italic;
 }
 
-.meteo-indication-open {
-   background: inherit;
-   overflow: visible;
-}
-
-.meteo-indication-locked {
-	background: #F5FAC4;
-}
-
 .meteo-infotable-header {
 	text-align: left;
 	color: rgb(75, 74, 74);
@@ -1147,10 +1113,12 @@ hr.style-one {
    color: #4a4a4a;
 }
 
-/*
-color-scheme-1 ==> #D6E99A, #AFC46A, #81963D, #51611E, #EE6630
-
-color-scheme-2 ==> #F0701B, #F0BD1B, #D6F01B, #9BF01B, #76B616
-
-color-scheme-3 ==> #658230, #7F9B08, #98A026, #E9CF47, #E1B902
-*/
+.subtitle {
+	clear: both;
+	background: #A8CD1B url(../images/corner.gif) no-repeat top right;
+	color: #FFF;
+	padding: 7px 0 7px 5px;
+	font: bold 1em Arial, Sans-Serif;
+	margin: 0 0 0px 0;
+	small;
+}
