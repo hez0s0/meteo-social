@@ -74,10 +74,7 @@ public class StationService {
     */
    public List <Station> getStationsInArea (double minLatitude, double minLongitude, double maxLatitude, double maxLongitude) {
       try {
-         Station own = stationPersistence.getOwnStation (true);
-         List <Station> stations = stationPersistence.getStationsInArea (minLatitude, minLongitude, maxLatitude, maxLongitude, true);
-         stations.remove (own);
-         return stations;
+         return stationPersistence.getStationsInArea (minLatitude, minLongitude, maxLatitude, maxLongitude, true);
       } catch (Exception e) {
          logger.error ("Error listin stations in an area", e);
          throw new RuntimeException ("Could not list stations in an area. See server logs.");

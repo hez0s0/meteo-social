@@ -17,4 +17,8 @@ public interface IStationMapActionsView extends IView {
    UIObject getTablePanel ();
    UIObject getStationSearchPanel ();
    UIObject getStationFormPanel ();
+
+   void clearSearchFields ();
+
+   void setCellVisible (boolean visible);
 }

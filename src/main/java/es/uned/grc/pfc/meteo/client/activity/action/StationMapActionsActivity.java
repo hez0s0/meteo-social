@@ -57,6 +57,8 @@ public class StationMapActionsActivity extends AbstractBaseActivity {
          @Override
          public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
             stationMapActionsView.getStationFormPanel ().setVisible (!stationMapActionsView.getStationFormPanel ().isVisible ());
+            stationMapActionsView.setCellVisible (false);
+            stationMapActionsView.clearSearchFields ();
             source.setCompleted ();
          }
       });

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
@@ -27,8 +29,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
-import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
+import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 
@@ -129,7 +131,7 @@ public class StationMapActionsViewImpl extends Composite implements IStationMapA
    @UiField
    protected ImageLabel viewTable = null;
    
-   protected MultiSelectionModel <IStationProxy> stationSelectionModel = new MultiSelectionModel <IStationProxy> (stationKeyProvider);
+   protected SingleSelectionModel <IStationProxy> stationSelectionModel = new SingleSelectionModel <IStationProxy> (stationKeyProvider);
    protected AsyncDataProvider <IStationProxy> stationListProvider = null;
    
    protected IRequestFactory requestFactory = null;
@@ -171,11 +173,29 @@ public class StationMapActionsViewImpl extends Composite implements IStationMapA
          }
       };
       stationListProvider.addDataDisplay (stationCellList);
+      
+      stationCellList.addDomHandler (new DoubleClickHandler () {
+         //handle add on double-click as well
+         @Override
+         public void onDoubleClick (DoubleClickEvent event) {
+            handleStationDoubleClick (null);
+         }
+      }, DoubleClickEvent.getType ());
+   }
+   
+   protected void handleStationDoubleClick (ClickEvent e) {
+      IStationProxy selected = stationSelectionModel.getSelectedObject ();
+      
+      if (selected != null) {
+         listView.setCenterStation (selected);
+      }
    }
 
    @Override
    public void setInput (IRequestFactory requestFactory) {
       this.requestFactory = requestFactory;
+      
+      setCellVisible (false);
       
       citySuggestBox.setRequestFactory (requestFactory);
       countrySuggestBox.setRequestFactory (requestFactory);
@@ -223,7 +243,7 @@ public class StationMapActionsViewImpl extends Composite implements IStationMapA
       if (requestFactory != null) {
          IStationRequestContext stationRequestContext = requestFactory.getStationContext ();
          stationRequestContext.getStations (getRequestParamProxy (start, pageSize, stationRequestContext), true)
-                              .with ("list", "list.transientLastObservations", "list.transientLastObservations.variable")
+                              .with ("list", "list.stationModel", "list.transientLastObservations", "list.transientLastObservations.variable")
                               .fire (new Receiver <IStationPagedListProxy> () {
             @Override
             public void onSuccess (IStationPagedListProxy response) {
@@ -234,6 +254,9 @@ public class StationMapActionsViewImpl extends Composite implements IStationMapA
                if (response.getRealSize () == 0) {
                   ActionResultDialogBox.showDialog (IClientConstants.TEXT_CONSTANTS.emptySearchResult (), ActionResultDialogBox.FADE_OUT_MILLIS);
                }
+
+               setCellVisible (true);
+               
                stationCellList.setRowCount (0);
                //we need to narrow it down (nastily): hibernate returns Long
                stationCellList.setRowCount (Long.valueOf (response.getRealSize ()).intValue ()); 
@@ -241,6 +264,23 @@ public class StationMapActionsViewImpl extends Composite implements IStationMapA
             }
          });
       }
+   }
+   
+   @Override
+   public void clearSearchFields () {
+      zipSuggestBox.setValue (null);
+      latTextBox.setValue (null);
+      lonTextBox.setValue (null);
+      radiusTextBox.setValue (null);
+      citySuggestBox.setValues (null);
+      countrySuggestBox.setValues (null);
+   }
+   
+   @Override
+   public void setCellVisible (boolean visible) {
+      stationCellList.setVisible (visible);
+      pagerTop.setVisible (visible);
+      pagerBottom.setVisible (visible);
    }
    
    private IRequestParamProxy getRequestParamProxy (int start, int pageSize, IStationRequestContext stationRequestContext) {

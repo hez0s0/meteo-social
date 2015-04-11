@@ -44,6 +44,8 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
 
    protected GoogleMap map = null;
    protected Map <IStationProxy, InfoWindow> infoWindows = null;
+
+   private IStationProxy centerStation = null;
    
    public StationMapViewImpl () {
       initUI ();
@@ -68,7 +70,7 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
 
       addMarker (station, true);
       
-      eventBus.fireEvent (new MapLoadedEvent ());
+      eventBus.fireEvent (new MapLoadedEvent (station));
    }
    
    private void addMarker (final IStationProxy station, boolean own) {
@@ -91,6 +93,7 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
 
    @Override
    public void setCenterStation (final IStationProxy station) {
+      this.centerStation  = station;
       AjaxLoaderOptions options = AjaxLoaderOptions.newInstance ();
       Runnable callback = new Runnable () {
          public void run () {
@@ -103,7 +106,9 @@ public class StationMapViewImpl extends AbstractPage implements IStationMapView 
    @Override
    public void renderStations (List <IStationProxy> stations) {
       for (IStationProxy station : stations) {
-         addMarker (station, false);
+         if (centerStation == null || !centerStation.getId ().equals (station.getId ())) {
+            addMarker (station, false);
+         }
       }
    }
    
