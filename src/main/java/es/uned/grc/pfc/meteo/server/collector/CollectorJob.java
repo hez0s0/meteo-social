@@ -3,7 +3,6 @@ package es.uned.grc.pfc.meteo.server.collector;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +20,6 @@ import es.uned.grc.pfc.meteo.server.collector.station.IParser;
 import es.uned.grc.pfc.meteo.server.collector.station.IStationPlugin;
 import es.uned.grc.pfc.meteo.server.collector.station.RawObservation;
 import es.uned.grc.pfc.meteo.server.model.Observation;
-import es.uned.grc.pfc.meteo.server.model.Parameter;
 import es.uned.grc.pfc.meteo.server.model.Station;
 import es.uned.grc.pfc.meteo.server.model.Variable;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
@@ -97,7 +95,7 @@ public class CollectorJob {
             throw new RuntimeException (String.format ("unable to obtain parser for '%s' station, please review the station plugin code", stationPlugin.getStationModelDescriptor ().getName ()));
          }
          
-         configuredParameters = asMap (station.getParameters ());
+         configuredParameters = parameterPersistence.asMap (station.getParameters ());
          
          //iterate until every pending observation has been obtained
          Date nextObservationPeriod = getNextObservationPeriod (station);
@@ -205,19 +203,5 @@ public class CollectorJob {
    
    private boolean isTooOld (Date lastCollectedPeriod) {
       return (new Date ().getTime () - lastCollectedPeriod.getTime () > TOO_OLD_MINUTES);
-   }
-
-   private Map <String, String> asMap (Set <Parameter> parameters) {
-      Map <String, String> configuredParameters = new HashMap <String, String> (parameters.size ());
-      
-      for (Parameter parameter : parameters) {
-         if (parameter.getValue () != null) {
-            configuredParameters.put (parameter.getName (), parameter.getValue ());
-         } else {
-            configuredParameters.put (parameter.getName (), parameter.getDefaultValue ());
-         }
-      }
-      
-      return configuredParameters;
    }
 }

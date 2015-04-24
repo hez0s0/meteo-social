@@ -18,4 +18,6 @@ public interface IObservationPersistence extends IPersistence <Integer, Observat
    List <Observation> getDerivedInRange (Date ini, Date end, Variable ... variables);
    /** obtains the last observations received by given station */
    List <Observation> getLastReceived (Integer stationId);
+   /** obtains the observations of the own station that could be published and were not yet */
+   List <Observation> getUnsent (Integer stationId, List <Integer> variableIds);
 }

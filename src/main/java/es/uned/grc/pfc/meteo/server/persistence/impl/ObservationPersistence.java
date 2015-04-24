@@ -132,6 +132,20 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
 
    @SuppressWarnings ("unchecked")
    @Override
+   public List <Observation> getUnsent (Integer stationId, List <Integer> variableIds) {
+      Criteria criteria = getBaseCriteria ().add (Restrictions.isNull ("sent"))
+                                            .add (Restrictions.isNotNull ("rangeIni"))
+                                            .add (Restrictions.eqProperty ("deriveBase", "deriveExpected"));
+      criteria.createCriteria ("station")
+              .add (Restrictions.idEq (stationId));
+      criteria.createCriteria ("variable")
+              .add (Restrictions.in ("id", variableIds));
+      return criteria.addOrder (Order.asc ("observed"))
+                     .list ();
+   }
+
+   @SuppressWarnings ("unchecked")
+   @Override
    public List <Observation> getObservedInRange (Date ini, Date end, boolean qualityControlled) {
       Criteria criteria = getBaseCriteria ().add (Restrictions.between ("observed", ini, end));
       if (qualityControlled) {

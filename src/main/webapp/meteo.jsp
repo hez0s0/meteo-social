@@ -20,6 +20,7 @@
     <meta name="gwt:property" content="locale=es_ES">
     <meta name="author" content="Gustavo Rodriguez" />
     <link rel="stylesheet" href="css/style.css" type="text/css" />
+    <link rel="shortcut icon" href="favicon.ico?v=2" />
     <title>Meteo Social - PFC</title>
     <script type="text/javascript" language="javascript" src="meteo/meteo.nocache.js"></script>
   </head>

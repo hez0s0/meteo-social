@@ -24,6 +24,9 @@ public interface IServerConstants {
    /** time between executions of the derived calculation job, in milliseconds */
    long DERIVED_POLLING_TIME = 60000;
 
+   /** time between executions of the publishing job, in milliseconds */
+   long PUBLISHING_POLLING_TIME = 60000;
+
    /** start hour of the night period */
    int NIGHT_START_HOUR = 0;
    /** end hour of the night period */
@@ -77,4 +80,9 @@ public interface IServerConstants {
    String MONTH_AVERAGE = "MonthAvg";
    /** derived variable: maximum in the month */
    String MONTH_MAXIMUM = "MonthMax";
+   
+   /** the parameter that contains the twitter username configuration */
+   String TWITTER_USERNAME_PARAM = "twitter_username";
+   /** the parameter that contains the twitter password configuration */
+   String TWITTER_PASSWORD_PARAM = "twitter_password";
 }
