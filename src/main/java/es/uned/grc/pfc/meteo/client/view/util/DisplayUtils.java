@@ -3,12 +3,10 @@ package es.uned.grc.pfc.meteo.client.view.util;
 import java.util.Date;
 import java.util.Map;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.user.client.ui.HTML;
 
 import es.uned.grc.pfc.meteo.client.util.IClientConstants;
@@ -20,20 +18,6 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
  * with the same format everywhere.
  */
 public class DisplayUtils {
-
-   /**
-    * The constants used in this Widget.
-    */
-   @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
-   @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
-   public interface TextMessages extends Messages {
-      @DefaultMessage ("From: {0} at {1}") @Meaning ("From label for tasks. Params: user, date")
-      String fromLabel (String userName, String date);
-      @DefaultMessage ("To: {0}") @Meaning ("To label for tasks. Params: user")
-      String toLabel (String userName);
-   }
-   public static TextMessages textMessages = GWT.create (TextMessages.class);
-
    private static final int MAX_LENGTH = 50;
    
    /**

@@ -60,6 +60,18 @@ public class DerivedRangePanel extends Composite {
       String averageColumn ();
       @DefaultStringValue ("Máxima") @Meaning ("Derived observation column")
       String maximumColumn ();
+      @DefaultStringValue ("Mes") @Meaning ("Derived observation range type")
+      String monthType ();
+      @DefaultStringValue ("Día") @Meaning ("Derived observation range type")
+      String dayType ();
+      @DefaultStringValue ("Noche") @Meaning ("Derived observation range type")
+      String nightType ();
+      @DefaultStringValue ("Mañana") @Meaning ("Derived observation range type")
+      String morningType ();
+      @DefaultStringValue ("Tarde") @Meaning ("Derived observation range type")
+      String afternoonType ();
+      @DefaultStringValue ("Tarde-noche") @Meaning ("Derived observation range type")
+      String eveningType ();
    }
    public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);
    
@@ -110,7 +122,7 @@ public class DerivedRangePanel extends Composite {
       graphPanel.setVisible (true);
       
       DateTimeFormat df = DateTimeFormat.getFormat (PredefinedFormat.DATE_TIME_SHORT);
-      titleLabel.setText (derivedRangeType.toString () + " (" + df.format (observations.get (0).getIni ()) + "-" + df.format (observations.get (0).getEnd ()) + ")");
+      titleLabel.setText (getLabel (derivedRangeType) + " (" + df.format (observations.get (0).getIni ()) + "-" + df.format (observations.get (0).getEnd ()) + ")");
       
       Runnable onLoadCallback = new Runnable () {
          public void run () {
@@ -160,6 +172,24 @@ public class DerivedRangePanel extends Composite {
          }
       };
       VisualizationUtils.loadVisualizationApi (onLoadCallback, LineChart.PACKAGE);
+   }
+
+   private String getLabel (DerivedRangeType type) {
+      switch (type) {
+         case AFTERNOON:
+            return TEXT_CONSTANTS.afternoonType ();
+         case DAY:
+            return TEXT_CONSTANTS.dayType ();
+         case EVENING:
+            return TEXT_CONSTANTS.eveningType ();
+         case MONTH:
+            return TEXT_CONSTANTS.monthType ();
+         case MORNING:
+            return TEXT_CONSTANTS.morningType ();
+         case NIGHT:
+            return TEXT_CONSTANTS.nightType ();
+      }
+      return "???" + type.toString () + "???";
    }
 
    private List <IVariableProxy> extractVariables (List <IDerivedRangeProxy> observations) {

@@ -45,7 +45,7 @@ public abstract class EntitySuggestInputListBox <E extends Object, R extends Req
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
       @DefaultStringValue ("Unregognized input. It shall be ignored")
-      @Meaning ("Validation message")
+      @Meaning ("Mensaje de validación")
       String unknownInput ();
    }
    public static TextConstants textConstants = GWT.create (TextConstants.class);

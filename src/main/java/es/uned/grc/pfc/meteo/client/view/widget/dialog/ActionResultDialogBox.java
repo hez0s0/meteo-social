@@ -16,7 +16,7 @@ public class ActionResultDialogBox extends DecoratedPopupPanel {
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
-      @DefaultStringValue ("Action executed successfully") @Meaning ("Success confirm")
+      @DefaultStringValue ("Acción ejecutada con éxito") @Meaning ("Success confirm")
       String defaultMessage ();
    }
    public static TextConstants textConstants = GWT.create (TextConstants.class);

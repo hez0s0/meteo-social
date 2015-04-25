@@ -16,7 +16,7 @@ public class AlertDialogBox extends ActionDialogBox {
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
-      @DefaultStringValue ("Information") @Meaning ("AlertDialogBox Dialog title")
+      @DefaultStringValue ("Información") @Meaning ("AlertDialogBox Dialog title")
       String caption ();
    }
    public static TextConstants textConstants = GWT.create (TextConstants.class);

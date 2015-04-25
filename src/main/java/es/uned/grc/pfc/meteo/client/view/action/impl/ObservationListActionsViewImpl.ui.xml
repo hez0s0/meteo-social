@@ -50,7 +50,7 @@
       <p>
         <b>
           <meteo-widget:ImageLabel ui:field="viewMap" imageUrl="images/icons/map.png">
-            <ui:msg meaning="the observation action" description="Title to view the station map">Map de estaciones</ui:msg>
+            <ui:msg meaning="the observation action" description="Title to view the station map">Mapa de estaciones</ui:msg>
           </meteo-widget:ImageLabel>
         </b>
         <ui:msg description="Detail text to view the station map">Pulse para geolocalizar las estaciones dadas de alta en el sistema sobre un mapa</ui:msg>

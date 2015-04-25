@@ -30,21 +30,21 @@ public class StationTooltipPanel extends Composite {
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
-      @DefaultStringValue ("Observed") @Meaning ("Observation column at station tooltip")
+      @DefaultStringValue ("Observada") @Meaning ("Observation column at station tooltip")
       String observedColumn ();
-      @DefaultStringValue ("Received") @Meaning ("Observation column at station tooltip")
+      @DefaultStringValue ("Recibida") @Meaning ("Observation column at station tooltip")
       String receivedColumn ();
       @DefaultStringValue ("Variable") @Meaning ("Observation column at station tooltip")
       String variableColumn ();
-      @DefaultStringValue ("Value") @Meaning ("Observation column at station tooltip")
+      @DefaultStringValue ("Valor") @Meaning ("Observation column at station tooltip")
       String valueColumn ();
-      @DefaultStringValue ("Quality") @Meaning ("Observation column at station tooltip")
+      @DefaultStringValue ("Calidad") @Meaning ("Observation column at station tooltip")
       String qualityColumn ();
-      @DefaultStringValue ("Good") @Meaning ("Quality value at station tooltip")
+      @DefaultStringValue ("Buena") @Meaning ("Quality value at station tooltip")
       String qualityOk ();
-      @DefaultStringValue ("Suspicious") @Meaning ("Quality value at station tooltip")
+      @DefaultStringValue ("Sospechosa") @Meaning ("Quality value at station tooltip")
       String qualityKo ();
-      @DefaultStringValue ("Unknown") @Meaning ("Quality value at station tooltip")
+      @DefaultStringValue ("Desconocida") @Meaning ("Quality value at station tooltip")
       String qualityUnkwown ();
       @DefaultStringValue ("º") @Meaning ("Latitude/longitude unit")
       String latlongUnit ();
