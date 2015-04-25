@@ -165,11 +165,13 @@ public class ObservationServiceHelper {
       return null;
    }
 
-   private Observation findDerivedObservation (List <Observation> observations, int variableId, int originalVariableId) {
+   private Observation findDerivedObservation (Date [] range, List <Observation> observations, int variableId, int originalVariableId) {
       for (Observation observation : observations) {
          if (observation.getVariable ().getId () == variableId 
                && observation.getDerivedVariable () != null 
-               && observation.getDerivedVariable ().getId () == originalVariableId) {
+               && observation.getDerivedVariable ().getId () == originalVariableId
+               && observation.getRangeIni ().getTime () == range [0].getTime ()
+               && observation.getRangeEnd ().getTime () == range [1].getTime ()) {
             return observation;
          }
       }
@@ -294,18 +296,15 @@ public class ObservationServiceHelper {
                                                Date [] range, 
                                                Variable minimum,
                                                Variable average,
-                                               Variable maximum) {
+                                               Variable maximum,
+                                               List <Variable> stationVariables) {
       DerivedVariableDTO derivedVariableDTO = null;
-      List <Variable> variables = null;
       List <DerivedVariableDTO> derivedVariableDTOs = null;
       DerivedRangeDTO result = null;
       
-      //find all the observed variables
-      variables = new ArrayList <Variable> (variablePersistence.getStationVariables (null, station.getId (), true, false));
-      
       //build the results for every observed variable
-      derivedVariableDTOs = new ArrayList <DerivedVariableDTO> (variables.size ());
-      for (Variable variable : variables) {
+      derivedVariableDTOs = new ArrayList <DerivedVariableDTO> (stationVariables.size ());
+      for (Variable variable : stationVariables) {
          derivedVariableDTO = new DerivedVariableDTO ();
          derivedVariableDTO.setVariable (variable);
          derivedVariableDTO.setMinimum (getDerivedObservation (range, station, observations, variable, minimum).getValue ());
@@ -335,7 +334,7 @@ public class ObservationServiceHelper {
    }
 
    private Observation getDerivedObservation (Date [] range, Station station, List<Observation> observations, Variable variable, Variable internalVariable) {
-      Observation observation = findDerivedObservation (observations, internalVariable.getId (), variable.getId ());
+      Observation observation = findDerivedObservation (range, observations, internalVariable.getId (), variable.getId ());
       if (observation == null) {
          //this derivation did not exist, we must create a dummy version
          observation = createEmptyObservation (range [0], range [1], internalVariable, variable, station);

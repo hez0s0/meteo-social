@@ -239,24 +239,24 @@ public class DerivedJob {
     */
    @Transactional (propagation = Propagation.REQUIRED)
    private Station checkInternalVariables (Station station) {
-      checkInternalVariable (station, IServerConstants.NIGHT_MINIMUM, "Night minimum", "Minimum value within the night (00-06)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.NIGHT_AVERAGE, "Night average", "Average value within the night (00-06)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.NIGHT_MAXIMUM, "Night maximum", "Maximum value within the night (00-06)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.MORNING_MINIMUM, "Morning minimum", "Minimum value within the morning (06-12)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.MORNING_AVERAGE, "Morning average", "Average value within the morning (06-12)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.MORNING_MAXIMUM, "Morning maximum", "Maximum value within the morning (06-12)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.AFTERNOON_MINIMUM, "Afternoon minimum", "Minimum value within the afternoon (12-18)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.AFTERNOON_AVERAGE, "Afternoon average", "Average value within the afternoon (12-18)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.AFTERNOON_MAXIMUM, "Afternoon maximum", "Maximum value within the afternoon (12-18)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.EVENING_MINIMUM, "Evening minimum", "Minimum value within the evening (18-00)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.EVENING_AVERAGE, "Evening average", "Average value within the evening (18-00)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.EVENING_MAXIMUM, "Evening maximum", "Maximum value within the evening (18-00)", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.DAY_MINIMUM, "Day minimum", "Minimum value within the day", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.DAY_AVERAGE, "Day average", "Average value within the day", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.DAY_MAXIMUM, "Day maximum", "Maximum value within the day", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.MONTH_MINIMUM, "Month minimum", "Minimum value within the month", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.MONTH_AVERAGE, "Month average", "Average value within the month", 0, 0, ISharedConstants.GraphType.NONE);
-      checkInternalVariable (station, IServerConstants.MONTH_MAXIMUM, "Month maximum", "Maximum value within the month", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.NIGHT_MINIMUM, "Mínima noche", "Valor mínimo durante la noche (00-06)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.NIGHT_AVERAGE, "Media noche", "Valor medio durante la noche (00-06)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.NIGHT_MAXIMUM, "Máxima noche", "Valor máximo durante la noche (00-06)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.MORNING_MINIMUM, "Mínima mañana", "Valor mínimo durante la mañana (06-12)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.MORNING_AVERAGE, "Media mañana", "Valor medio durante la mañana (06-12)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.MORNING_MAXIMUM, "Máxima mañana", "Valor máximo durante la mañana (06-12)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.AFTERNOON_MINIMUM, "Mínima tarde", "Valor mínimo durante la tarde (12-18)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.AFTERNOON_AVERAGE, "Media tarde", "Valor medio durante la tarde (12-18)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.AFTERNOON_MAXIMUM, "Máxima tarde", "Valor máximo durante la tarde (12-18)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.EVENING_MINIMUM, "Mínima tarde-noche", "Valor mínimo durante la tarde-noche (18-00)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.EVENING_AVERAGE, "Media tarde-noche", "Valor medio durante la tarde-noche (18-00)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.EVENING_MAXIMUM, "Máxima tarde-noche", "Valor máximo durante la tarde-noche (18-00)", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.DAY_MINIMUM, "Mínima del día", "Valor mínimo durante el día", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.DAY_AVERAGE, "Media del día", "Valor medio durante el día", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.DAY_MAXIMUM, "Máxima del día", "Valor máximo durante el día", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.MONTH_MINIMUM, "Mínima del mes", "Valor mínimo durante el mes", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.MONTH_AVERAGE, "Media del mes", "Valor medio durante el mes", 0, 0, ISharedConstants.GraphType.NONE);
+      checkInternalVariable (station, IServerConstants.MONTH_MAXIMUM, "Máxima del mes", "Valor máximo durante el mes", 0, 0, ISharedConstants.GraphType.NONE);
       return stationPersistence.merge (station);
    }
 
@@ -280,6 +280,10 @@ public class DerivedJob {
          logger.info ("Automatically creating internal variable {}", internalVariable.getAcronym ());
          
          station.getVariables ().add (internalVariable);
+      } else {
+         internalVariable.setName (name);
+         internalVariable.setDescription (description);
+         variablePersistence.save (internalVariable);
       }
    }
 

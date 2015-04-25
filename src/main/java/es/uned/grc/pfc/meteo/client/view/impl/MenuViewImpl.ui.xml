@@ -9,20 +9,8 @@
   <g:HTMLPanel>
     <g:MenuBar ui:field="menuBar" styleName="bar" autoOpen="true" animationEnabled="true">
       <g:MenuItem ui:field="refreshMenuItem" styleName="barItem" width="90%">
-         <img src="images/icons/arrow_refresh.png" alt="Refresh current page"/>
-         <ui:msg meaning="the menu item" description="Refresh menu item">Refresh current view</ui:msg>
-      </g:MenuItem>
-      <g:MenuItem ui:field="configurationMenuItem" styleName="barItem" width="10%">
-         <ui:msg meaning="the menu item" description="Configuracion menu item">Configuration</ui:msg>
-         
-         <g:MenuBar vertical="true" ui:field="configurationSubMenu" styleName="subBar" >
-           <g:MenuItem ui:field="stationConfigurationMenuItem" styleName="subBarItem">
-              <ui:msg meaning="the menu item" description="Station configuration menu item">Configure your station</ui:msg>
-           </g:MenuItem>
-           <g:MenuItem ui:field="profileConfigurationMenuItem" styleName="subBarItem">
-              <ui:msg meaning="the menu item" description="Profile configuration menu item">Configure your social profile</ui:msg>
-           </g:MenuItem>
-         </g:MenuBar>
+         <img src="images/icons/arrow_refresh.png" alt="Actualizar vista actual"/>
+         <ui:msg meaning="the menu item" description="Refresh menu item">Actualizar vista actual</ui:msg>
       </g:MenuItem>
     </g:MenuBar>
   </g:HTMLPanel>

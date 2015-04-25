@@ -6,7 +6,6 @@ import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceChangeRequestEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import es.uned.grc.pfc.meteo.client.activity.mapper.MainActivityMapper;
@@ -60,18 +59,6 @@ public class MenuActivity extends AbstractBaseActivity {
                } else {
                   refreshView (eventBus);
                }
-            }
-         });
-         menuView.getStationConfigurationMenuItem ().setScheduledCommand (new Command () {
-            public void execute () {
-               Window.alert ("Station configuration not implemented");
-//               FormUtils.goConditionallyToPlace (mainActivityMapper, new ObservationListPlace (ObservationListPlace.Representation.GRAPHIC), placeController); //TODO
-            }
-         });
-         menuView.getProfileConfigurationMenuItem ().setScheduledCommand (new Command () {
-            public void execute () {
-               Window.alert ("Profile configuration not implemented");
-//               FormUtils.goConditionallyToPlace (mainActivityMapper, new ObservationListPlace (), placeController); //TODO
             }
          });
                   

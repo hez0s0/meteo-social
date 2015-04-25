@@ -44,9 +44,9 @@ public class MainActivityMapper implements ActivityMapper {
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
-      @DefaultStringValue ("Observation list") @Meaning ("Detail region title")
+      @DefaultStringValue ("Lista de observaciones") @Meaning ("Detail region title")
       String observationListPlace ();
-      @DefaultStringValue ("Station Map") @Meaning ("Detail region title")
+      @DefaultStringValue ("Mapa de estaciones") @Meaning ("Detail region title")
       String stationMapPlace ();
    }
    public static TextConstants textConstants = GWT.create (TextConstants.class);

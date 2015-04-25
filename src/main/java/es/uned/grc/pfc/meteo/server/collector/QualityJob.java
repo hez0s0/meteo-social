@@ -104,7 +104,7 @@ public class QualityJob {
             } else {
                //empty observations are suspicious (sensor errors)
                ok = false;
-               addWarning ("Value is empty", warning);
+               addWarning ("El valor está vacío", warning);
             }
             
             //the quality control was conducted, store it
@@ -129,24 +129,24 @@ public class QualityJob {
          value = Double.valueOf (stringValue);
          if (minimum != null && value < minimum) {
             ok = false;
-            addWarning (String.format ("Value '%s' should not be less than '%s'", value, minimum), warning);
+            addWarning (String.format ("El valor '%s' no debería ser menor de '%s'", value, minimum), warning);
          }
          if (maximum != null && value > maximum) {
             ok = false;
-            addWarning (String.format ("Value '%s' should not be more than '%s'", value, maximum), warning);
+            addWarning (String.format ("El valor '%s' no debería ser mayor de '%s'", value, maximum), warning);
          }
          if (minimum != null && value < physicalMinimum) {
             ok = false;
-            addWarning (String.format ("Value '%s' cannot be less than '%s'", value, physicalMinimum), warning);
+            addWarning (String.format ("El valor '%s' no debería ser menor de '%s'", value, physicalMinimum), warning);
          }
          if (maximum != null && value > physicalMaximum) {
             ok = false;
-            addWarning (String.format ("Value '%s' cannot be more than '%s'", value, physicalMaximum), warning);
+            addWarning (String.format ("El valor '%s' no debería ser mayor de '%s'", value, physicalMaximum), warning);
          }
       } catch (Exception e) {
          //if not a double, it should not have limits, so this is suspicious (sensor data corruption)
          ok = false;
-         addWarning (String.format ("Value '%s' is not a number", value), warning);
+         addWarning (String.format ("El valor '%s' no es numérico", value), warning);
       }
       
       return ok;

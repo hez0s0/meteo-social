@@ -29,7 +29,7 @@
                   <g:Label ui:field="detailsTitleLabel" styleName="details_left_header"/>
                </td>
                <td width="30%">
-                  <g:Label ui:field="backToListLabel" styleName="details_right_header"><ui:msg description="Return to list text">Return to the list</ui:msg></g:Label>
+                  <g:Label ui:field="backToListLabel" styleName="details_right_header"><ui:msg description="Return to list text">Volver a la lista</ui:msg></g:Label>
                </td>
             </tr>
           </table>
@@ -38,7 +38,7 @@
       </div>
       <div>
         <div class="right" ui:field="actionsDiv">
-          <h3><ui:msg description="Actions block title">Actions:</ui:msg></h3>
+          <h3><ui:msg description="Actions block title">Acciones:</ui:msg></h3>
           <g:SimplePanel ui:field="actionsPanel"/>
         </div>
       </div>

@@ -34,11 +34,11 @@ public class DerivedTableBuilder extends AbstractCellTableBuilder <IDerivedVaria
    public interface TextConstants extends Constants {
       @DefaultStringValue ("Variable") @Meaning ("Derived column")
       String variableColumn ();
-      @DefaultStringValue ("Minimum") @Meaning ("Derived column")
+      @DefaultStringValue ("Mínima") @Meaning ("Derived column")
       String minimumColumn ();
-      @DefaultStringValue ("Average") @Meaning ("Derived column")
+      @DefaultStringValue ("Media") @Meaning ("Derived column")
       String averageColumn ();
-      @DefaultStringValue ("Maximum") @Meaning ("Derived column")
+      @DefaultStringValue ("Máxima") @Meaning ("Derived column")
       String maximumColumn ();
    }
    public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);
@@ -47,11 +47,11 @@ public class DerivedTableBuilder extends AbstractCellTableBuilder <IDerivedVaria
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextMessages extends Messages {
-      @DefaultMessage ("{0} ({1}% computed)") @Meaning ("value displayed at derived table")
+      @DefaultMessage ("{0} ({1}% calculado)") @Meaning ("value displayed at derived table")
       String value (String value, String pctg);
-      @DefaultMessage ("{0} out of {1} used for calculation: {2}%") @Meaning ("tooltip at derived table")
+      @DefaultMessage ("{0} de {1} usadas para el cálculo: {2}%") @Meaning ("tooltip at derived table")
       String used (String used, String expected, String pctg);
-      @DefaultMessage ("{0} ignored for quality reasons: {1}%") @Meaning ("tooltip at derived table")
+      @DefaultMessage ("{0} ignoradas por motivos de calidad: {1}%") @Meaning ("tooltip at derived table")
       String ignored (String ignored, String pctg);
    }
    public static TextMessages TEXT_MESSAGES = GWT.create (TextMessages.class);

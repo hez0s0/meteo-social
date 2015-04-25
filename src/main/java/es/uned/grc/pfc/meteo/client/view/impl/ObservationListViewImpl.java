@@ -60,9 +60,9 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
-      @DefaultStringValue ("Observed") @Meaning ("Observation column")
+      @DefaultStringValue ("Observada") @Meaning ("Observation column")
       String observedColumn ();
-      @DefaultStringValue ("Value") @Meaning ("Observation column")
+      @DefaultStringValue ("Valor") @Meaning ("Observation column")
       String valueColumn ();
    }
    public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);

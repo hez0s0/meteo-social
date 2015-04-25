@@ -13,7 +13,7 @@ public class StationModelRenderer extends AbstractEntityRenderer <IStationModelP
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
-      @DefaultStringValue ("(Select a station model)") @Meaning ("Empty list element title")
+      @DefaultStringValue ("(Seleccione un modelo de estación)") @Meaning ("Empty list element title")
       String empty ();
    }
    private static TextConstants textConstants = GWT.create (TextConstants.class);

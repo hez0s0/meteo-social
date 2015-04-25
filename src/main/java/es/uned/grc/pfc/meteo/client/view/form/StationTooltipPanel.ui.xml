@@ -22,7 +22,7 @@
             </g:cell>
             <g:cell verticalAlignment="ALIGN_BOTTOM">
                <g:HorizontalPanel>
-                  <g:Label styleName="meteo-form-field-label"><ui:msg meaning="station model" description="label for station tooltip">Model: </ui:msg></g:Label>
+                  <g:Label styleName="meteo-form-field-label"><ui:msg meaning="station model" description="label for station tooltip">Modelo: </ui:msg></g:Label>
                   <g:Label ui:field="modelLabel"/>
                </g:HorizontalPanel>
             </g:cell>
@@ -31,11 +31,11 @@
             <br/>
          </g:HTMLPanel>
          <g:HorizontalPanel>
-              <g:Label styleName="meteo-form-field-label"><ui:msg meaning="latitude" description="label for station tooltip">Latitude: </ui:msg></g:Label>
+              <g:Label styleName="meteo-form-field-label"><ui:msg meaning="latitude" description="label for station tooltip">Latitud: </ui:msg></g:Label>
               <g:Label ui:field="latitudeLabel"/>
-              <g:Label styleName="meteo-form-field-label"><ui:msg meaning="longitude" description="label for station tooltip">Longitude: </ui:msg></g:Label>
+              <g:Label styleName="meteo-form-field-label"><ui:msg meaning="longitude" description="label for station tooltip">Longitud: </ui:msg></g:Label>
               <g:Label ui:field="longitudeLabel"/>
-              <g:Label styleName="meteo-form-field-label"><ui:msg meaning="height" description="label for station tooltip">Height: </ui:msg></g:Label>
+              <g:Label styleName="meteo-form-field-label"><ui:msg meaning="height" description="label for station tooltip">Altitud: </ui:msg></g:Label>
               <g:Label ui:field="heightLabel"/>
           </g:HorizontalPanel>
          <g:HTMLPanel>
@@ -50,12 +50,12 @@
                      <g:FlexTable ui:field="observationFlexTable" borderWidth="0" />
                   </g:cell>
                   <g:cell horizontalAlignment="ALIGN_CENTER">
-                     <g:Label ui:field="viewAllLabel" visible="false" styleName="meteo-link-label"><ui:msg meaning="list all observations" description="label for station tooltip">List all observations</ui:msg></g:Label>
+                     <g:Label ui:field="viewAllLabel" visible="false" styleName="meteo-link-label"><ui:msg meaning="list all observations" description="label for station tooltip">Listar todas las observaciones</ui:msg></g:Label>
                   </g:cell>
                </g:VerticalPanel>
              </g:cell>
              <g:cell horizontalAlignment="ALIGN_CENTER">
-               <g:Label ui:field="noResultsLabel" visible="false"><ui:msg meaning="no results" description="label for station tooltip">No observations received</ui:msg></g:Label>
+               <g:Label ui:field="noResultsLabel" visible="false"><ui:msg meaning="no results" description="label for station tooltip">No se recibieron observaciones</ui:msg></g:Label>
              </g:cell>
           </g:VerticalPanel>
       </g:VerticalPanel>

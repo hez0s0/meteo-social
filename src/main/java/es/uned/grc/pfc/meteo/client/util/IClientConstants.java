@@ -16,22 +16,22 @@ public interface IClientConstants {
       @DefaultStringValue ("-") @Meaning ("Empty value")
       String emptyValue ();
       
-      @DefaultStringValue ("No rows") @Meaning ("no rows value")
+      @DefaultStringValue ("No hay resultados") @Meaning ("no rows value")
       String noRows ();
       
-      @DefaultStringValue ("This field cannot be left empty") @Meaning ("Field validation message")
+      @DefaultStringValue ("Este campo no puede estar vacío") @Meaning ("Field validation message")
       String notEmpty ();
 
-      @DefaultStringValue ("yes") @Meaning ("true value representation")
+      @DefaultStringValue ("sí") @Meaning ("true value representation")
       String trueValue ();
       @DefaultStringValue ("no") @Meaning ("false value representation")
       String falseValue ();
       
-      @DefaultStringValue ("Some unsaved changes were made on the form that will be lost. Do you still want to proceed?")
+      @DefaultStringValue ("Los cambios no guardados se perderá. ¿Desea continuar?")
       @Meaning ("Unsaved changes being lost confirm question")
       String pendingChangesQuestion ();
 
-      @DefaultStringValue ("No results found") @Meaning ("no results found")
+      @DefaultStringValue ("No hay resultados") @Meaning ("no results found")
       String emptySearchResult ();
    }
    public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);
@@ -40,7 +40,7 @@ public interface IClientConstants {
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextMessages extends Messages {
-      @DefaultMessage ("This field {0}") @Meaning ("Some validation message about a field. Params: the specific message")
+      @DefaultMessage ("Este campo {0}") @Meaning ("Some validation message about a field. Params: the specific message")
       String fieldMessage (String message);
    }
    public static TextMessages TEXT_MESSAGES = GWT.create (TextMessages.class);

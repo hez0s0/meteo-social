@@ -29,12 +29,6 @@ public class MenuViewImpl extends Composite implements IMenuView {
    protected MenuBar menuBar = null;
    @UiField
    protected MenuItem refreshMenuItem = null;
-   @UiField
-   protected MenuItem configurationMenuItem = null;
-   @UiField
-   protected MenuItem stationConfigurationMenuItem = null;
-   @UiField
-   protected MenuItem profileConfigurationMenuItem = null;
 
    public MenuViewImpl () {
       initWidget (uiBinder.createAndBindUi (this));
@@ -49,24 +43,9 @@ public class MenuViewImpl extends Composite implements IMenuView {
    public MenuItem getRefreshMenuItem () {
       return refreshMenuItem;
    }
-
-   @Override
-   public MenuItem getStationConfigurationMenuItem () {
-      return stationConfigurationMenuItem;
-   }
-
-   @Override
-   public MenuItem getProfileConfigurationMenuItem () {
-      return profileConfigurationMenuItem;
-   }
    
    @Override
    public UIObject getRootMenuBar () {
       return menuBar;
-   }
-
-   @Override
-   public MenuItem getConfigurationMenuItem () {
-      return configurationMenuItem;
    }
 }

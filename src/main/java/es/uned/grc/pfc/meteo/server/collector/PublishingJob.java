@@ -2,6 +2,7 @@ package es.uned.grc.pfc.meteo.server.collector;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -18,9 +19,9 @@ import oauth.signpost.exception.OAuthMessageSignerException;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import winterwell.jtwitter.Twitter;
 
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -50,7 +49,7 @@ public class PublishingJob {
    private static final String [] VARIABLES_TO_PUBLISH = {IServerConstants.DAY_MINIMUM, IServerConstants.DAY_AVERAGE, IServerConstants.DAY_MAXIMUM,
                                                           IServerConstants.MONTH_MINIMUM, IServerConstants.MONTH_AVERAGE, IServerConstants.MONTH_MAXIMUM};
 
-   private static final String COMMENT_TEMPLATE = "I got %s as average %s in %s (min=%s,max=%s)";
+   private static final String COMMENT_TEMPLATE = "He medido %s como %s media en %s (mín=%s,max=%s)";
    
    @Autowired
    private IStationPersistence stationPersistence = null;
@@ -61,8 +60,12 @@ public class PublishingJob {
    @Autowired
    private IVariablePersistence variablePersistence = null;
    
-   private static final String JTWITTER_OAUTH_KEY = "471222984-nM0Yfg6xvTIALv6ORAnsKODKuRD71BWPhimwc33f";
-   private static final String JTWITTER_OAUTH_SECRET = "4PMTzMtf8HPJ0usqeZTw4RRzVf2UVjMaOIIqRtnWtzO8v";
+   private static final String CONSUMER_KEY = "K9wUgKoXzqSBKZXPa4GV5wyWJ";
+   private static final String CONSUMER_SECRET = "bwGGzxhNJ77Lgkr1pdFa70Aei5VyyCI4SN7qIcfHuuQGZ0VO1a";
+   private static final String APP_KEY = "471222984-nM0Yfg6xvTIALv6ORAnsKODKuRD71BWPhimwc33f";
+   private static final String APP_SECRET = "4PMTzMtf8HPJ0usqeZTw4RRzVf2UVjMaOIIqRtnWtzO8v";
+
+   private static final String POST_TWEET_URL = "https://api.twitter.com/1.1/statuses/update.json?status=%s";
 
    /**
     * To be executed periodically
@@ -165,40 +168,24 @@ public class PublishingJob {
    }
 
    private void publishComment (Comment comment) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthCommunicationException, ClientProtocolException, IOException {
-//      Map <String, String> configuredParameters = parameterPersistence.asMap (station.getParameters ());
+      OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer (CONSUMER_KEY, CONSUMER_SECRET);
+      oAuthConsumer.setTokenWithSecret (APP_KEY, APP_SECRET);
 
-//      Twitter twitter = new Twitter ( "dolorestula", "tula01");
-//
-//      twitter.setOAuthConsumer ("K9wUgKoXzqSBKZXPa4GV5wyWJ", "bwGGzxhNJ77Lgkr1pdFa70Aei5VyyCI4SN7qIcfHuuQGZ0VO1a");
-//      AccessToken accessToken = new AccessToken ("471222984-nM0Yfg6xvTIALv6ORAnsKODKuRD71BWPhimwc33f", "4PMTzMtf8HPJ0usqeZTw4RRzVf2UVjMaOIIqRtnWtzO8v");
-//
-//      twitter.setOAuthAccessToken (accessToken);
-
-      OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer ("K9wUgKoXzqSBKZXPa4GV5wyWJ", "bwGGzxhNJ77Lgkr1pdFa70Aei5VyyCI4SN7qIcfHuuQGZ0VO1a");
-      oAuthConsumer.setTokenWithSecret ("471222984-nM0Yfg6xvTIALv6ORAnsKODKuRD71BWPhimwc33f", "4PMTzMtf8HPJ0usqeZTw4RRzVf2UVjMaOIIqRtnWtzO8v");
-
-      HttpPost httpPost = new HttpPost ("https://api.twitter.com/1.1/statuses/update.json?status=" + URLEncoder.encode (comment.toString ()));
+      HttpPost httpPost = new HttpPost (String.format (POST_TWEET_URL, URLEncoder.encode (comment.toString (), StandardCharsets.UTF_8.toString())));
 
       oAuthConsumer.sign (httpPost);
 
-      HttpClient httpClient = new DefaultHttpClient ();
-      HttpResponse httpResponse = httpClient.execute (httpPost);
-
-      int statusCode = httpResponse.getStatusLine ().getStatusCode ();
-      logger.info (statusCode + ':' + httpResponse.getStatusLine ().getReasonPhrase ());
-      logger.info (IOUtils.toString (httpResponse.getEntity ().getContent ()));
-//      httpClient.
-
-   }
+      CloseableHttpClient httpClient = HttpClients.createDefault ();
+      try {
+         HttpResponse httpResponse = httpClient.execute (httpPost);
    
-//   private Api connectTwitter (Station station) {
-//      Map <String, String> configuredParameters = parameterPersistence.asMap (station.getParameters ());
-//      return Api.builder ()
-//                .scheme (Url.Scheme.HTTPS)
-//                .username (configuredParameters.get (IServerConstants.TWITTER_USERNAME_PARAM))
-//                .password (configuredParameters.get (IServerConstants.TWITTER_PASSWORD_PARAM))
-//                .build ();
-//   }
+         int statusCode = httpResponse.getStatusLine ().getStatusCode ();
+         logger.info (statusCode + ':' + httpResponse.getStatusLine ().getReasonPhrase ());
+         logger.info (IOUtils.toString (httpResponse.getEntity ().getContent ()));
+      } finally {
+         httpClient.close ();
+      }
+   }
 
    private class Comment {
       private String variable = null;

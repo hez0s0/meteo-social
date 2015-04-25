@@ -6,7 +6,7 @@
   ui:generateLocales="default">
   
   <g:HTMLPanel styleName="top_info">
-    <g:HorizontalPanel>
+    <g:HorizontalPanel visible="false">
       <g:Image ui:field="esImage" width="16px" height="11px" styleName="meteo-flag-image"/>
       <g:Image ui:field="enImage" width="16px" height="11px" styleName="meteo-flag-image"/>
     </g:HorizontalPanel>

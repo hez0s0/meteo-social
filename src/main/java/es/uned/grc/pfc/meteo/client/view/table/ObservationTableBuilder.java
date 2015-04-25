@@ -37,13 +37,13 @@ public class ObservationTableBuilder extends AbstractCellTableBuilder <IObservat
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
-      @DefaultStringValue ("Observed") @Meaning ("Observation column")
+      @DefaultStringValue ("Observada") @Meaning ("Observation column")
       String observedColumn ();
-      @DefaultStringValue ("Value") @Meaning ("Observation column")
+      @DefaultStringValue ("Valor") @Meaning ("Observation column")
       String valueColumn ();
-      @DefaultStringValue ("Quality: good") @Meaning ("tooltip at observation table")
+      @DefaultStringValue ("Calidad: buena") @Meaning ("tooltip at observation table")
       String qualityOk ();
-      @DefaultStringValue ("Quality: unknown") @Meaning ("tooltip at observation table")
+      @DefaultStringValue ("Calidad: desconocida") @Meaning ("tooltip at observation table")
       String qualityUnkwown ();
    }
    public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);
@@ -52,7 +52,7 @@ public class ObservationTableBuilder extends AbstractCellTableBuilder <IObservat
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextMessages extends Messages {
-      @DefaultMessage ("Quality: suspicious ({0})") @Meaning ("tooltip at observation table")
+      @DefaultMessage ("Calidad: sospechosa ({0})") @Meaning ("tooltip at observation table")
       String qualityKo (String suspectReason);
    }
    public static TextMessages TEXT_MESSAGES = GWT.create (TextMessages.class);

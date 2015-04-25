@@ -76,7 +76,7 @@ public class StationMapActionsViewImpl extends Composite implements IStationMapA
                                    "<tr><td style='font-size:95%;font-weight: bold;'><div>{0}</div></td></tr>" + 
                                    "<tr><td style='font-size:90%;font-weight: bold;'><div>{1}º, {2}º, {3}m.</div></td></tr>" + 
                                    "<tr><td style='font-size:90%'><div>{4} ({5})</div></td></tr>" +
-                                   "<tr><td style='font-size:90%'><div>Last observed at: {6}</div></td></tr>")
+                                   "<tr><td style='font-size:90%'><div>Última observación: {6}</div></td></tr>")
       SafeHtml stationCellIni (String name, String lat, String lon, String height, String city, String country, String lastObserved);
       
       @SafeHtmlTemplates.Template ("<tr><td style='font-size:80%'><div>{0}={1}{2}</div></td></tr>")

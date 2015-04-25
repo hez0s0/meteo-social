@@ -52,13 +52,13 @@ public class DerivedRangePanel extends Composite {
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextConstants extends Constants {
-      @DefaultStringValue ("Observed") @Meaning ("Derived observation column")
+      @DefaultStringValue ("Observada") @Meaning ("Derived observation column")
       String observedColumn ();
-      @DefaultStringValue ("Minimum") @Meaning ("Derived observation column")
+      @DefaultStringValue ("Mínima") @Meaning ("Derived observation column")
       String minimumColumn ();
-      @DefaultStringValue ("Average") @Meaning ("Derived observation column")
+      @DefaultStringValue ("Media") @Meaning ("Derived observation column")
       String averageColumn ();
-      @DefaultStringValue ("Maximum") @Meaning ("Derived observation column")
+      @DefaultStringValue ("Máxima") @Meaning ("Derived observation column")
       String maximumColumn ();
    }
    public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);
@@ -174,7 +174,7 @@ public class DerivedRangePanel extends Composite {
    
    private AbstractDataTable createDataTable (List <IDerivedRangeProxy> observations, IVariableProxy variable) {
       int row = 0;
-      DateTimeFormat representationDateFormat = DateTimeFormat.getFormat (PredefinedFormat.DATE_TIME_SHORT);
+      DateTimeFormat representationDateFormat = DateTimeFormat.getFormat (PredefinedFormat.DATE_SHORT);
       DataTable data = DataTable.create ();
       data.addColumn (ColumnType.STRING, TEXT_CONSTANTS.observedColumn ());
       data.addColumn (ColumnType.NUMBER, TEXT_CONSTANTS.minimumColumn ());
