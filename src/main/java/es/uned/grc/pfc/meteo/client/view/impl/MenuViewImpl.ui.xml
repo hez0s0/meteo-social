@@ -9,8 +9,8 @@
   <g:HTMLPanel>
     <g:MenuBar ui:field="menuBar" styleName="bar" autoOpen="true" animationEnabled="true">
       <g:MenuItem ui:field="refreshMenuItem" styleName="barItem" width="90%">
-         <img src="images/icons/arrow_refresh.png" alt="Actualizar vista actual"/>
-         <ui:msg meaning="the menu item" description="Refresh menu item">Actualizar vista actual</ui:msg>
+         <img src="images/icons/arrow_refresh.png" alt="Actualizar vista"/>
+         <ui:msg meaning="the menu item" description="Refresh menu item">Actualizar vista</ui:msg>
       </g:MenuItem>
     </g:MenuBar>
   </g:HTMLPanel>
