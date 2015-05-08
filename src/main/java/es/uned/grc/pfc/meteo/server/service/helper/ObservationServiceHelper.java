@@ -18,11 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.uned.grc.pfc.meteo.client.util.DerivedUtils;
-import es.uned.grc.pfc.meteo.server.collector.station.IStationPlugin;
 import es.uned.grc.pfc.meteo.server.dto.DerivedRangeDTO;
 import es.uned.grc.pfc.meteo.server.dto.DerivedVariableDTO;
 import es.uned.grc.pfc.meteo.server.dto.ObservationBlockDTO;
 import es.uned.grc.pfc.meteo.server.dto.VariableObservationsDTO;
+import es.uned.grc.pfc.meteo.server.job.station.IStationPlugin;
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.RequestParam;
 import es.uned.grc.pfc.meteo.server.model.RequestParamFilter;

@@ -6,11 +6,13 @@ import com.google.gwt.visualization.client.visualizations.ColumnChart;
 import com.google.gwt.visualization.client.visualizations.LineChart;
 
 import es.uned.grc.pfc.meteo.client.model.IVariableProxy;
+import es.uned.grc.pfc.meteo.client.util.PortableStringUtils;
 
 public class ChartUtils {
 
    private static final int GRAPH_WIDTH = 500;
    private static final int GRAPH_HEIGHT = 380;
+   private static final String GRAPH_TITLE = "%s (%s)";
    
    private ChartUtils () {
       
@@ -20,7 +22,7 @@ public class ChartUtils {
       ColumnChart.Options options = ColumnChart.Options.create ();
       options.setWidth (GRAPH_WIDTH);
       options.setHeight (GRAPH_HEIGHT);
-      options.setTitle (variable.getName ());
+      options.setTitle (PortableStringUtils.format (GRAPH_TITLE, variable.getName (), variable.getUnit ()));
 //      options.setEnableTooltip (true);
       return options;
    }
@@ -29,7 +31,7 @@ public class ChartUtils {
       BarChart.Options options = BarChart.Options.create ();
       options.setWidth (GRAPH_WIDTH);
       options.setHeight (GRAPH_HEIGHT);
-      options.setTitle (variable.getName ());
+      options.setTitle (PortableStringUtils.format (GRAPH_TITLE, variable.getName (), variable.getUnit ()));
 //      options.setEnableTooltip (true);
       return options;
    }
@@ -38,7 +40,7 @@ public class ChartUtils {
       AreaChart.Options options = AreaChart.Options.create ();
       options.setWidth (GRAPH_WIDTH);
       options.setHeight (GRAPH_HEIGHT);
-      options.setTitle (variable.getName ());
+      options.setTitle (PortableStringUtils.format (GRAPH_TITLE, variable.getName (), variable.getUnit ()));
 //      options.setEnableTooltip (true);
       return options;
    }
@@ -47,7 +49,7 @@ public class ChartUtils {
       LineChart.Options options = LineChart.Options.create ();
       options.setWidth (GRAPH_WIDTH);
       options.setHeight (GRAPH_HEIGHT);
-      options.setTitle (variable.getName ());
+      options.setTitle (PortableStringUtils.format (GRAPH_TITLE, variable.getName (), variable.getUnit ()));
 //      options.setEnableTooltip (true);
       options.setSmoothLine (true);
       return options;

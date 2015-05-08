@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationProxy;
 import es.uned.grc.pfc.meteo.client.util.IStyleConstants;
+import es.uned.grc.pfc.meteo.client.util.PortableStringUtils;
 import es.uned.grc.pfc.meteo.client.view.util.ColumnAppender;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
@@ -41,10 +42,10 @@ public class ObservationTableBuilder extends AbstractCellTableBuilder <IObservat
       String observedColumn ();
       @DefaultStringValue ("Valor") @Meaning ("Observation column")
       String valueColumn ();
-      @DefaultStringValue ("Calidad: buena") @Meaning ("tooltip at observation table")
-      String qualityOk ();
       @DefaultStringValue ("Calidad: desconocida") @Meaning ("tooltip at observation table")
       String qualityUnkwown ();
+      @DefaultStringValue ("Calidad: buena") @Meaning ("tooltip at observation table")
+      String qualityOk ();
    }
    public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);
    
@@ -52,7 +53,9 @@ public class ObservationTableBuilder extends AbstractCellTableBuilder <IObservat
    @com.google.gwt.i18n.client.LocalizableResource.Generate (format = "com.google.gwt.i18n.rebind.format.PropertiesFormat", locales = {"default"})
    @com.google.gwt.i18n.client.LocalizableResource.GenerateKeys ("com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator")
    public interface TextMessages extends Messages {
-      @DefaultMessage ("Calidad: sospechosa ({0})") @Meaning ("tooltip at observation table")
+      @DefaultMessage ("Calidad: buena (umbrales {0})") @Meaning ("tooltip with params at observation table")
+      String qualityOk (String limits);
+      @DefaultMessage ("Calidad: sospechosa ({0})") @Meaning ("tooltip with params at observation table")
       String qualityKo (String suspectReason);
    }
    public static TextMessages TEXT_MESSAGES = GWT.create (TextMessages.class);
@@ -202,11 +205,16 @@ public class ObservationTableBuilder extends AbstractCellTableBuilder <IObservat
                      IObservationProxy observation = event.getValue ().getObservations ().get (event.getColumn () - 1);
                      
                      tooltip.append (observation.getVariable ().getName ());
+                     tooltip.append (ISharedConstants.WORD_LIST_SEPARATOR);
                      tooltip.append (ISharedConstants.WORD_SEPARATOR);
                      if (observation.getQuality () == null) {
                         tooltip.append (TEXT_CONSTANTS.qualityUnkwown ());
                      } else if (observation.getQuality ()) {
-                        tooltip.append (TEXT_CONSTANTS.qualityOk ());
+                        if (PortableStringUtils.isEmpty (observation.getWarning ())) {
+                           tooltip.append (TEXT_CONSTANTS.qualityOk ());
+                        } else {
+                           tooltip.append (TEXT_MESSAGES.qualityOk (observation.getWarning ()));
+                        }
                      } else {
                         tooltip.append (TEXT_MESSAGES.qualityKo (observation.getWarning ()));
                      }
