@@ -12,6 +12,17 @@
          <img src="images/icons/arrow_refresh.png" alt="Actualizar vista"/>
          <ui:msg meaning="the menu item" description="Refresh menu item">Actualizar vista</ui:msg>
       </g:MenuItem>
+       <g:MenuItem ui:field="configurationMenuItem" styleName="barItem" width="10%">
+          <ui:msg meaning="the menu item" description="Configuracion menu item">Configuración</ui:msg>
+          <g:MenuBar vertical="true" ui:field="configurationSubMenu" styleName="subBar" >
+            <g:MenuItem ui:field="stationConfigurationMenuItem" styleName="subBarItem">
+               <ui:msg meaning="the menu item" description="Station configuration menu item">Configuración de estación</ui:msg>
+            </g:MenuItem>
+            <g:MenuItem ui:field="profileConfigurationMenuItem" styleName="subBarItem">
+               <ui:msg meaning="the menu item" description="Profile configuration menu item">Configuración de usuario</ui:msg>
+            </g:MenuItem>
+          </g:MenuBar>
+       </g:MenuItem>
     </g:MenuBar>
   </g:HTMLPanel>
 </ui:UiBinder>

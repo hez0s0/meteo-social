@@ -37,22 +37,20 @@ public class QualityJob {
    @Transactional (propagation = Propagation.REQUIRED)
    @Scheduled (fixedRate = IServerConstants.QUALITY_POLLING_TIME)
    public synchronized void timeout () {
-      Station station = null;
       List <Observation> observations = null;
       
       logger.info ("Executing task {}", getClass ().getSimpleName ());
       try {
          synchronized (IJobConstants.STATION_ACCESS) {
-            station = stationPersistence.getOwnStation ();
-            if (station == null) {
-               throw new RuntimeException ("unable to obtain own station, please review the system configuration");
+            List <Station> stations = stationPersistence.findAll ();
+            for (Station station : stations) {
+               observations = observationPersistence.getUncontrolled (station.getId (), UNCONTROLLED_BLOCK);
+               
+               if (observations != null && !observations.isEmpty ()) {
+                  processQuality (station, observations);
+               }
+               logger.info ("Quality processed for {} observations of station {}", observations != null ? observations.size () : 0, station.getId ());
             }
-            observations = observationPersistence.getUncontrolled (UNCONTROLLED_BLOCK);
-            
-            if (observations != null && !observations.isEmpty ()) {
-               processQuality (station, observations);
-            }
-            logger.info ("Quality processed for {} observations", observations != null ? observations.size () : 0);
          }
       } catch (Exception e) {
          logger.error ("Error computing quality control of observations", e);

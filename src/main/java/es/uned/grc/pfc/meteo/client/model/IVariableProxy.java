@@ -44,9 +44,6 @@ public interface IVariableProxy extends IEntityProxy {
    
    boolean getInternal ();
    void setInternal (boolean internal);
-   
-   IStationProxy getStation ();
-   void setStation (IStationProxy station);
 
    int getPosition ();
    void setPosition (int position);

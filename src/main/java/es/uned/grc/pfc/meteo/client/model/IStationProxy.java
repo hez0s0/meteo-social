@@ -38,9 +38,6 @@ public interface IStationProxy extends IEntityProxy {
    
    Date getLastCollectedPeriod ();
    void setLastCollectedPeriod (Date lastCollectedPeriod);
-   
-   Boolean getOwn ();
-   void setOwn (Boolean own);
 
    String getStreet ();
    void setStreet (String street);

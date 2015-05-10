@@ -15,7 +15,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.AbstractCellTable;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -81,10 +80,6 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @UiField
    protected VariableSuggestInputListBox variableSuggestInputListBox = null;
    @UiField
-   protected CheckBox onlyMeasuredCheckBox = null;
-   @UiField
-   protected CheckBox onlyDerivedCheckBox = null;
-   @UiField
    protected Button searchButton = null;
    @UiField
    protected Panel textPanel = null;
@@ -134,9 +129,6 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @Override
    public void setInput (IRequestFactory requestFactory) {
       variableSuggestInputListBox.setRequestFactory (requestFactory);
-
-      onlyMeasuredCheckBox.setValue (true);
-      onlyDerivedCheckBox.setValue (false);
    }
 
    /**
@@ -170,16 +162,6 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @Override
    public List <IVariableProxy> getVariables () {
       return variableSuggestInputListBox.getValues ();
-   }
-
-   @Override
-   public boolean getOnlyMeasured () {
-      return onlyMeasuredCheckBox.getValue ();
-   }
-
-   @Override
-   public boolean getOnlyDerived () {
-      return onlyDerivedCheckBox.getValue ();
    }
 
    @Override

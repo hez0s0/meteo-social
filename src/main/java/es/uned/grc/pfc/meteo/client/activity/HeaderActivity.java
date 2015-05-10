@@ -7,8 +7,10 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.requestfactory.shared.Receiver;
 
 import es.uned.grc.pfc.meteo.client.activity.mapper.MainActivityMapper;
+import es.uned.grc.pfc.meteo.client.model.IUserProxy;
 import es.uned.grc.pfc.meteo.client.place.AbstractPlace;
 import es.uned.grc.pfc.meteo.client.util.IClientConstants;
 import es.uned.grc.pfc.meteo.client.view.IHeaderView;
@@ -37,6 +39,20 @@ public class HeaderActivity extends AbstractBaseActivity {
       
       bind (eventBus);
       
+      getRequestFactory (eventBus).getStationContext ().getLoggedUser ().fire (new Receiver <IUserProxy> () {
+         @Override
+         public void onSuccess (IUserProxy response) {
+            StringBuilder builder = new StringBuilder ();
+            if (response.getFirstName () != null) {
+               builder.append (response.getFirstName ());
+               builder.append (" ");
+            }
+            if (response.getFamilyName () != null) {
+               builder.append (response.getFamilyName ());
+            }
+            HeaderActivity.this.headerView.getUserLabel ().setText (builder.toString ());
+         }
+      });
       headerView.setInput (getRequestFactory (eventBus));
    }
    

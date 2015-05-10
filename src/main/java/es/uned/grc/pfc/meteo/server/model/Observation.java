@@ -20,7 +20,13 @@ import es.uned.grc.pfc.meteo.server.model.base.AbstractVersionable;
 
 @Entity
 @Table (name = "metObservation",
-        indexes = {@Index (name = "ix1Observation", columnList = "observed")})
+        indexes = {@Index (name = "ix1Observation", columnList = "observed"),
+                   @Index (name = "ix2Observation", columnList = "received"),
+                   @Index (name = "ix3Observation", columnList = "sent"),
+                   @Index (name = "ix4Observation", columnList = "controlled"),
+                   @Index (name = "ix5Observation", columnList = "derived"),
+                   @Index (name = "ix6Observation", columnList = "rangeIni"),
+                   @Index (name = "ix7Observation", columnList = "rangeEnd")})
 public class Observation extends AbstractVersionable <Integer> {
 
    private Integer id = null;

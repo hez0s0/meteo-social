@@ -31,6 +31,8 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 @Component
 public class DummyGeneratorJob {
 
+   private static final Integer STATION_ID = 1;
+   
    protected static Logger logger = LoggerFactory.getLogger (DummyGeneratorJob.class);
 
    private enum MonthType {WINTER, SPRING, SUMMER};
@@ -72,7 +74,7 @@ public class DummyGeneratorJob {
       Date now = new Date ();
       GenerationStatus status = new GenerationStatus ();
 
-      station = stationPersistence.getOwnStation ();
+      station = stationPersistence.findById (STATION_ID);
       if (station == null) {
          throw new RuntimeException ("unable to obtain own station, please review the system configuration");
       }

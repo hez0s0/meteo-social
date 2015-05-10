@@ -1,6 +1,7 @@
 package es.uned.grc.pfc.meteo.client.view;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasText;
 
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.view.base.IView;
@@ -13,4 +14,6 @@ public interface IHeaderView extends IView {
    HasClickHandlers getEsButton ();
    /** gets access to the element that must be clicked to select GB language */
    HasClickHandlers getEnButton ();
+   
+   HasText getUserLabel ();
 }

@@ -23,6 +23,7 @@ import es.uned.grc.pfc.meteo.server.model.Variable;
 import es.uned.grc.pfc.meteo.server.persistence.AbstractPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IVariablePersistence;
+import es.uned.grc.pfc.meteo.server.util.AuthInfo;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
 @Repository
@@ -31,6 +32,8 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
    
    @Autowired
    private IVariablePersistence variablePersistence = null;
+   @Autowired
+   private AuthInfo authInfo = null;
    
    @Override
    protected void applyDefaultSort (Criteria criteria, Map <String, Object> contextParams) {
@@ -54,7 +57,7 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
             if (!StringUtils.isEmpty (filter.getValue ())) {
                switch (property) {
                   case OWN:
-                     stationCriteria.add (Restrictions.eq ("own", true));
+                     stationCriteria.createCriteria ("user").add (Restrictions.idEq (authInfo.getLoggedUserId ()));
                      break;
                   case START_DATE:
                      try {
@@ -101,7 +104,7 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
 
    @SuppressWarnings ("unchecked")
    @Override
-   public List <Observation> getUncontrolled (int max) {
+   public List <Observation> getUncontrolled (Integer stationId, int max) {
       if (max <= 0) {
          max = Integer.MAX_VALUE;
       }
@@ -110,13 +113,13 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
                                .addOrder (Order.asc ("observed"))
                                .setMaxResults (max)
                                .createCriteria ("station")
-                                  .add (Restrictions.eq ("own", true))
+                                  .add (Restrictions.idEq (stationId))
                                .list ();
    }
 
    @SuppressWarnings ("unchecked")
    @Override
-   public List <Observation> getUnderived (int max) {
+   public List <Observation> getUnderived (Integer stationId, int max) {
       if (max <= 0) {
          max = Integer.MAX_VALUE;
       }
@@ -126,7 +129,7 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
                                .addOrder (Order.asc ("observed"))
                                .setMaxResults (max)
                                .createCriteria ("station")
-                                  .add (Restrictions.eq ("own", true))
+                               .add (Restrictions.idEq (stationId))
                                .list ();
    }
 
@@ -146,26 +149,26 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
 
    @SuppressWarnings ("unchecked")
    @Override
-   public List <Observation> getObservedInRange (Date ini, Date end, boolean qualityControlled) {
+   public List <Observation> getObservedInRange (Integer stationId, Date ini, Date end, boolean qualityControlled) {
       Criteria criteria = getBaseCriteria ().add (Restrictions.between ("observed", ini, end));
       if (qualityControlled) {
          criteria.add (Restrictions.isNotNull ("quality"));
       }
 
       criteria.createCriteria ("station")
-              .add (Restrictions.eq ("own", true));
+         .add (Restrictions.idEq (stationId));
       return criteria.addOrder (Order.asc ("observed"))
                      .list ();
    }
 
    @SuppressWarnings ("unchecked")
    @Override
-   public List <Observation> getDerivedInRange (Date ini, Date end, Variable ... variables) {
+   public List <Observation> getDerivedInRange (Integer stationId, Date ini, Date end, Variable ... variables) {
       if (variables != null && variables.length > 0){
          Criteria criteria = getBaseCriteria ().add (Restrictions.between ("rangeIni", ini, end))
                                                .add (Restrictions.between ("rangeEnd", ini, end));
          criteria.createCriteria ("station")
-                 .add (Restrictions.eq ("own", true));
+                 .add (Restrictions.idEq (stationId));
          criteria.createCriteria ("variable")
                  .add (Restrictions.in ("id", variablePersistence.getIdList (Arrays.asList (variables))));
          return criteria.list ();
@@ -173,7 +176,7 @@ public class ObservationPersistence extends AbstractPersistence <Integer, Observ
          return getBaseCriteria ().add (Restrictions.between ("rangeIni", ini, end))
                .add (Restrictions.between ("rangeEnd", ini, end))
                .createCriteria ("station")
-                  .add (Restrictions.eq ("own", true))
+                  .add (Restrictions.idEq (stationId))
                .list ();
       }
    }

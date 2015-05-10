@@ -8,6 +8,7 @@ import com.google.web.bindery.requestfactory.shared.Service;
 
 import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
 import es.uned.grc.pfc.meteo.client.model.IStationProxy;
+import es.uned.grc.pfc.meteo.client.model.IUserProxy;
 import es.uned.grc.pfc.meteo.client.model.paged.IStationPagedListProxy;
 import es.uned.grc.pfc.meteo.client.model.paged.IStringPagedListProxy;
 import es.uned.grc.pfc.meteo.server.service.StationService;
@@ -18,6 +19,10 @@ import es.uned.grc.pfc.meteo.shared.locators.SpringServiceLocator;
  */
 @Service (value = StationService.class, locator = SpringServiceLocator.class)
 public interface IStationRequestContext extends RequestContext {
+   /**
+    * Get the logged user
+    */
+   Request <IUserProxy> getLoggedUser ();
    /**
     * Obtain the own station
     */

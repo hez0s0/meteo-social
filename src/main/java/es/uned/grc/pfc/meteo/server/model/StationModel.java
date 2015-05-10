@@ -21,7 +21,8 @@ public class StationModel extends AbstractVersionable <Integer> {
    private Integer id = null;
    private String name = null;
    private String description = null;
-
+   private String className = null;
+   
    @Id
    @GeneratedValue (strategy = GenerationType.AUTO, generator = "metStationModelID_gen")
    @SequenceGenerator (name = "metStationModelID_gen", sequenceName = "metStationModelID_seq")
@@ -47,5 +48,13 @@ public class StationModel extends AbstractVersionable <Integer> {
    }
    public void setDescription (String description) {
       this.description = description;
+   }
+   
+   @Column (nullable = false, length = 4000)
+   public String getClassName () {
+      return className;
+   }
+   public void setClassName (String className) {
+      this.className = className;
    }
 }

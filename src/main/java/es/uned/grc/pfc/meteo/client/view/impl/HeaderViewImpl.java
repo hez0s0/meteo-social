@@ -7,7 +7,9 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -26,9 +28,11 @@ public class HeaderViewImpl extends Composite implements IHeaderView  {
    private static HeaderViewImplUiBinder uiBinder = GWT.create (HeaderViewImplUiBinder.class);
    
    @UiField
-   Image esImage = null;
+   protected Image esImage = null;
    @UiField
-   Image enImage = null;
+   protected Image enImage = null;
+   @UiField
+   protected Label userLabel = null;
    
    @Inject
    protected PlaceController placeController = null;
@@ -65,5 +69,10 @@ public class HeaderViewImpl extends Composite implements IHeaderView  {
    @Override
    public HasClickHandlers getEnButton () {
       return enImage;
+   }
+
+   @Override
+   public HasText getUserLabel () {
+      return userLabel;
    }
 }

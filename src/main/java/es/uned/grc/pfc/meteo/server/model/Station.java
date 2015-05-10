@@ -15,8 +15,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -25,7 +28,13 @@ import es.uned.grc.pfc.meteo.server.model.base.AbstractVersionable;
 
 @Entity
 @Table (name = "metStation",
-        indexes = {@Index (name = "ix1Station", columnList = "name")})
+        indexes = {@Index (name = "ix1Station", columnList = "name"),
+                   @Index (name = "ix2Station", columnList = "latitude"),
+                   @Index (name = "ix3Station", columnList = "longitude"),
+                   @Index (name = "ix4Station", columnList = "street"),
+                   @Index (name = "ix5Station", columnList = "zip"),
+                   @Index (name = "ix6Station", columnList = "city"),
+                   @Index (name = "ix7Station", columnList = "country")})
 public class Station extends AbstractVersionable <Integer> {
    
    private Integer id = null;
@@ -37,11 +46,11 @@ public class Station extends AbstractVersionable <Integer> {
    private Double longitude = null;
    private Integer height = null;
    private Date lastCollectedPeriod = null;
-   private Boolean own = false;
    private String street = null;
    private String zip = null;
    private String city = null;
    private String country = null;
+   private User user = null;
    
    //transient property!
    private List <Observation> transientLastObservations = new ArrayList <Observation> ();
@@ -73,7 +82,10 @@ public class Station extends AbstractVersionable <Integer> {
       this.parameters = parameters;
    }
 
-   @OneToMany (mappedBy = "station", cascade = {CascadeType.ALL}, orphanRemoval = true)
+   @ManyToMany (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinTable (name = "metStationVariable", 
+               joinColumns = {@JoinColumn (name = "stationId", nullable = false, updatable = false)}, 
+               inverseJoinColumns = {@JoinColumn(name = "variableId", nullable = false, updatable = false)})
    public Set <Variable> getVariables () {
       return variables;
    }
@@ -91,7 +103,7 @@ public class Station extends AbstractVersionable <Integer> {
       this.stationModel = stationModel;
    }
    
-   @Column
+   @Column (nullable = false)
    public Double getLatitude () {
       return latitude;
    }
@@ -99,7 +111,7 @@ public class Station extends AbstractVersionable <Integer> {
       this.latitude = latitude;
    }
    
-   @Column
+   @Column (nullable = false)
    public Double getLongitude () {
       return longitude;
    }
@@ -115,20 +127,12 @@ public class Station extends AbstractVersionable <Integer> {
       this.lastCollectedPeriod = lastCollectedPeriod;
    }
    
-   @Column
+   @Column (nullable = false)
    public Integer getHeight () {
       return height;
    }
    public void setHeight (Integer height) {
       this.height = height;
-   }
-
-   @Column (nullable = false)
-   public Boolean getOwn () {
-      return own;
-   }
-   public void setOwn (Boolean own) {
-      this.own = own;
    }
 
    @Column (length = 1024)
@@ -169,5 +173,15 @@ public class Station extends AbstractVersionable <Integer> {
    }
    public void setTransientLastObservations (List <Observation> transientLastObservations) {
       this.transientLastObservations = transientLastObservations;
+   }
+   
+   @OneToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
+   @JoinColumn (name = "userId",
+                foreignKey = @ForeignKey (name = "fk2Station"))
+   public User getUser () {
+      return user;
+   }
+   public void setUser (User user) {
+      this.user = user;
    }
 }

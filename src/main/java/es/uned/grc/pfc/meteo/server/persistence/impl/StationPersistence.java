@@ -13,11 +13,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.uned.grc.pfc.meteo.server.job.station.IStationPlugin;
 import es.uned.grc.pfc.meteo.server.model.RequestParamFilter;
 import es.uned.grc.pfc.meteo.server.model.Station;
 import es.uned.grc.pfc.meteo.server.persistence.AbstractPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
+import es.uned.grc.pfc.meteo.server.util.AuthInfo;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
 @Repository
@@ -28,6 +30,8 @@ public class StationPersistence extends AbstractPersistence <Integer, Station> i
    
    @Autowired
    private IObservationPersistence observationPersistence = null;
+   @Autowired
+   private AuthInfo authInfo = null;
    
    @Override
    protected void applyDefaultSort (Criteria criteria, Map <String, Object> contextParams) {
@@ -66,7 +70,7 @@ public class StationPersistence extends AbstractPersistence <Integer, Station> i
             if (!StringUtils.isEmpty (filter.getValue ())) {
                switch (property) {
                   case OWN:
-                     criteria.add (Restrictions.eq ("own", true));
+                     criteria.createCriteria ("user").add (Restrictions.idEq (authInfo.getLoggedUserId ()));
                      break;
                   case RADIUS:
                      //a radius around given lat/lon: nothing to be done here, it affects the LAT/LON params
@@ -94,7 +98,6 @@ public class StationPersistence extends AbstractPersistence <Integer, Station> i
                      }
                      break;
                   case NAME:
-                     //TODO: bind with username when available
                      criteria.add (Restrictions.ilike ("name", asLike (filter.getValue ())));
                      break;
                   case ZIP:
@@ -108,15 +111,16 @@ public class StationPersistence extends AbstractPersistence <Integer, Station> i
 
    @Transactional (propagation = Propagation.REQUIRED)
    @Override
-   public Station getOwnStation () {
-      return getOwnStation (false);
+   public Station getOwnStation (Integer userId) {
+      return getOwnStation (userId, false);
    }
    
    @Transactional (propagation = Propagation.REQUIRED)
    @Override
-   public Station getOwnStation (boolean includeLastObservations) {
-      Criteria criteria = getBaseCriteria ()
-                             .add (Restrictions.eq ("own", true));
+   public Station getOwnStation (Integer userId, boolean includeLastObservations) {
+      Criteria criteria = getBaseCriteria ();
+      
+      criteria.createCriteria ("user").add (Restrictions.idEq (userId));
       if (!includeLastObservations) {
          criteria.setFetchMode ("parameters", FetchMode.JOIN);
          criteria.setFetchMode ("variables", FetchMode.JOIN);
@@ -144,6 +148,28 @@ public class StationPersistence extends AbstractPersistence <Integer, Station> i
          }
       }
       return stations;
+   }
+   
+   @Override
+   public IStationPlugin getStationPlugin (int stationId) {
+      return getStationPlugin (findById (stationId));
+   }
+   
+   @Override
+   public IStationPlugin getStationPlugin (Station station) {
+      if (station != null) {
+         try {
+            return (IStationPlugin) Class.forName (station.getStationModel ().getClassName ()).newInstance ();
+         } catch (ClassNotFoundException cnfe) {
+            throw new RuntimeException (cnfe);
+         } catch (InstantiationException ie) {
+            throw new RuntimeException (ie);
+         } catch (IllegalAccessException iae) {
+            throw new RuntimeException (iae);
+         }
+      } else {
+         return null;
+      }
    }
    
    private double getMinLatitude (double lat, double radius) {

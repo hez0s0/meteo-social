@@ -141,15 +141,6 @@ public abstract class EntitySuggestInputListBox <E extends Object, R extends Req
             try {
                if (event.getNativeKeyCode () == KeyCodes.KEY_ENTER) {
                   handleNewItem ();
-                  // TODO there is no reliable way here to know if an item has just been selected (so the ENTER means nothing)
-                  //      or not (so the ENTER means trigger the other actions), since the event on the list may
-                  //      happen before this one
-//                  if ( ("".equals (itemTextBox.getValue ().trim ()))
-//                        && (!((DefaultSuggestionDisplay) entitySuggestBox.getSuggestBox ().getSuggestionDisplay ()).isSuggestionListShowing ()) ) {
-//                     for (IEnterOnEmptyFieldHandler enterOnEmptyFieldHandler : enterOnEmptyFieldHandlers) {
-//                        enterOnEmptyFieldHandler.onEnter ();
-//                     }
-//                  }
                }
                // handle backspace
                if (event.getNativeKeyCode () == KeyCodes.KEY_BACKSPACE) {

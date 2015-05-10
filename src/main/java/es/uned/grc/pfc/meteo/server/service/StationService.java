@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 
 import es.uned.grc.pfc.meteo.server.model.RequestParam;
 import es.uned.grc.pfc.meteo.server.model.Station;
+import es.uned.grc.pfc.meteo.server.model.User;
 import es.uned.grc.pfc.meteo.server.model.paged.StationPagedList;
 import es.uned.grc.pfc.meteo.server.model.paged.StringPagedList;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
 import es.uned.grc.pfc.meteo.server.service.helper.StationServiceHelper;
+import es.uned.grc.pfc.meteo.server.util.AuthInfo;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
 /**
@@ -22,7 +24,7 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
  */
 @Service
 public class StationService {
-
+   
    private static Logger logger = LoggerFactory.getLogger (StationService.class);
    
    @Autowired
@@ -32,13 +34,27 @@ public class StationService {
 
    @Autowired
    private StationServiceHelper stationServiceHelper = null;
+   @Autowired
+   private AuthInfo authInfo = null;
+   
+   /**
+    * Get the own station
+    */
+   public User getLoggedUser () {
+      try {
+         return authInfo.getLoggedUser ();
+      } catch (Exception e) {
+         logger.error ("Error getting logged user", e);
+         throw new RuntimeException ("Could not get logged user. See server logs.");
+      }
+   }
    
    /**
     * Get the own station
     */
    public Station getOwnStation () {
       try {
-         return stationPersistence.getOwnStation ();
+         return stationPersistence.getOwnStation (authInfo.getLoggedUserId ());
       } catch (Exception e) {
          logger.error ("Error getting own station", e);
          throw new RuntimeException ("Could not get own station. See server logs.");
@@ -50,7 +66,7 @@ public class StationService {
     */
    public Station getOwnStation (boolean includeLastObservations) {
       try {
-         return stationPersistence.getOwnStation (includeLastObservations);
+         return stationPersistence.getOwnStation (authInfo.getLoggedUserId (), includeLastObservations);
       } catch (Exception e) {
          logger.error ("Error getting own station", e);
          throw new RuntimeException ("Could not get own station. See server logs.");

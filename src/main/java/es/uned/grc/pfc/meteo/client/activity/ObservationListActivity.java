@@ -127,20 +127,11 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
             paramFilter.setValue (getVariableIdList (listView.getVariables ()));
             requestParamProxy.getFilters ().add (paramFilter);
          }
-         //only measured filter, if active
-         if (listView.getOnlyMeasured ()) {
-            paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
-            paramFilter.setParam (ISharedConstants.ObservationFilter.MEASURED_ONLY.toString ());
-            paramFilter.setValue ("true");
-            requestParamProxy.getFilters ().add (paramFilter);
-         }
-         //only derived filter, if active
-         if (listView.getOnlyDerived ()) {
-            paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
-            paramFilter.setParam (ISharedConstants.ObservationFilter.DERIVED_ONLY.toString ());
-            paramFilter.setValue ("true");
-            requestParamProxy.getFilters ().add (paramFilter);
-         }
+         //only measured filter, always use
+         paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
+         paramFilter.setParam (ISharedConstants.ObservationFilter.MEASURED_ONLY.toString ());
+         paramFilter.setValue ("true");
+         requestParamProxy.getFilters ().add (paramFilter);
          
          if ((sortList != null) && (sortList.size () > 0) && (sortList.get (0) != null) && (sortList.get (0).getColumn () != null)) {
             requestParamProxy.setSortField (sortList.get (0).getColumn ().getDataStoreName ());

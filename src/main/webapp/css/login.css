@@ -89,7 +89,7 @@ a{
    padding: 0px 0px 5px 0px;
 }
 .container header h1 span{
-   color: #FF9148;
+   color: #A8CD1B;
    text-shadow: 0px 1px 1px rgba(255,255,255,0.8);
 }
 .container header h2{
@@ -111,7 +111,7 @@ a{
    padding: 0px 0px 5px 0px;
 }
 .container h1 span{
-   color: #FF9148;
+   color: #A8CD1B;
    text-shadow: 0px 1px 1px rgba(255,255,255,0.8);
 }
 
@@ -170,7 +170,7 @@ a.hiddenanchor{
 
 #wrapper h1{
    font-size: 48px;
-   color: #FF9148;
+   color: #A8CD1B;
    padding: 2px 0 10px 0;
    font-family: 'FranchiseRegular','Arial Narrow',Arial,sans-serif;
    font-weight: bold;
@@ -249,7 +249,7 @@ input {
 #wrapper p.button input{
    width: 30%;
    cursor: pointer;  
-   background: #FF9148;
+   background: #A8CD1B;
    padding: 8px 5px;
    font-family: 'BebasNeueRegular','Arial Narrow',Arial,sans-serif;
    color: #fff;
@@ -356,6 +356,6 @@ p.login.button{
    padding: 0px 0px 5px 0px;
 }
 .ie9 container h1 span{
-   color: #FF9148;
+   color: #A8CD1B;
    text-shadow: 0px 1px 1px rgba(255,255,255,0.8);
 }

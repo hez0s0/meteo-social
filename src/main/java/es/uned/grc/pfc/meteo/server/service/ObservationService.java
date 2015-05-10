@@ -24,6 +24,7 @@ import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IVariablePersistence;
 import es.uned.grc.pfc.meteo.server.service.helper.ObservationServiceHelper;
+import es.uned.grc.pfc.meteo.server.util.AuthInfo;
 import es.uned.grc.pfc.meteo.server.util.IServerConstants;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
@@ -34,7 +35,7 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
  */
 @Service
 public class ObservationService {
-
+   
    private static Logger logger = LoggerFactory.getLogger (ObservationService.class);
    
    @Autowired
@@ -46,6 +47,8 @@ public class ObservationService {
    
    @Autowired
    private ObservationServiceHelper observationServiceHelper = null;
+   @Autowired
+   private AuthInfo authInfo = null;
 
    /**
     * Get the variables that a given station is able to measure.
@@ -54,7 +57,7 @@ public class ObservationService {
    public VariablePagedList getStationVariables (String filter, Integer stationId, boolean measuredOnly, boolean derivedOnly) {
       try {
          if (stationId == null) {
-            stationId = stationPersistence.getOwnStation ().getId ();
+            stationId = stationPersistence.getOwnStation (authInfo.getLoggedUserId ()).getId ();
          }
          return new VariablePagedList (variablePersistence.getStationVariables (filter, stationId, measuredOnly, derivedOnly));
       } catch (Exception e) {
@@ -131,7 +134,7 @@ public class ObservationService {
       List <Variable> stationVariables = null;
       
       try {
-         station = stationId == null ? stationPersistence.getOwnStation () : stationPersistence.findById (stationId);
+         station = stationId == null ? stationPersistence.getOwnStation (authInfo.getLoggedUserId ()) : stationPersistence.findById (stationId);
 
          range = observationServiceHelper.getRange (derivedRangeType, searched);
          switch (derivedRangeType) {
@@ -166,7 +169,7 @@ public class ObservationService {
                maximum = variablePersistence.getByAcronym (IServerConstants.NIGHT_MAXIMUM);
                break;
          }
-         observations = observationPersistence.getDerivedInRange (range [0], range [1], minimum, average, maximum);
+         observations = observationPersistence.getDerivedInRange (station.getId (), range [0], range [1], minimum, average, maximum);
 
          stationVariables = new ArrayList <Variable> (variablePersistence.getStationVariables (null, station.getId (), true, false));
          
@@ -196,7 +199,7 @@ public class ObservationService {
       List <DerivedRangeDTO> result = new ArrayList <DerivedRangeDTO> ();
       
       try {
-         station = stationId == null ? stationPersistence.getOwnStation () : stationPersistence.findById (stationId);
+         station = stationId == null ? stationPersistence.getOwnStation (authInfo.getLoggedUserId ()) : stationPersistence.findById (stationId);
          
          wideRange = observationServiceHelper.getWideRange (derivedRangeType, searched);
          logger.info ("Wide range for {}: {}-{}: ", derivedRangeType, wideRange [0], wideRange [1]);
@@ -238,7 +241,7 @@ public class ObservationService {
          
          rangeBottom = observationServiceHelper.getRange (derivedRangeType, wideRange [0]);
          rangeTop = observationServiceHelper.getRange (derivedRangeType, wideRange [1]);
-         observations = observationPersistence.getDerivedInRange (rangeBottom [0], rangeTop [1], minimum, average, maximum);
+         observations = observationPersistence.getDerivedInRange (station.getId (), rangeBottom [0], rangeTop [1], minimum, average, maximum);
 
          //find all the observed variables
          stationVariables = new ArrayList <Variable> (variablePersistence.getStationVariables (null, station.getId (), true, false));
@@ -272,7 +275,7 @@ public class ObservationService {
    public List <Observation> getLastReceived (Integer stationId) {
       try {
          if (stationId == null) {
-            stationId = stationPersistence.getOwnStation ().getId ();
+            stationId = stationPersistence.getOwnStation (authInfo.getLoggedUserId ()).getId ();
          }
          return observationPersistence.getLastReceived (stationId);
       } catch (Exception e) {

@@ -12,4 +12,10 @@ public interface IMenuView extends IView {
 
    /** handler for the refresh menu item */
    MenuItem getRefreshMenuItem ();
+
+   /** handler for the station config menu item */
+   MenuItem getStationConfigurationMenuItem ();
+
+   /** handler for the user config menu item */
+   MenuItem getUserConfigurationMenuItem ();
 }

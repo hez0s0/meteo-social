@@ -31,6 +31,7 @@ import es.uned.grc.pfc.meteo.server.model.Variable;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IVariablePersistence;
+import es.uned.grc.pfc.meteo.server.util.AuthInfo;
 import es.uned.grc.pfc.meteo.server.util.IServerConstants;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
@@ -40,7 +41,7 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
  */
 @Service
 public class ObservationServiceHelper {
-
+   
    @SuppressWarnings ("unused")
    private static Logger logger = LoggerFactory.getLogger (ObservationServiceHelper.class);
    
@@ -50,9 +51,8 @@ public class ObservationServiceHelper {
    private IStationPersistence stationPersistence = null;
    @Autowired
    private IVariablePersistence variablePersistence = null;
-   
    @Autowired
-   private IStationPlugin stationPlugin = null;
+   private AuthInfo authInfo = null;
    
    public List <Observation> fillGaps (List <Observation> observations, RequestParam requestParam) throws ParseException {
       Observation  observation = null;
@@ -61,11 +61,13 @@ public class ObservationServiceHelper {
       Date endDate = getEndDate (requestParam);
       List <Variable> variables = null;
       Station station = null;
+      IStationPlugin stationPlugin = null;
       
       if (startDate != null && endDate != null) {
          //iterate all the periods and variables to fill the gaps with "empty" observations
          station = getStation (requestParam, observations);
          variables = getVariables (station, requestParam);
+         stationPlugin = stationPersistence.getStationPlugin (station);
          
          long stationPeriod = (stationPlugin.getObservationPeriod () * IServerConstants.ONE_MINUTE);
          
@@ -114,7 +116,7 @@ public class ObservationServiceHelper {
          filterValue = findFilterValue (requestParam, ISharedConstants.ObservationFilter.OWN);
          if (!StringUtils.isEmpty (filterValue)) {
             //own station
-            result = stationPersistence.getOwnStation ();
+            result = stationPersistence.getOwnStation (authInfo.getLoggedUserId ());
             if (result == null) {
                throw new RuntimeException ("unable to obtain own station, please review the system configuration");
             }

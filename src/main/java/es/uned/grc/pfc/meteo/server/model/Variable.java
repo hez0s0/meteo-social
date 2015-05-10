@@ -1,18 +1,17 @@
 package es.uned.grc.pfc.meteo.server.model;
 
-import javax.persistence.CascadeType;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -23,11 +22,11 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 @Entity
 @Table (name = "metVariable",
         uniqueConstraints = {@UniqueConstraint (name = "uk1Variable", columnNames = {"name"})},
-        indexes = {@Index (name = "ix1Variable", columnList = "name")})
+        indexes = {@Index (name = "ix1Variable", columnList = "name"),
+                   @Index (name = "ix2Variable", columnList = "acronym")})
 public class Variable extends AbstractVersionable <Integer> {
 
    private Integer id = null;
-   private Station station = null;
    private String name = null;
    private String acronym = null;
    private String description = null;
@@ -42,6 +41,7 @@ public class Variable extends AbstractVersionable <Integer> {
    private int position = 0;
    private int displayGroup = 0;
    private ISharedConstants.GraphType graphType = null;
+   private Set <Station> stations = null;
 
    @Id
    @GeneratedValue (strategy = GenerationType.AUTO, generator = "metVariableID_gen")
@@ -141,16 +141,6 @@ public class Variable extends AbstractVersionable <Integer> {
    public void setInternal (boolean internal) {
       this.internal = internal;
    }
-
-   @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
-   @JoinColumn (name = "stationId",
-                foreignKey = @ForeignKey (name = "fk1Variable"))
-   public Station getStation () {
-      return station;
-   }
-   public void setStation (Station station) {
-      this.station = station;
-   }
    
    @Column (nullable = false)
    public int getPosition () {
@@ -175,5 +165,13 @@ public class Variable extends AbstractVersionable <Integer> {
    }
    public void setGraphType (ISharedConstants.GraphType graphType) {
       this.graphType = graphType;
+   }
+   
+   @ManyToMany (fetch = FetchType.LAZY, mappedBy = "variables")
+   public Set <Station> getStations () {
+      return stations;
+   }
+   public void setStations (Set <Station> stations) {
+      this.stations = stations;
    }
 }

@@ -73,25 +73,22 @@ public class PublishingJob {
    @Transactional (propagation = Propagation.REQUIRED)
    @Scheduled (fixedRate = IServerConstants.PUBLISHING_POLLING_TIME)
    public synchronized void timeout () {
-      Station station = null;
       int comments = 0;
-      List <Variable> variablesToPublish = new ArrayList <Variable> (VARIABLES_TO_PUBLISH.length);
+      List <Variable> variablesToPublish = null;
       
       logger.info ("Executing task {}", getClass ().getSimpleName ());
       try {
          synchronized (IJobConstants.STATION_ACCESS) {
-            station = stationPersistence.getOwnStation ();
-            if (station == null) {
-               throw new RuntimeException ("unable to obtain own station, please review the system configuration");
+            List <Station> stations = stationPersistence.findAll ();
+            for (Station station : stations) {
+               variablesToPublish = new ArrayList <Variable> (VARIABLES_TO_PUBLISH.length);
+               for (String acronym : VARIABLES_TO_PUBLISH) {
+                  variablesToPublish.add (variablePersistence.getByAcronym (acronym));
+               }
+               comments = generate (station, variablesToPublish, new Date ());
+   
+               logger.info ("{} comments published for station", comments, station.getId ());
             }
-            
-            for (String acronym : VARIABLES_TO_PUBLISH) {
-               variablesToPublish.add (variablePersistence.getByAcronym (acronym));
-            }
-            
-            comments = generate (station, variablesToPublish, new Date ());
-
-            logger.info ("{} comments published", comments);
          }
       } catch (Exception e) {
          logger.error ("Error publishing comments", e);

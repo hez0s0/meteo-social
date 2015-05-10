@@ -23,25 +23,11 @@
                            </g:Label>
                            <dp:DateBox ui:field="startDateBox" />
                         </g:VerticalPanel>
-                     </g:HorizontalPanel>
-                     <g:HorizontalPanel>
                         <g:VerticalPanel>
                            <g:Label>
                               <ui:msg meaning="variable filter" description="label for observations filter">Variables</ui:msg>
                            </g:Label>
                            <meteo-suggest:VariableSuggestInputListBox ui:field="variableSuggestInputListBox" />
-                        </g:VerticalPanel>
-                        <g:VerticalPanel>
-                           <g:Label>
-                              <ui:msg meaning="only measured filter" description="label for observations filter">Sólo medidas</ui:msg>
-                           </g:Label>
-                           <g:CheckBox ui:field="onlyMeasuredCheckBox" />
-                        </g:VerticalPanel>
-                        <g:VerticalPanel>
-                           <g:Label>
-                              <ui:msg meaning="only derived filter" description="label for observations filter">Sólo calculadas</ui:msg>
-                           </g:Label>
-                           <g:CheckBox ui:field="onlyDerivedCheckBox" />
                         </g:VerticalPanel>
                      </g:HorizontalPanel>
                   </g:VerticalPanel>

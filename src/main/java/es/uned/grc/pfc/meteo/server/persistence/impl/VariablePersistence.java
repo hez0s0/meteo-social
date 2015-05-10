@@ -20,7 +20,7 @@ public class VariablePersistence extends AbstractPersistence <Integer, Variable>
    public List <Variable> getStationVariables (String filter, int stationId, boolean measuredOnly, boolean derivedOnly) {
       Criteria criteria = getBaseCriteria ();
       
-      criteria.createCriteria ("station").add (Restrictions.idEq (stationId));
+      criteria.createCriteria ("stations").add (Restrictions.idEq (stationId));
       if (measuredOnly) {
          criteria.add (Restrictions.eq ("internal", false));
       } else if (derivedOnly) {

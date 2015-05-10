@@ -6,9 +6,10 @@
   ui:generateLocales="default">
   
   <g:HTMLPanel styleName="top_info">
-    <g:HorizontalPanel visible="false">
-      <g:Image ui:field="esImage" width="16px" height="11px" styleName="meteo-flag-image"/>
-      <g:Image ui:field="enImage" width="16px" height="11px" styleName="meteo-flag-image"/>
+    <g:HorizontalPanel>
+      <g:Image ui:field="esImage" width="16px" height="11px" styleName="meteo-flag-image" visible="false"/>
+      <g:Image ui:field="enImage" width="16px" height="11px" styleName="meteo-flag-image" visible="false"/>
+      <g:Label ui:field="userLabel"/>
     </g:HorizontalPanel>
   </g:HTMLPanel>
 </ui:UiBinder>

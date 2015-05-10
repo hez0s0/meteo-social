@@ -19,8 +19,6 @@ public interface IObservationListView extends IAsyncCellTableView <IObservationB
    Date getExactDate ();
    List <IVariableProxy> getVariables ();
    void setInput (IRequestFactory requestFactory);
-   boolean getOnlyMeasured ();
-   boolean getOnlyDerived ();
    HasClickHandlers getSearchHandler ();
    void setStartDate (Date date);
    void setExactDate (Date date);

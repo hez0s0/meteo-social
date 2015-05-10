@@ -10,6 +10,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import es.uned.grc.pfc.meteo.client.activity.mapper.MainActivityMapper;
 import es.uned.grc.pfc.meteo.client.place.AbstractPlace;
+import es.uned.grc.pfc.meteo.client.place.StationSetupPlace;
+import es.uned.grc.pfc.meteo.client.place.UserSetupPlace;
 import es.uned.grc.pfc.meteo.client.util.IClientConstants;
 import es.uned.grc.pfc.meteo.client.view.IMenuView;
 import es.uned.grc.pfc.meteo.client.view.widget.dialog.ActionDialogBox;
@@ -61,7 +63,37 @@ public class MenuActivity extends AbstractBaseActivity {
                }
             }
          });
-                  
+         menuView.getStationConfigurationMenuItem ().setScheduledCommand (new Command () {
+            public void execute () {
+               if (mainActivityMapper.isMainViewDirty ()) { 
+                  //if there are unsaved changes, confirmation is needed to proceed
+                  ConfirmationDialogBox.askConfirmation (IClientConstants.TEXT_CONSTANTS.pendingChangesQuestion ()).addClickHandler (ActionDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
+                     @Override
+                     public void onActionClicked (ActionDialogBoxClickEvent event) {
+                        placeController.goTo (new StationSetupPlace ());
+                     }
+                  });
+               } else {
+                  placeController.goTo (new StationSetupPlace ());
+               }
+            }
+         });
+         menuView.getUserConfigurationMenuItem ().setScheduledCommand (new Command () {
+            public void execute () {
+               if (mainActivityMapper.isMainViewDirty ()) { 
+                  //if there are unsaved changes, confirmation is needed to proceed
+                  ConfirmationDialogBox.askConfirmation (IClientConstants.TEXT_CONSTANTS.pendingChangesQuestion ()).addClickHandler (ActionDialogBox.ButtonType.ACCEPT, new IActionDialogBoxEventHandler () {
+                     @Override
+                     public void onActionClicked (ActionDialogBoxClickEvent event) {
+                        placeController.goTo (new UserSetupPlace ());
+                     }
+                  });
+               } else {
+                  placeController.goTo (new UserSetupPlace ());
+               }
+            }
+         });
+
          bound = true;
       }
    }

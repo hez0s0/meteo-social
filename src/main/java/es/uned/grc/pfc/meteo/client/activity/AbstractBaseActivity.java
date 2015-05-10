@@ -127,60 +127,6 @@ public abstract class AbstractBaseActivity extends AbstractActivity {
    protected Integer getEntityID () {
       return place.getEntityID ();
    }
-//
-//   /**
-//    * Create a map to bound the visibility of given items to the roles of logged-in user.
-//    * Override this method (and invoke applyRoleVisibility) if you want to hide items depending on role.
-//    * All roles must be present.
-//    */
-//   protected Map <ISharedConstants.RoleName [], UIObject> getAllRoleComponentMap () {
-//      return null;
-//   }
-//   
-//   /**
-//    * Hide elements that should not be visible because of the logged user roles.
-//    * All roles must be present.
-//    * NOTE this method shall never show, only hide.
-//    * To be invoked by implementing classes on demand, this class does not enforce its usage.
-//    */
-//   private void applyAllRoleVisibility () {
-//      Map <ISharedConstants.RoleName [], UIObject> roleComponentMap = getAllRoleComponentMap ();
-//      
-//      if (roleComponentMap != null) {
-//         for (Map.Entry <ISharedConstants.RoleName [], UIObject> entry : roleComponentMap.entrySet ()) {
-////            if (!ClientGlobals.getInstance ().hasAllRole (entry.getKey ())) {
-////               entry.getValue ().setVisible (false);
-////            } //TODO
-//         }
-//      }
-//   }
-//   
-//   /**
-//    * Create a map to bound the visibility of given items to the roles of logged-in user.
-//    * Override this method (and invoke applyRoleVisibility) if you want to hide items depending on role.
-//    * Any role can be present
-//    */
-//   protected Map <ISharedConstants.RoleName [], UIObject> getAnyRoleComponentMap () {
-//      return null;
-//   }
-//   
-//   /**
-//    * Hide elements that should not be visible because of the logged user roles.
-//    * Any role can be present
-//    * NOTE this method shall never show, only hide.
-//    * To be invoked by implementing classes on demand, this class does not enforce its usage.
-//    */
-//   private void applyAnyRoleVisibility () {
-//      Map <ISharedConstants.RoleName [], UIObject> roleComponentMap = getAnyRoleComponentMap ();
-//      
-//      if (roleComponentMap != null) {
-//         for (Map.Entry <ISharedConstants.RoleName [], UIObject> entry : roleComponentMap.entrySet ()) {
-////            if (!ClientGlobals.getInstance ().hasAnyRole (entry.getKey ())) {
-////               entry.getValue ().setVisible (false);
-////            } //TODO
-//         }
-//      }
-//   }
 
    /**
     * Hide elements that should not be visible because of the logged user roles.
@@ -188,36 +134,5 @@ public abstract class AbstractBaseActivity extends AbstractActivity {
     * To be invoked by implementing classes on demand, this class does not enforce its usage.
     */
    protected void applyRoleVisibility () {
-//      applyAllRoleVisibility ();
-//      applyAnyRoleVisibility ();
    }
-//   
-//   /**
-//    * Checks if a given component is allowed to be displayed depending on roles
-//    */
-//   protected boolean isAllowedVisibility (UIObject component) {
-//      return isAllowedVisibility (component, true) && isAllowedVisibility (component, false);
-//   }
-//   
-//   private boolean isAllowedVisibility (UIObject component, boolean all) {
-//      boolean allowed = true;
-//      UIObject someComponent = null;
-//      Map <ISharedConstants.RoleName [], UIObject> roleComponentMap = (all) ? getAllRoleComponentMap () : getAnyRoleComponentMap ();
-//      
-//      if (roleComponentMap != null) {
-//         for (Map.Entry <ISharedConstants.RoleName [], UIObject> entry : roleComponentMap.entrySet ()) {
-//            someComponent = entry.getValue ();
-//            if (someComponent.equals (component)){
-////               if (all) {
-////                  allowed = (ClientGlobals.getInstance ().hasAllRole (entry.getKey ()));
-////               } else {
-////                  allowed = (ClientGlobals.getInstance ().hasAnyRole (entry.getKey ()));
-////               } //TODO
-//               break;
-//            }
-//         }
-//      }
-//      
-//      return allowed;
-//   }
 }
