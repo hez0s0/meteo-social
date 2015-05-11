@@ -16,17 +16,20 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 
 import es.uned.grc.pfc.meteo.client.activity.ObservationListActivity;
 import es.uned.grc.pfc.meteo.client.activity.StationMapActivity;
+import es.uned.grc.pfc.meteo.client.activity.UserSetupActivity;
 import es.uned.grc.pfc.meteo.client.event.IMapLoadedEventHandler;
 import es.uned.grc.pfc.meteo.client.event.MapLoadedEvent;
 import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.place.AbstractPlace;
 import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
 import es.uned.grc.pfc.meteo.client.place.StationMapPlace;
+import es.uned.grc.pfc.meteo.client.place.UserSetupPlace;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.util.IClientConstants;
 import es.uned.grc.pfc.meteo.client.view.IMainLayoutView;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.client.view.IStationMapView;
+import es.uned.grc.pfc.meteo.client.view.IUserSetupView;
 import es.uned.grc.pfc.meteo.client.view.base.IFormView;
 import es.uned.grc.pfc.meteo.client.view.widget.dialog.ActionDialogBoxClickEvent;
 import es.uned.grc.pfc.meteo.client.view.widget.dialog.ConfirmationDialogBox;
@@ -48,8 +51,10 @@ public class MainActivityMapper implements ActivityMapper {
       String observationListPlace ();
       @DefaultStringValue ("Mapa de estaciones") @Meaning ("Detail region title")
       String stationMapPlace ();
+      @DefaultStringValue ("Configuración de perfil") @Meaning ("Detail region title")
+      String userSetupPlace ();
    }
-   public static TextConstants textConstants = GWT.create (TextConstants.class);
+   public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);
 
    @Inject
    private PlaceController placeController = null;
@@ -62,6 +67,8 @@ public class MainActivityMapper implements ActivityMapper {
    private IObservationListView observationListView = null;
    @Inject
    private IStationMapView stationMapView = null;
+   @Inject
+   private IUserSetupView userSetupView = null;
    
    private boolean init = false;
 
@@ -97,11 +104,14 @@ public class MainActivityMapper implements ActivityMapper {
       
       // configure place header, back to list link and return the correct activity
       if (place instanceof ObservationListPlace) {
-         mainLayoutView.getDetailsTitle ().setText (textConstants.observationListPlace ());
+         mainLayoutView.getDetailsTitle ().setText (TEXT_CONSTANTS.observationListPlace ());
          return new ObservationListActivity ((ObservationListPlace) place, observationListView, placeController);
       } else if (place instanceof StationMapPlace) {
-         mainLayoutView.getDetailsTitle ().setText (textConstants.stationMapPlace ());
+         mainLayoutView.getDetailsTitle ().setText (TEXT_CONSTANTS.stationMapPlace ());
          return new StationMapActivity ((StationMapPlace) place, stationMapView, placeController);
+      } else if (place instanceof UserSetupPlace) {
+         mainLayoutView.getDetailsTitle ().setText (TEXT_CONSTANTS.userSetupPlace ());
+         return new UserSetupActivity ((UserSetupPlace) place, userSetupView, placeController);
       }
       
       return null;
@@ -126,7 +136,6 @@ public class MainActivityMapper implements ActivityMapper {
 
    private void bindStationMapEvents () {
       eventBus.addHandler (MapLoadedEvent.TYPE, new IMapLoadedEventHandler () {
-         
          @Override
          public void onMapLoaded (MapLoadedEvent event) {
             //TODO obtain display rectangle

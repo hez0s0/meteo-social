@@ -10,13 +10,17 @@ import com.google.inject.Inject;
 
 import es.uned.grc.pfc.meteo.client.activity.action.ObservationListActionsActivity;
 import es.uned.grc.pfc.meteo.client.activity.action.StationMapActionsActivity;
+import es.uned.grc.pfc.meteo.client.activity.action.UserSetupActionsActivity;
 import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
 import es.uned.grc.pfc.meteo.client.place.StationMapPlace;
+import es.uned.grc.pfc.meteo.client.place.UserSetupPlace;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.client.view.IStationMapView;
+import es.uned.grc.pfc.meteo.client.view.IUserSetupView;
 import es.uned.grc.pfc.meteo.client.view.action.IObservationListActionsView;
 import es.uned.grc.pfc.meteo.client.view.action.IStationMapActionsView;
+import es.uned.grc.pfc.meteo.client.view.action.IUserSetupActionsView;
 
 /**
  * Mapper for the actions display of the screen.
@@ -36,11 +40,15 @@ public class ActionsActivityMapper implements ActivityMapper {
    private IObservationListView observationListView = null;
    @Inject
    private IStationMapView stationMapView = null;
+   @Inject
+   private IUserSetupView userSetupView = null;
 
    @Inject
    private IObservationListActionsView observationListActionsView = null;
    @Inject
    private IStationMapActionsView stationMapActionsView = null;
+   @Inject
+   private IUserSetupActionsView userSetupActionsView = null;
    
    private IRequestFactory requestFactory = null;
 
@@ -58,9 +66,10 @@ public class ActionsActivityMapper implements ActivityMapper {
          return new ObservationListActionsActivity ((ObservationListPlace) place, observationListView, observationListActionsView, placeController);
       } else if (place instanceof StationMapPlace) {
          return new StationMapActionsActivity ((StationMapPlace) place, stationMapView, stationMapActionsView, placeController);
+      } else if (place instanceof UserSetupPlace) {
+         return new UserSetupActionsActivity ((UserSetupPlace) place, userSetupView, userSetupActionsView, placeController);
       }
       
       return null;
    }
-   
 }

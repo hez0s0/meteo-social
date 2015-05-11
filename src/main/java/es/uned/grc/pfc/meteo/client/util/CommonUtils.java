@@ -12,27 +12,25 @@ public class CommonUtils {
    private CommonUtils () {
       //do not construct
    }
-   
+
    public static String getBaseUrl () {
       String url = GWT.getHostPageBaseURL ();
-      
-      if ( (url != null) && (url.endsWith ("/")) ) {
+
+      if ((url != null) && (url.endsWith ("/"))) {
          url = url.substring (0, url.length () - 1);
       }
-      
+
       return url;
    }
-   
+
    public static String getServerUrl () {
       String urlString = getBaseUrl ();
-      
+
       //very ugly!! but there seems to be no replacement for java.net.URL
       AnchorElement anchor = Document.get ().createAnchorElement ();
       anchor.setHref (urlString);
-      
-      return PortableStringUtils.format ("%s//%s", 
-                                         anchor.getPropertyString ("protocol"),
-                                         anchor.getPropertyString ("host"));
+
+      return PortableStringUtils.format ("%s//%s", anchor.getPropertyString ("protocol"), anchor.getPropertyString ("host"));
    }
 
    /**
@@ -54,7 +52,7 @@ public class CommonUtils {
          }
          currentSuperClass = currentSuperClass.getSuperclass ();
       }
-      
+
       return false;
    }
 }

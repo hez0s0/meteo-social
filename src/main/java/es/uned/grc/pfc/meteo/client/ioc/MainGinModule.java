@@ -28,8 +28,11 @@ import es.uned.grc.pfc.meteo.client.view.IMessagesView;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.client.view.ISearchView;
 import es.uned.grc.pfc.meteo.client.view.IStationMapView;
+import es.uned.grc.pfc.meteo.client.view.IUserSetupView;
 import es.uned.grc.pfc.meteo.client.view.action.IObservationListActionsView;
 import es.uned.grc.pfc.meteo.client.view.action.IStationMapActionsView;
+import es.uned.grc.pfc.meteo.client.view.action.IUserSetupActionsView;
+import es.uned.grc.pfc.meteo.client.view.action.UserSetupActionsViewImpl;
 import es.uned.grc.pfc.meteo.client.view.action.impl.ObservationListActionsViewImpl;
 import es.uned.grc.pfc.meteo.client.view.action.impl.StationMapActionsViewImpl;
 import es.uned.grc.pfc.meteo.client.view.impl.HeaderViewImpl;
@@ -39,12 +42,13 @@ import es.uned.grc.pfc.meteo.client.view.impl.MessagesViewImpl;
 import es.uned.grc.pfc.meteo.client.view.impl.ObservationListViewImpl;
 import es.uned.grc.pfc.meteo.client.view.impl.SearchViewImpl;
 import es.uned.grc.pfc.meteo.client.view.impl.StationMapViewImpl;
+import es.uned.grc.pfc.meteo.client.view.impl.UserSetupViewImpl;
 
 public class MainGinModule extends AbstractGinModule {
 
    @Override
    protected void configure () {
-      // global-wide elements for control and comm
+      // global-wide elements for control and communication
       bind (EventBus.class).to (SimpleEventBus.class).in (Singleton.class);
       bind (PlaceController.class).to (InjectablePlaceController.class).in (Singleton.class);
       bind (IBootstrap.class).to (BootstrapImpl.class).in (Singleton.class);
@@ -59,10 +63,12 @@ public class MainGinModule extends AbstractGinModule {
       //detail singleton views
       bind (IObservationListView.class).to (ObservationListViewImpl.class).in (Singleton.class);
       bind (IStationMapView.class).to (StationMapViewImpl.class).in (Singleton.class);
+      bind (IUserSetupView.class).to (UserSetupViewImpl.class).in (Singleton.class);
 
       //action singleton views
       bind (IObservationListActionsView.class).to (ObservationListActionsViewImpl.class).in (Singleton.class);
       bind (IStationMapActionsView.class).to (StationMapActionsViewImpl.class).in (Singleton.class);
+      bind (IUserSetupActionsView.class).to (UserSetupActionsViewImpl.class).in (Singleton.class);
    }
 
    /**

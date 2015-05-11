@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
@@ -33,6 +34,8 @@ public class HeaderViewImpl extends Composite implements IHeaderView  {
    protected Image enImage = null;
    @UiField
    protected Label userLabel = null;
+   @UiField
+   protected Anchor logoutAnchor = null;
    
    @Inject
    protected PlaceController placeController = null;
@@ -74,5 +77,10 @@ public class HeaderViewImpl extends Composite implements IHeaderView  {
    @Override
    public HasText getUserLabel () {
       return userLabel;
+   }
+
+   @Override
+   public Anchor getLogoutLink () {
+      return logoutAnchor;
    }
 }

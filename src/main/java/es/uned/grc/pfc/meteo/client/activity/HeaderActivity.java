@@ -12,9 +12,12 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 import es.uned.grc.pfc.meteo.client.activity.mapper.MainActivityMapper;
 import es.uned.grc.pfc.meteo.client.model.IUserProxy;
 import es.uned.grc.pfc.meteo.client.place.AbstractPlace;
+import es.uned.grc.pfc.meteo.client.util.CommonUtils;
 import es.uned.grc.pfc.meteo.client.util.IClientConstants;
+import es.uned.grc.pfc.meteo.client.util.PortableStringUtils;
 import es.uned.grc.pfc.meteo.client.view.IHeaderView;
 import es.uned.grc.pfc.meteo.client.view.util.FormUtils;
+import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
 /**
  * Activity (presenter) that acts as a bridge between aplication logic
@@ -69,6 +72,13 @@ public class HeaderActivity extends AbstractBaseActivity {
          @Override
          public void onClick (ClickEvent event) {
             setLocale (IClientConstants.LOCALE_ENGLISH);
+         }
+      });
+      /** logout */
+      registerHandler (headerView.getLogoutLink (), new ClickHandler() {
+         @Override
+         public void onClick (ClickEvent event) {
+            FormUtils.goConditionallyToUrl (mainActivityMapper, PortableStringUtils.format (ISharedConstants.LOGOUT_URL, CommonUtils.getBaseUrl ()));
          }
       });
    }

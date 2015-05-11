@@ -1,0 +1,45 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' 
+  xmlns:g='urn:import:com.google.gwt.user.client.ui' 
+  xmlns:meteo-widget="urn:import:es.uned.grc.pfc.meteo.client.view.widget"
+  ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat' 
+  ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+  ui:generateLocales="default">
+
+  <g:HTMLPanel>
+    <g:HTMLPanel ui:field="viewActionsPanel">
+      <div class="right_articles">
+        <p>
+          <b>
+            <meteo-widget:ImageLabel ui:field="editUser" imageUrl="images/icons/page_edit.png">
+              <ui:msg meaning="the user action" description="Title to edit a user">Editar perfil</ui:msg>
+            </meteo-widget:ImageLabel>
+          </b>
+          <ui:msg description="Detail text to edit a user">Pulse para editar los valores de configuración del perfil de usuario</ui:msg>
+        </p>
+      </div>
+    </g:HTMLPanel>
+    
+    <g:HTMLPanel ui:field="editActionsPanel" visible="false">
+      <div class="right_articles">
+        <p>
+          <b>
+            <meteo-widget:ImageLabel ui:field="saveUser" imageUrl="images/icons/disk.png">
+              <ui:msg meaning="the user action" description="Title to save changes to a user in edition">Guardar perfil</ui:msg>
+            </meteo-widget:ImageLabel>
+          </b>
+          <ui:msg description="Detail to save changes to a user in edition">Pulse para validar y guardar los valores introducidos</ui:msg>
+        </p>
+      </div>
+      <div class="right_articles">
+        <p>
+          <b>
+            <meteo-widget:ImageLabel ui:field="cancelUser" imageUrl="images/icons/delete.png">
+              <ui:msg meaning="the user action" description="Title text to cancel changes to a user in edition">Cancelar cambios</ui:msg>
+            </meteo-widget:ImageLabel>
+          </b>
+          <ui:msg description="Detail to cancel changes to a user in edition">Pulse para descartar todos los cambios realizados sobre el perfil</ui:msg>
+        </p>
+      </div>
+    </g:HTMLPanel>
+  </g:HTMLPanel>
+</ui:UiBinder>

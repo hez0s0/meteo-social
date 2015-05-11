@@ -159,7 +159,7 @@ public class StationPersistence extends AbstractPersistence <Integer, Station> i
    public IStationPlugin getStationPlugin (Station station) {
       if (station != null) {
          try {
-            return (IStationPlugin) Class.forName (station.getStationModel ().getClassName ()).newInstance ();
+            return station.getStationModel () != null ? (IStationPlugin) Class.forName (station.getStationModel ().getClassName ()).newInstance () : null;
          } catch (ClassNotFoundException cnfe) {
             throw new RuntimeException (cnfe);
          } catch (InstantiationException ie) {

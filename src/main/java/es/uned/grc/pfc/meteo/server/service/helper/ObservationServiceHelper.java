@@ -62,14 +62,15 @@ public class ObservationServiceHelper {
       List <Variable> variables = null;
       Station station = null;
       IStationPlugin stationPlugin = null;
+      int observationPeriod = -1;
       
       if (startDate != null && endDate != null) {
          //iterate all the periods and variables to fill the gaps with "empty" observations
          station = getStation (requestParam, observations);
          variables = getVariables (station, requestParam);
          stationPlugin = stationPersistence.getStationPlugin (station);
-         
-         long stationPeriod = (stationPlugin.getObservationPeriod () * IServerConstants.ONE_MINUTE);
+         observationPeriod = (stationPlugin != null) ? stationPlugin.getObservationPeriod () : 10; 
+         long stationPeriod = (observationPeriod * IServerConstants.ONE_MINUTE);
          
          for (long observed = startDate.getTime (); observed <= endDate.getTime (); observed += stationPeriod) {
             for (Variable variable : variables) {

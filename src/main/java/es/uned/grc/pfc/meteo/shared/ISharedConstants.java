@@ -9,7 +9,7 @@ public interface ISharedConstants {
    long ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
    
    /** the URL to invoke to perform a logout */
-   String LOGOUT_URL = "logout";
+   String LOGOUT_URL = "%s/logout";
    /** the URL of the login page */
    String LOGIN_URL = "login.jsp";
 

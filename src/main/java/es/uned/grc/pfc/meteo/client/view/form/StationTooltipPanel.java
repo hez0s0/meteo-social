@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import es.uned.grc.pfc.meteo.client.model.IObservationProxy;
 import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
+import es.uned.grc.pfc.meteo.client.util.IClientConstants;
 import es.uned.grc.pfc.meteo.client.util.IStyleConstants;
 
 public class StationTooltipPanel extends Composite {
@@ -86,7 +87,7 @@ public class StationTooltipPanel extends Composite {
       
       //display station properties
       titleLabel.setText (station.getName ());
-      modelLabel.setText (station.getStationModel ().getName ());
+      modelLabel.setText (station.getStationModel () != null ? station.getStationModel ().getName () : IClientConstants.TEXT_CONSTANTS.emptyValue ());
       
       latitudeLabel.setText (String.valueOf (station.getLatitude ()) + TEXT_CONSTANTS.latlongUnit ());
       longitudeLabel.setText (String.valueOf (station.getLongitude ()) + TEXT_CONSTANTS.latlongUnit ());

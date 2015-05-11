@@ -9,7 +9,10 @@
     <g:HorizontalPanel>
       <g:Image ui:field="esImage" width="16px" height="11px" styleName="meteo-flag-image" visible="false"/>
       <g:Image ui:field="enImage" width="16px" height="11px" styleName="meteo-flag-image" visible="false"/>
-      <g:Label ui:field="userLabel"/>
+      <g:VerticalPanel>
+         <g:Label ui:field="userLabel"/>
+         <g:Anchor ui:field="logoutAnchor" styleName="vdas-ImageLabel"><ui:msg description="Label for logout">(Desconectar)</ui:msg></g:Anchor>
+      </g:VerticalPanel>
     </g:HorizontalPanel>
   </g:HTMLPanel>
 </ui:UiBinder>
