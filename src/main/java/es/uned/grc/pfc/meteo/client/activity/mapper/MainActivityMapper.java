@@ -16,19 +16,26 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 
 import es.uned.grc.pfc.meteo.client.activity.ObservationListActivity;
 import es.uned.grc.pfc.meteo.client.activity.StationMapActivity;
+import es.uned.grc.pfc.meteo.client.activity.StationSetupActivity;
 import es.uned.grc.pfc.meteo.client.activity.UserSetupActivity;
 import es.uned.grc.pfc.meteo.client.event.IMapLoadedEventHandler;
+import es.uned.grc.pfc.meteo.client.event.IStationSetupEventHandler;
+import es.uned.grc.pfc.meteo.client.event.IUserSetupEventHandler;
 import es.uned.grc.pfc.meteo.client.event.MapLoadedEvent;
+import es.uned.grc.pfc.meteo.client.event.StationSetupEvent;
+import es.uned.grc.pfc.meteo.client.event.UserSetupEvent;
 import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.place.AbstractPlace;
 import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
 import es.uned.grc.pfc.meteo.client.place.StationMapPlace;
+import es.uned.grc.pfc.meteo.client.place.StationSetupPlace;
 import es.uned.grc.pfc.meteo.client.place.UserSetupPlace;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.util.IClientConstants;
 import es.uned.grc.pfc.meteo.client.view.IMainLayoutView;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.client.view.IStationMapView;
+import es.uned.grc.pfc.meteo.client.view.IStationSetupView;
 import es.uned.grc.pfc.meteo.client.view.IUserSetupView;
 import es.uned.grc.pfc.meteo.client.view.base.IFormView;
 import es.uned.grc.pfc.meteo.client.view.widget.dialog.ActionDialogBoxClickEvent;
@@ -53,6 +60,8 @@ public class MainActivityMapper implements ActivityMapper {
       String stationMapPlace ();
       @DefaultStringValue ("Configuración de perfil") @Meaning ("Detail region title")
       String userSetupPlace ();
+      @DefaultStringValue ("Configuración de usuario") @Meaning ("Detail region title")
+      String stationSetupPlace ();
    }
    public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);
 
@@ -69,6 +78,8 @@ public class MainActivityMapper implements ActivityMapper {
    private IStationMapView stationMapView = null;
    @Inject
    private IUserSetupView userSetupView = null;
+   @Inject
+   private IStationSetupView stationSetupView = null;
    
    private boolean init = false;
 
@@ -112,6 +123,9 @@ public class MainActivityMapper implements ActivityMapper {
       } else if (place instanceof UserSetupPlace) {
          mainLayoutView.getDetailsTitle ().setText (TEXT_CONSTANTS.userSetupPlace ());
          return new UserSetupActivity ((UserSetupPlace) place, userSetupView, placeController);
+      } else if (place instanceof StationSetupPlace) {
+         mainLayoutView.getDetailsTitle ().setText (TEXT_CONSTANTS.stationSetupPlace ());
+         return new StationSetupActivity ((StationSetupPlace) place, stationSetupView, placeController);
       }
       
       return null;
@@ -123,8 +137,26 @@ public class MainActivityMapper implements ActivityMapper {
    private void bind () {
       bindGeneralViewEvents ();
       bindStationMapEvents ();
+      bindConfigEvents ();
    }
    
+   private void bindConfigEvents () {
+      // edit user profile
+      eventBus.addHandler (UserSetupEvent.TYPE, new IUserSetupEventHandler () {
+         @Override
+         public void onUserSetupEdit (UserSetupEvent userSetupEvent) {
+            placeController.goTo (new UserSetupPlace ());
+         }
+      });
+      // edit station
+      eventBus.addHandler (StationSetupEvent.TYPE, new IStationSetupEventHandler () {
+         @Override
+         public void onStationSetupEdit (StationSetupEvent stationSetupEvent) {
+            placeController.goTo (new StationSetupPlace ());
+         }
+      });
+   }
+
    private void bindGeneralViewEvents () {
       mainLayoutView.getBackToList ().addClickHandler (new ClickHandler () {
          @Override
@@ -138,7 +170,6 @@ public class MainActivityMapper implements ActivityMapper {
       eventBus.addHandler (MapLoadedEvent.TYPE, new IMapLoadedEventHandler () {
          @Override
          public void onMapLoaded (MapLoadedEvent event) {
-            //TODO obtain display rectangle
             getRequestFactory (eventBus).getStationContext ().getStationsInArea (Double.MAX_VALUE * -1, Double.MAX_VALUE * -1, Double.MAX_VALUE, Double.MAX_VALUE)
                                                              .with ("stationModel", "transientLastObservations", "transientLastObservations.variable")
                                                              .fire (new Receiver <List <IStationProxy>> () {

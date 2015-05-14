@@ -11,7 +11,8 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
 public class UserIdleTimeOutControl {
 
-   private static final int TIMEOUT = 20 * 60 * 1000; //20 minutes max user inactivity
+   // 20 minutes max user inactivity
+   private static final int TIMEOUT = 20 * 60 * 1000;
    
    private static UserIdleTimeOutControl instance = null;
 
@@ -27,7 +28,7 @@ public class UserIdleTimeOutControl {
    
    private UserIdleTimeOutControl () {
       
-   } //end of UserIdleTimeOutControl
+   }
    
    public void startCheck () {
       NativePreviewHandler handler = null;
@@ -35,23 +36,23 @@ public class UserIdleTimeOutControl {
       inactivityTimer = new Timer () {
          @Override
          public void run () {
-            
             // Logout
             handlerRegistration.removeHandler ();
             inactivityTimer.cancel ();
 
-            Window.Location.assign (ISharedConstants.LOGOUT_URL); //perform logout by using spring logout servlet
-         } //end of run
+            //perform logout by using spring logout servlet
+            Window.Location.assign (PortableStringUtils.format (ISharedConstants.LOGOUT_URL, CommonUtils.getBaseUrl ()));
+         }
       };
       inactivityTimer.schedule (TIMEOUT);
 
-      handler = new NativePreviewHandler () { //register for user events
+      handler = new NativePreviewHandler () { 
+         //register for user events
          @Override
          public void onPreviewNativeEvent (NativePreviewEvent event) {
             inactivityTimer.schedule (TIMEOUT);
-
          }
       };
       handlerRegistration = Event.addNativePreviewHandler (handler);
-   } //end of startCheck
-} //end of UserIdleTimeOutControl
+   }
+}

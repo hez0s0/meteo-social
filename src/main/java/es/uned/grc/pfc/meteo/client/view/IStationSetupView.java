@@ -1,8 +1,13 @@
 package es.uned.grc.pfc.meteo.client.view;
 
-import es.uned.grc.pfc.meteo.client.model.IStationProxy;
-import es.uned.grc.pfc.meteo.client.view.base.IView;
+import com.google.gwt.place.shared.PlaceController;
+import com.google.web.bindery.requestfactory.shared.RequestContext;
 
-public interface IStationSetupView extends IView {
-   void setStation (IStationProxy response);
+import es.uned.grc.pfc.meteo.client.model.IStationProxy;
+import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
+import es.uned.grc.pfc.meteo.client.view.base.IFormView;
+
+public interface IStationSetupView extends IFormView <IStationProxy> {
+   /** sets the element and info to be edited */
+   void setInput (IStationProxy station, IRequestFactory requestFactory, RequestContext requestContext, PlaceController placeController);
 }

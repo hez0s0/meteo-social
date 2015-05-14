@@ -28,13 +28,16 @@ import es.uned.grc.pfc.meteo.client.view.IMessagesView;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
 import es.uned.grc.pfc.meteo.client.view.ISearchView;
 import es.uned.grc.pfc.meteo.client.view.IStationMapView;
+import es.uned.grc.pfc.meteo.client.view.IStationSetupView;
 import es.uned.grc.pfc.meteo.client.view.IUserSetupView;
 import es.uned.grc.pfc.meteo.client.view.action.IObservationListActionsView;
 import es.uned.grc.pfc.meteo.client.view.action.IStationMapActionsView;
+import es.uned.grc.pfc.meteo.client.view.action.IStationSetupActionsView;
 import es.uned.grc.pfc.meteo.client.view.action.IUserSetupActionsView;
-import es.uned.grc.pfc.meteo.client.view.action.UserSetupActionsViewImpl;
 import es.uned.grc.pfc.meteo.client.view.action.impl.ObservationListActionsViewImpl;
 import es.uned.grc.pfc.meteo.client.view.action.impl.StationMapActionsViewImpl;
+import es.uned.grc.pfc.meteo.client.view.action.impl.StationSetupActionsViewImpl;
+import es.uned.grc.pfc.meteo.client.view.action.impl.UserSetupActionsViewImpl;
 import es.uned.grc.pfc.meteo.client.view.impl.HeaderViewImpl;
 import es.uned.grc.pfc.meteo.client.view.impl.MainLayoutViewImpl;
 import es.uned.grc.pfc.meteo.client.view.impl.MenuViewImpl;
@@ -42,6 +45,7 @@ import es.uned.grc.pfc.meteo.client.view.impl.MessagesViewImpl;
 import es.uned.grc.pfc.meteo.client.view.impl.ObservationListViewImpl;
 import es.uned.grc.pfc.meteo.client.view.impl.SearchViewImpl;
 import es.uned.grc.pfc.meteo.client.view.impl.StationMapViewImpl;
+import es.uned.grc.pfc.meteo.client.view.impl.StationSetupViewImpl;
 import es.uned.grc.pfc.meteo.client.view.impl.UserSetupViewImpl;
 
 public class MainGinModule extends AbstractGinModule {
@@ -64,11 +68,13 @@ public class MainGinModule extends AbstractGinModule {
       bind (IObservationListView.class).to (ObservationListViewImpl.class).in (Singleton.class);
       bind (IStationMapView.class).to (StationMapViewImpl.class).in (Singleton.class);
       bind (IUserSetupView.class).to (UserSetupViewImpl.class).in (Singleton.class);
+      bind (IStationSetupView.class).to (StationSetupViewImpl.class).in (Singleton.class);
 
       //action singleton views
       bind (IObservationListActionsView.class).to (ObservationListActionsViewImpl.class).in (Singleton.class);
       bind (IStationMapActionsView.class).to (StationMapActionsViewImpl.class).in (Singleton.class);
       bind (IUserSetupActionsView.class).to (UserSetupActionsViewImpl.class).in (Singleton.class);
+      bind (IStationSetupActionsView.class).to (StationSetupActionsViewImpl.class).in (Singleton.class);
    }
 
    /**

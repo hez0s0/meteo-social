@@ -24,6 +24,10 @@ public interface IStationRequestContext extends RequestContext {
     */
    Request <IUserProxy> getLoggedUser ();
    /**
+    * Persists an user
+    */
+   Request <IUserProxy> saveUser (IUserProxy user);
+   /**
     * Obtain the own station
     */
    Request <IStationProxy> getOwnStation ();

@@ -23,6 +23,9 @@ public class User extends AbstractVersionable <Integer> {
    private String familyName = null;
    private String email = null;
    private boolean enabled = true;
+   private boolean enableTwitter = true;
+   private String consumerKey = null;
+   private String consumerSecret = null;
    
    @Id
    @GeneratedValue (strategy = GenerationType.AUTO, generator = "metUserID_gen")
@@ -81,5 +84,29 @@ public class User extends AbstractVersionable <Integer> {
    }
    public void setEnabled (boolean enabled) {
       this.enabled = enabled;
+   }
+   
+   @Column (nullable = false)
+   public boolean isEnableTwitter () {
+      return enableTwitter;
+   }
+   public void setEnableTwitter (boolean enableTwitter) {
+      this.enableTwitter = enableTwitter;
+   }
+   
+   @Column (length = 1024)
+   public String getConsumerKey () {
+      return consumerKey;
+   }
+   public void setConsumerKey (String consumerKey) {
+      this.consumerKey = consumerKey;
+   }
+   
+   @Column (length = 1024)
+   public String getConsumerSecret () {
+      return consumerSecret;
+   }
+   public void setConsumerSecret (String consumerSecret) {
+      this.consumerSecret = consumerSecret;
    }
 }

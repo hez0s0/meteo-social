@@ -14,6 +14,7 @@ import es.uned.grc.pfc.meteo.server.model.paged.StationPagedList;
 import es.uned.grc.pfc.meteo.server.model.paged.StringPagedList;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
+import es.uned.grc.pfc.meteo.server.persistence.IUserPersistence;
 import es.uned.grc.pfc.meteo.server.service.helper.StationServiceHelper;
 import es.uned.grc.pfc.meteo.server.util.AuthInfo;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
@@ -31,6 +32,8 @@ public class StationService {
    private IStationPersistence stationPersistence = null;
    @Autowired
    private IObservationPersistence observationPersistence = null;
+   @Autowired
+   private IUserPersistence userPersistence = null;
 
    @Autowired
    private StationServiceHelper stationServiceHelper = null;
@@ -46,6 +49,18 @@ public class StationService {
       } catch (Exception e) {
          logger.error ("Error getting logged user", e);
          throw new RuntimeException ("Could not get logged user. See server logs.");
+      }
+   }
+   
+   /**
+    * Persits an user
+    */
+   public User saveUser (User user) {
+      try {
+         return userPersistence.saveOrMerge (user);
+      } catch (Exception e) {
+         logger.error ("Error saving user", e);
+         throw new RuntimeException ("Could not save user. See server logs.");
       }
    }
    

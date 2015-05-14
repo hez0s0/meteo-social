@@ -1,0 +1,45 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' 
+  xmlns:g='urn:import:com.google.gwt.user.client.ui' 
+  xmlns:meteo-widget="urn:import:es.uned.grc.pfc.meteo.client.view.widget"
+  ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat' 
+  ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+  ui:generateLocales="default">
+
+  <g:HTMLPanel>
+    <g:HTMLPanel ui:field="viewActionsPanel">
+      <div class="right_articles">
+        <p>
+          <b>
+            <meteo-widget:ImageLabel ui:field="editStation" imageUrl="images/icons/page_edit.png">
+              <ui:msg meaning="the station action" description="Title to edit a station">Editar datos de estación</ui:msg>
+            </meteo-widget:ImageLabel>
+          </b>
+          <ui:msg description="Detail text to edit a station">Pulse para editar los valores de configuración de la estación</ui:msg>
+        </p>
+      </div>
+    </g:HTMLPanel>
+    
+    <g:HTMLPanel ui:field="editActionsPanel" visible="false">
+      <div class="right_articles">
+        <p>
+          <b>
+            <meteo-widget:ImageLabel ui:field="saveStation" imageUrl="images/icons/disk.png">
+              <ui:msg meaning="the station action" description="Title to save changes to a station in edition">Guardar estación</ui:msg>
+            </meteo-widget:ImageLabel>
+          </b>
+          <ui:msg description="Detail to save changes to a station in edition">Pulse para validar y guardar los valores introducidos</ui:msg>
+        </p>
+      </div>
+      <div class="right_articles">
+        <p>
+          <b>
+            <meteo-widget:ImageLabel ui:field="cancelStation" imageUrl="images/icons/delete.png">
+              <ui:msg meaning="the station action" description="Title text to cancel changes to a station in edition">Cancelar cambios</ui:msg>
+            </meteo-widget:ImageLabel>
+          </b>
+          <ui:msg description="Detail to cancel changes to a station in edition">Pulse para descartar todos los cambios realizados sobre la estación</ui:msg>
+        </p>
+      </div>
+    </g:HTMLPanel>
+  </g:HTMLPanel>
+</ui:UiBinder>

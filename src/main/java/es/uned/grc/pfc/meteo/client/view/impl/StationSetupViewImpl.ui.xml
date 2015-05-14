@@ -9,7 +9,7 @@
 
   <g:HTMLPanel styleName="left_box">
     <div class="formulaire">
-      <meteo-form:UserForm ui:field="userForm"/>
+      <meteo-form:StationForm ui:field="stationForm"/>
     </div>
   </g:HTMLPanel>
 </ui:UiBinder>

@@ -25,19 +25,19 @@ import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 import es.uned.grc.pfc.meteo.client.event.MessageChangeEvent;
-import es.uned.grc.pfc.meteo.client.event.UserSetupEvent;
-import es.uned.grc.pfc.meteo.client.model.IUserProxy;
-import es.uned.grc.pfc.meteo.client.place.UserSetupPlace;
+import es.uned.grc.pfc.meteo.client.event.StationSetupEvent;
+import es.uned.grc.pfc.meteo.client.model.IStationProxy;
+import es.uned.grc.pfc.meteo.client.place.StationSetupPlace;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.request.IStationRequestContext;
 import es.uned.grc.pfc.meteo.client.validator.ConstraintViolationWrapper;
-import es.uned.grc.pfc.meteo.client.view.IUserSetupView;
+import es.uned.grc.pfc.meteo.client.view.IStationSetupView;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractEntityEditor.EditorMode;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractFormView;
-import es.uned.grc.pfc.meteo.client.view.form.UserForm;
+import es.uned.grc.pfc.meteo.client.view.form.StationForm;
 
-public class UserSetupViewImpl extends AbstractFormView <IUserProxy> implements IUserSetupView {
-   interface ViewUiBinder extends UiBinder <HTMLPanel, UserSetupViewImpl> {
+public class StationSetupViewImpl extends AbstractFormView <IStationProxy> implements IStationSetupView {
+   interface ViewUiBinder extends UiBinder <HTMLPanel, StationSetupViewImpl> {
    }
    private static ViewUiBinder uiBinder = GWT.create (ViewUiBinder.class);
    
@@ -47,12 +47,12 @@ public class UserSetupViewImpl extends AbstractFormView <IUserProxy> implements 
    PlaceController placeController = null;
 
    @UiField
-   UserForm userForm = null;
+   StationForm stationForm = null;
 
-   public UserSetupViewImpl () {
+   public StationSetupViewImpl () {
       initWidget (uiBinder.createAndBindUi (this));
       
-      userForm.setVisible (true);
+      stationForm.setVisible (true);
    }
 
    @Override
@@ -61,60 +61,60 @@ public class UserSetupViewImpl extends AbstractFormView <IUserProxy> implements 
    }
 
    @Override
-   public void setInput (IUserProxy user, IRequestFactory requestFactory, RequestContext requestContext, PlaceController placeController) {
-      user = requestContext.edit (user);
-      super.setInput (user, requestFactory, requestContext, placeController);
+   public void setInput (IStationProxy station, IRequestFactory requestFactory, RequestContext requestContext, PlaceController placeController) {
+      station = requestContext.edit (station);
+      super.setInput (station, requestFactory, requestContext, placeController);
 
-      userForm.setInput (entityProxy, requestFactory, requestContext, placeController, eventBus);
+      stationForm.setInput (entityProxy, requestFactory, requestContext, placeController, eventBus);
       dirty = false;
    }
 
    @Override
    public void notifyEditMode (EditorMode editorMode) {
-      userForm.notifyEditMode (editorMode);
+      stationForm.notifyEditMode (editorMode);
    }
 
    @Override
    public Place getCancelCreationPlace () {
-      return new UserSetupPlace ();
+      return new StationSetupPlace ();
    }
 
    @Override
-   public void display (IUserProxy user) {
-      userForm.display (user);
+   public void display (IStationProxy station) {
+      stationForm.display (station);
       dirty = false;
    }
 
    @Override
    public void addPathToSpanMap (String prefix, Map <String, SpanElement> pathToSpanMap, Map <String, DisclosurePanel> disclosurePanels) {
-      userForm.addPathToSpanMap (prefix, pathToSpanMap, disclosurePanels);
+      stationForm.addPathToSpanMap (prefix, pathToSpanMap, disclosurePanels);
    }
 
    @Override
-   protected Set <ConstraintViolationWrapper> validate (IUserProxy user) {
+   protected Set <ConstraintViolationWrapper> validate (IStationProxy station) {
       Set <ConstraintViolationWrapper> violations = new HashSet <ConstraintViolationWrapper> ();
-      runDefaultValidation (user, "", violations);
+      runDefaultValidation (station, "", violations);
       return violations;
    }
 
    @Override
    protected void displayServerValidationError (ConstraintViolation <?> violation) {
-      userForm.displayServerValidationError (violation);
+      stationForm.displayServerValidationError (violation);
    }
 
    @Override
    protected void clearServerErrors () {
-      userForm.clearServerErrors ();
+      stationForm.clearServerErrors ();
    }
 
    @Override
-   protected IUserProxy loadFormIntoEntity (IUserProxy editableProxy) {
-      return userForm.getEntity (entityProxy);
+   protected IStationProxy loadFormIntoEntity (IStationProxy editableProxy) {
+      return stationForm.getEntity (entityProxy);
    }
 
    @Override
-   protected Class <IUserProxy> getEntityProxyClass () {
-      return IUserProxy.class;
+   protected Class <IStationProxy> getEntityProxyClass () {
+      return IStationProxy.class;
    }
 
    @Override
@@ -123,8 +123,9 @@ public class UserSetupViewImpl extends AbstractFormView <IUserProxy> implements 
    }
    
    @Override
-   protected Request <?> getSaveRequest (IUserProxy entityProxy) {
-      return ((IStationRequestContext) getRequestContext ()).saveUser (entityProxy);
+   protected Request <?> getSaveRequest (IStationProxy entityProxy) {
+//      return ((IStationRequestContext) getRequestContext ()).saveStation (entityProxy); //TODO
+      return null;
    }
 
    @Override
@@ -134,17 +135,17 @@ public class UserSetupViewImpl extends AbstractFormView <IUserProxy> implements 
          public void onSuccess (List <String> response) {
             if (response.isEmpty ()) {
                // fire config event and forward to success place
-               placeController.goTo (new UserSetupPlace ());
+               placeController.goTo (new StationSetupPlace ());
             } else {
                // display the errors and reset element (because it will not be saveable after error due to RequestFactory restrictions!!)
                eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, response, (Exception) null));
-               eventBus.fireEvent (new UserSetupEvent ());
+               eventBus.fireEvent (new StationSetupEvent ());
             }
          }
 
          @Override
          public void onFailure (ServerFailure serverFailure) {
-            eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().saveElementError ("User"), serverFailure));
+            eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().saveElementError ("Station"), serverFailure));
          }
 
          @Override
@@ -156,7 +157,7 @@ public class UserSetupViewImpl extends AbstractFormView <IUserProxy> implements 
 
    @Override
    public void addDataFields (List <HasValueChangeHandlers <?>> dataFields) {
-      userForm.addDataFields (dataFields);
+      stationForm.addDataFields (dataFields);
    }
 
    @Override

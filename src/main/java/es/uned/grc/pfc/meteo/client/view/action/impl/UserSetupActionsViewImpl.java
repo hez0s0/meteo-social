@@ -1,4 +1,4 @@
-package es.uned.grc.pfc.meteo.client.view.action;
+package es.uned.grc.pfc.meteo.client.view.action.impl;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import es.uned.grc.pfc.meteo.client.view.IUserSetupView;
+import es.uned.grc.pfc.meteo.client.view.action.IUserSetupActionsView;
 import es.uned.grc.pfc.meteo.client.view.base.AbstractEntityEditor.EditorMode;
 import es.uned.grc.pfc.meteo.client.view.base.IHasActionHandlers;
 import es.uned.grc.pfc.meteo.client.view.widget.ImageLabel;

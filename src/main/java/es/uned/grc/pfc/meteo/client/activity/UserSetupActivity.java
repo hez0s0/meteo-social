@@ -30,31 +30,25 @@ public class UserSetupActivity extends AbstractBaseActivity {
       final IRequestFactory requestFactory = getRequestFactory (eventBus);
       final IStationRequestContext stationContext = requestFactory.getStationContext ();
 
-      if (place.getEntityID () != null) {
-         // detail of the user
-         GlassPanel.fireDistraction (panel,
-                                     editView.asWidget (), 
-                                     stationContext.getLoggedUser (),
-                                     new Receiver <IUserProxy> () {
-                                        @Override
-                                        public void onSuccess (IUserProxy response) {
-                                           if (response != null) {
-                                              editView.setInput (response, requestFactory, requestFactory.getStationContext (), placeController);
-                                           } else {
-                                              placeController.goTo (new ObservationListPlace ());
-                                           }
+      // detail of the user
+      GlassPanel.fireDistraction (panel,
+                                  editView.asWidget (), 
+                                  stationContext.getLoggedUser (),
+                                  new Receiver <IUserProxy> () {
+                                     @Override
+                                     public void onSuccess (IUserProxy response) {
+                                        if (response != null) {
+                                           editView.setInput (response, requestFactory, requestFactory.getStationContext (), placeController);
+                                        } else {
+                                           placeController.goTo (new ObservationListPlace ());
                                         }
-                                        
-                                        @Override
-                                        public void onFailure (ServerFailure serverFailure) {
-                                           eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().getError ("User", place.getEntityID ()), serverFailure));
-                                        }
-                                     });
-      } else {
-         //empty (new) user
-         panel.setWidget (editView.asWidget ());
-         editView.setInput (stationContext.create (IUserProxy.class), requestFactory, stationContext, placeController);
-      }
+                                     }
+                                     
+                                     @Override
+                                     public void onFailure (ServerFailure serverFailure) {
+                                        eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().getError ("User", place.getEntityID ()), serverFailure));
+                                     }
+                                  });
    }
 
 }

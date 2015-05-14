@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import es.uned.grc.pfc.meteo.client.activity.AbstractBaseActivity;
 import es.uned.grc.pfc.meteo.client.event.MessageChangeEvent;
+import es.uned.grc.pfc.meteo.client.event.UserSetupEvent;
 import es.uned.grc.pfc.meteo.client.place.UserSetupPlace;
 import es.uned.grc.pfc.meteo.client.view.IUserSetupView;
 import es.uned.grc.pfc.meteo.client.view.action.IUserSetupActionsView;
@@ -36,7 +37,7 @@ public class UserSetupActionsActivity extends AbstractBaseActivity {
       panel.setWidget (editActionsView.asWidget ());
       applyRoleVisibility ();
       bind (eventBus);
-      editActionsView.setEditorMode ((place.getEntityID () != null) ? AbstractEntityEditor.EditorMode.VIEW : AbstractEntityEditor.EditorMode.CREATE);
+      editActionsView.setEditorMode (AbstractEntityEditor.EditorMode.VIEW);
    }
 
    /**
@@ -48,7 +49,8 @@ public class UserSetupActionsActivity extends AbstractBaseActivity {
          @Override
          public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
             editView.setEditorMode (EditorMode.EDIT);
-            editView.setEditorMode (EditorMode.EDIT);
+            editActionsView.getViewActionsPanel ().setVisible (false);
+            editActionsView.getEditActionsPanel ().setVisible (true);
             source.setCompleted ();
          }
       });
@@ -76,7 +78,7 @@ public class UserSetupActionsActivity extends AbstractBaseActivity {
          public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
             if (!editView.getEditorMode ().equals (EditorMode.CREATE)) { 
                //it was not a new element, let us clear up and return to view mode
-//               eventBus.fireEvent (new UserEditEvent (getEntityID ())); //TODO
+               eventBus.fireEvent (new UserSetupEvent ());
             } else { 
                //we were creating new, let us allow the editor to decide were to go
                editView.cancelCreation ();
