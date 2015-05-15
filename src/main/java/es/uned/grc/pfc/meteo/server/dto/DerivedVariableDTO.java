@@ -2,10 +2,10 @@ package es.uned.grc.pfc.meteo.server.dto;
 
 import java.util.Date;
 
-import es.uned.grc.pfc.meteo.server.model.Variable;
+import es.uned.grc.pfc.meteo.server.model.StationVariable;
 
 public class DerivedVariableDTO {
-   private Variable variable = null;
+   private StationVariable stationVariable = null;
    private String minimum = null;
    private String maximum = null;
    private String average = null;
@@ -20,11 +20,11 @@ public class DerivedVariableDTO {
    private Integer averageDeriveExpected = null;
    private Date displayDate = null;
    
-   public Variable getVariable () {
-      return variable;
+   public StationVariable getStationVariable () {
+      return stationVariable;
    }
-   public void setVariable (Variable variable) {
-      this.variable = variable;
+   public void setStationVariable (StationVariable stationVariable) {
+      this.stationVariable = stationVariable;
    }
    public String getMinimum () {
       return minimum;

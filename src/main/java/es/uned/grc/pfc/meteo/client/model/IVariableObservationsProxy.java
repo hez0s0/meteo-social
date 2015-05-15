@@ -9,10 +9,8 @@ import es.uned.grc.pfc.meteo.server.dto.VariableObservationsDTO;
 
 @ProxyFor (VariableObservationsDTO.class)
 public interface IVariableObservationsProxy extends ValueProxy {
-   IStationProxy getStation ();
-   void setStation (IStationProxy station);
-   IVariableProxy getVariable ();
-   void setVariable (IVariableProxy variable);
    List <IObservationProxy> getObservations ();
    void setObservations (List <IObservationProxy> observations);
+   IStationVariableProxy getStationVariable ();
+   void setStationVariable (IStationVariableProxy stationVariable);
 }

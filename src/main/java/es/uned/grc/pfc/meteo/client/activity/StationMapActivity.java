@@ -8,6 +8,7 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.place.StationMapPlace;
 import es.uned.grc.pfc.meteo.client.view.IStationMapView;
+import es.uned.grc.pfc.meteo.client.view.widget.GlassPanel;
 
 public class StationMapActivity extends AbstractBaseActivity {
 
@@ -23,15 +24,17 @@ public class StationMapActivity extends AbstractBaseActivity {
    public void start (final AcceptsOneWidget panel, final EventBus eventBus) {
       this.eventBus = eventBus;
       panel.setWidget (mapView.asWidget ());
-            
-      getRequestFactory (eventBus).getStationContext ().getOwnStation (true)
-                                                       .with ("stationModel", "transientLastObservations", "transientLastObservations.variable")
-                                                       .fire (new Receiver <IStationProxy> () {
-
-         @Override
-         public void onSuccess (IStationProxy response) {
-            mapView.setCenterStation (response);
-         }
-      });
+      
+      // load own station
+      GlassPanel.fireDistraction (panel,
+                                  mapView.asWidget (), 
+                                  getRequestFactory (eventBus).getStationContext ().getOwnStation (true)
+                                                              .with ("stationModel", "transientLastObservations", "transientLastObservations.variable"),
+                                  new Receiver <IStationProxy> () {
+                                     @Override
+                                     public void onSuccess (IStationProxy response) {
+                                        mapView.setCenterStation (response);
+                                     }
+                                  });
    } 
 }

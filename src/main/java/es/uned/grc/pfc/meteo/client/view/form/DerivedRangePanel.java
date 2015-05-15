@@ -31,6 +31,7 @@ import com.google.gwt.visualization.client.visualizations.LineChart;
 
 import es.uned.grc.pfc.meteo.client.model.IDerivedRangeProxy;
 import es.uned.grc.pfc.meteo.client.model.IDerivedVariableProxy;
+import es.uned.grc.pfc.meteo.client.model.IStationVariableProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableProxy;
 import es.uned.grc.pfc.meteo.client.view.table.DerivedTableBuilder;
 import es.uned.grc.pfc.meteo.client.view.util.ChartUtils;
@@ -44,7 +45,7 @@ public class DerivedRangePanel extends Composite {
    public static final ProvidesKey <IDerivedVariableProxy> keyProvider = new ProvidesKey <IDerivedVariableProxy> () {
       @Override
       public Object getKey (IDerivedVariableProxy derivedVariableProxy) {
-         return (derivedVariableProxy != null) ? derivedVariableProxy.getVariable ().getId () : null;
+         return (derivedVariableProxy != null) ? derivedVariableProxy.getStationVariable ().getVariable ().getId () : null;
       }
    };
    
@@ -109,45 +110,45 @@ public class DerivedRangePanel extends Composite {
       tablePanel.setVisible (true);
       
       DateTimeFormat df = DateTimeFormat.getFormat (PredefinedFormat.DATE_TIME_SHORT);
-      titleLabel.setText (derivedRangeType.toString () + " (" + df.format (derivedRange.getIni ()) + "-" + df.format (derivedRange.getEnd ()) + ")");
+      titleLabel.setText (getLabel (derivedRangeType) + " (" + df.format (derivedRange.getIni ()) + "-" + df.format (derivedRange.getEnd ()) + ")");
 
       derivedCellTable.setRowCount (0);
       derivedCellTable.setRowCount (derivedRange.getDerivedVariables ().size ());
       derivedCellTable.setRowData (0, derivedRange.getDerivedVariables ());
    }
 
-   public void setInput (DerivedRangeType derivedRangeType, final List <IDerivedRangeProxy> observations) {
+   public void setInput (DerivedRangeType derivedRangeType, final List <IDerivedRangeProxy> derivedRanges) {
       this.derivedRangeType = derivedRangeType;
       
       graphPanel.setVisible (true);
       
       DateTimeFormat df = DateTimeFormat.getFormat (PredefinedFormat.DATE_TIME_SHORT);
-      titleLabel.setText (getLabel (derivedRangeType) + " (" + df.format (observations.get (0).getIni ()) + "-" + df.format (observations.get (0).getEnd ()) + ")");
+      titleLabel.setText (getLabel (derivedRangeType) + " (" + df.format (derivedRanges.get (0).getIni ()) + "-" + df.format (derivedRanges.get (derivedRanges.size () - 1).getEnd ()) + ")");
       
       Runnable onLoadCallback = new Runnable () {
          public void run () {
             int i = 0;
-            List <IVariableProxy> variables = null;
+            List <IStationVariableProxy> stationVariables = null;
             HorizontalPanel horizontalPanel = GWT.create (HorizontalPanel.class);
             Widget chart = null;
-            variables = extractVariables (observations);
-            for (IVariableProxy variable : variables) {
-               AbstractDataTable data = createDataTable (observations, variable);
-               switch (variable.getGraphType ()) {
+            stationVariables = extractStationVariables (derivedRanges);
+            for (IStationVariableProxy stationVariable : stationVariables) {
+               AbstractDataTable data = createDataTable (derivedRanges, stationVariable.getVariable ());
+               switch (stationVariable.getGraphType ()) {
                   case AREA:
-                     AreaChart.Options areaOptions = ChartUtils.createAreaOptions (variable);
+                     AreaChart.Options areaOptions = ChartUtils.createAreaOptions (stationVariable.getVariable ());
                      chart = new AreaChart (data, areaOptions);
                      break;
                   case BAR:
-                     BarChart.Options barOptions = ChartUtils.createBarOptions (variable);
+                     BarChart.Options barOptions = ChartUtils.createBarOptions (stationVariable.getVariable ());
                      chart = new BarChart (data, barOptions);
                      break;
                   case COLUMN:
-                     ColumnChart.Options columnOptions = ChartUtils.createColumnOptions (variable);
+                     ColumnChart.Options columnOptions = ChartUtils.createColumnOptions (stationVariable.getVariable ());
                      chart = new ColumnChart (data, columnOptions);
                      break;
                   case LINE:
-                     LineChart.Options lineOptions = ChartUtils.createLineOptions (variable);
+                     LineChart.Options lineOptions = ChartUtils.createLineOptions (stationVariable.getVariable ());
                      chart = new LineChart (data, lineOptions);
                      break;
                   case NONE:
@@ -192,11 +193,11 @@ public class DerivedRangePanel extends Composite {
       return "???" + type.toString () + "???";
    }
 
-   private List <IVariableProxy> extractVariables (List <IDerivedRangeProxy> observations) {
-      List <IVariableProxy> result = new ArrayList <IVariableProxy> ();
+   private List <IStationVariableProxy> extractStationVariables (List <IDerivedRangeProxy> observations) {
+      List <IStationVariableProxy> result = new ArrayList <IStationVariableProxy> ();
       if (!observations.isEmpty ()) {
          for (IDerivedVariableProxy derivedVariable : observations.get (0).getDerivedVariables ()) {
-            result.add (derivedVariable.getVariable ());
+            result.add (derivedVariable.getStationVariable ());
          }
       }
       return result;
@@ -213,7 +214,7 @@ public class DerivedRangePanel extends Composite {
       data.addRows (observations.size ());
       for (IDerivedRangeProxy derivedRange : observations) {
          for (IDerivedVariableProxy derivedVariable : derivedRange.getDerivedVariables ()) {
-            if (derivedVariable.getVariable ().getId ().equals (variable.getId ())) {
+            if (derivedVariable.getStationVariable ().getVariable ().getId ().equals (variable.getId ())) {
                data.setValue (row, 0, representationDateFormat.format (derivedVariable.getDisplayDate ()));
                data.setValue (row, 1, derivedVariable.getMinimum ());
                data.setValue (row, 2, derivedVariable.getAverage ());

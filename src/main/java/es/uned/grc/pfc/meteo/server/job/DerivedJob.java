@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.mutable.MutableInt;
 import org.slf4j.Logger;
@@ -24,9 +23,11 @@ import es.uned.grc.pfc.meteo.client.util.DerivedUtils;
 import es.uned.grc.pfc.meteo.server.job.station.IStationPlugin;
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.Station;
+import es.uned.grc.pfc.meteo.server.model.StationVariable;
 import es.uned.grc.pfc.meteo.server.model.Variable;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
+import es.uned.grc.pfc.meteo.server.persistence.IStationVariablePersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IVariablePersistence;
 import es.uned.grc.pfc.meteo.server.util.IServerConstants;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
@@ -46,6 +47,8 @@ public class DerivedJob {
    private IObservationPersistence observationPersistence = null;
    @Autowired
    private IVariablePersistence variablePersistence = null;
+   @Autowired
+   private IStationVariablePersistence stationVariablePersistence = null;
 
    /**
     * To be executed periodically
@@ -92,12 +95,12 @@ public class DerivedJob {
       //iterate all observations
       for (Observation observation : observations) {
          //for every observation, derive a new observation for every internal variable
-         for (Variable variable : station.getVariables ()) {
-            if (variable.getInternal ()) {
+         for (StationVariable stationVariable : station.getStationVariables ()) {
+            if (stationVariable.getVariable ().getInternal ()) {
                range [0] = null;
                range [1] = null;
                //depending on the variable, calculate the deriveType and date range
-               switch (variable.getAcronym ()) {
+               switch (stationVariable.getVariable ().getAcronym ()) {
                   case IServerConstants.NIGHT_MINIMUM:
                      deriveType = DeriveType.MINIMUM;
                      range [0] = DerivedUtils.getNightIni (observation.getObserved ());
@@ -219,7 +222,7 @@ public class DerivedJob {
                
                //actually create and save the derived observation
                if (range [0] != null && range [1] != null && isInRange (observation, range)) {
-                  derive (station, observation, variable, range, deriveType, deriveExpected, existingObservationsMap, now);
+                  derive (station, observation, stationVariable.getVariable (), range, deriveType, deriveExpected, existingObservationsMap, now);
                }
             }
          }
@@ -260,19 +263,16 @@ public class DerivedJob {
 
    @Transactional (propagation = Propagation.REQUIRED)
    private void checkInternalVariable (Station station, String acronym, String name, String description, int position, int displayGroup, ISharedConstants.GraphType graphType) {
-      Variable stationVariable = null;
+      StationVariable stationVariable = null;
       Variable internalVariable = variablePersistence.getByAcronym (acronym);
       
       if (internalVariable == null) {
-         //it not in DB yet, create it new
+         //if not in DB yet, create it new
          internalVariable = new Variable ();
          internalVariable.setAcronym (acronym);
          internalVariable.setName (name);
          internalVariable.setDescription (description);
          internalVariable.setInternal (true);
-         internalVariable.setPosition (position);
-         internalVariable.setDisplayGroup (displayGroup);
-         internalVariable.setGraphType (graphType);
          variablePersistence.save (internalVariable);
          
          logger.info ("Automatically creating internal variable {}", internalVariable.getAcronym ());
@@ -282,10 +282,17 @@ public class DerivedJob {
          variablePersistence.save (internalVariable);
       }
       
-      stationVariable = findInternalByAcronyn (acronym, station.getVariables ());
+      stationVariable = stationVariablePersistence.findStationVariable (station.getId (), internalVariable.getId (), station.getStationVariables ()); 
       if (stationVariable == null) {
+         stationVariable = new StationVariable ();
+         stationVariable.setStation (station);
+         stationVariable.setVariable (internalVariable);
+         stationVariable.setPosition (position);
+         stationVariable.setDisplayGroup (displayGroup);
+         stationVariable.setGraphType (graphType);
+         stationVariablePersistence.save (stationVariable);
          //if not assigned to this station, add it there too
-         station.getVariables ().add (internalVariable);
+         station.getStationVariables ().add (stationVariable);
          stationPersistence.save (station);
       }
    }
@@ -405,15 +412,6 @@ public class DerivedJob {
       }
       
       return result;
-   }
-
-   private Variable findInternalByAcronyn (String acronym, Set <Variable> variables) {
-      for (Variable variable : variables) {
-         if (variable.getAcronym ().equalsIgnoreCase (acronym) && variable.getInternal ()) {
-            return variable;
-         }
-      }
-      return null;
    }
 
    private boolean isInRange (Observation observation, Date [] range) {

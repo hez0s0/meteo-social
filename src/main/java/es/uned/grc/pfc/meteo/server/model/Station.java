@@ -15,8 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -41,7 +39,7 @@ public class Station extends AbstractVersionable <Integer> {
    private String name = null;
    private StationModel stationModel = null;
    private Set <Parameter> parameters = null;
-   private Set <Variable> variables = null;
+   private Set <StationVariable> stationVariables = null;
    private Double latitude = null;
    private Double longitude = null;
    private Integer height = null;
@@ -82,15 +80,12 @@ public class Station extends AbstractVersionable <Integer> {
       this.parameters = parameters;
    }
 
-   @ManyToMany (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinTable (name = "metStationVariable", 
-               joinColumns = {@JoinColumn (name = "stationId", nullable = false, updatable = false)}, 
-               inverseJoinColumns = {@JoinColumn(name = "variableId", nullable = false, updatable = false)})
-   public Set <Variable> getVariables () {
-      return variables;
+   @OneToMany (mappedBy = "station", cascade = {CascadeType.ALL}, orphanRemoval = true)
+   public Set <StationVariable> getStationVariables () {
+      return stationVariables;
    }
-   public void setVariables (Set <Variable> variables) {
-      this.variables = variables;
+   public void setStationVariables (Set <StationVariable> stationVariables) {
+      this.stationVariables = stationVariables;
    }
 
    @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 

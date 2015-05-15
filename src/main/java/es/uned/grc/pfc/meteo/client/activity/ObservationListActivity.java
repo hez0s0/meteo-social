@@ -28,11 +28,13 @@ import es.uned.grc.pfc.meteo.client.place.ObservationListPlace.ObservationType;
 import es.uned.grc.pfc.meteo.client.request.IObservationRequestContext;
 import es.uned.grc.pfc.meteo.client.util.PortableStringUtils;
 import es.uned.grc.pfc.meteo.client.view.IObservationListView;
+import es.uned.grc.pfc.meteo.client.view.widget.GlassPanel;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants.DerivedRangeType;
 
 public class ObservationListActivity extends AbstractAsyncDataActivity <IObservationBlockProxy, IObservationListView, ObservationListPlace> {
 
+   private AcceptsOneWidget panel = null;
    private ObservationListPlace listPlace = null;
    
    public ObservationListActivity (ObservationListPlace listPlace, IObservationListView listView, PlaceController placeController) {
@@ -43,6 +45,7 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
    
    @Override
    public void start (final AcceptsOneWidget panel, final EventBus eventBus) {
+      this.panel = panel;
       listView.setDerived (listPlace.getObservationType ().equals (ObservationType.DERIVED));
       getRequestFactory (eventBus).getObservationContext ().getTodayStart ().fire (new Receiver <Date> () {
 
@@ -158,79 +161,87 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
       } else {
          if (listPlace.getRepresentation ().equals (ObservationListPlace.Representation.TEXT)) {
             //search for table representation
-            observationRequestContext.getObservationBlocks (requestParamProxy)
-                                     .with ("station", "observations", "observations.variable")
-                                     .fire (new Receiver <List <IObservationBlockProxy>> () {
-               @Override
-               public void onSuccess (List <IObservationBlockProxy> response) {
-                  listView.setTextVisible (true);
-                  listView.setGraphVisible (false);
-                  listView.initTableColumns (response);
-                  listView.getDataTable ().setRowCount (0);
-                  listView.getDataTable ().setRowCount (response.size ());
-                  listView.getDataTable ().setRowData (0, response);
-               }
-      
-               @Override
-               public void onFailure (ServerFailure serverFailure) {
-                  eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
-               }
-            });
+            GlassPanel.fireDistraction (panel,
+                                        listView.asWidget (), 
+                                        observationRequestContext.getObservationBlocks (requestParamProxy)
+                                                                 .with ("station", "observations", "observations.variable"),
+                                        new Receiver <List <IObservationBlockProxy>> () {
+                                           @Override
+                                           public void onSuccess (List <IObservationBlockProxy> response) {
+                                              listView.setTextVisible (true);
+                                              listView.setGraphVisible (false);
+                                              listView.initTableColumns (response);
+                                              listView.getDataTable ().setRowCount (0);
+                                              listView.getDataTable ().setRowCount (response.size ());
+                                              listView.getDataTable ().setRowData (0, response);
+                                           }
+                                  
+                                           @Override
+                                           public void onFailure (ServerFailure serverFailure) {
+                                              eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
+                                           }
+                                        });
          } else {
             //search for graphic representation
-            observationRequestContext.getVariableObservations (requestParamProxy)
-                                     .with ("station", "observations", "observations.variable")
-                                     .fire (new Receiver <List <IVariableObservationsProxy>> () {
-               @Override
-               public void onSuccess (List <IVariableObservationsProxy> response) {
-                  listView.setTextVisible (false);
-                  listView.setGraphVisible (true);
-                  
-                  listView.generateGraphics (response);
-               }
-      
-               @Override
-               public void onFailure (ServerFailure serverFailure) {
-                  eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
-               }
-            });
+            GlassPanel.fireDistraction (panel,
+                                        listView.asWidget (), 
+                                        observationRequestContext.getVariableObservations (requestParamProxy)
+                                                                 .with ("observations", "observations.variable", "stationVariable", "stationVariable.station", "stationVariable.variable"),
+                                        new Receiver <List <IVariableObservationsProxy>> () {
+                                           @Override
+                                           public void onSuccess (List <IVariableObservationsProxy> response) {
+                                              listView.setTextVisible (false);
+                                              listView.setGraphVisible (true);
+                                              
+                                              listView.generateGraphics (response);
+                                           }
+                                  
+                                           @Override
+                                           public void onFailure (ServerFailure serverFailure) {
+                                              eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Observation"), serverFailure));
+                                           }
+                                        });
          }
       }
    }
 
    private void getDerivedGraphic (final DerivedRangeType derivedRangeType, IObservationRequestContext observationRequestContext, final EventBus eventBus) {
-      observationRequestContext.getDerivedInRangeForGraphics (derivedRangeType, listView.getExactDate (), null)
-            .with ("station", "derivedVariables", "derivedVariables.variable")
-            .to (new Receiver <List <IDerivedRangeProxy>> () {
-         @Override
-         public void onSuccess (List <IDerivedRangeProxy> response) {
-            listView.setDerivedVisible (true);
-            
-            listView.appendDerivedGraphics (derivedRangeType, response);
-         }
-         
-         @Override
-         public void onFailure (ServerFailure serverFailure) {
-            eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Derived Observation"), serverFailure));
-         }
-      });
-   }
+      GlassPanel.toDistraction (panel,
+                                listView.asWidget (), 
+                                observationRequestContext.getDerivedInRangeForGraphics (derivedRangeType, listView.getExactDate (), null)
+                                                         .with ("station", "derivedVariables", "derivedVariables.stationVariable", "derivedVariables.stationVariable.variable"),
+                                new Receiver <List <IDerivedRangeProxy>> () {
+                                   @Override
+                                   public void onSuccess (List <IDerivedRangeProxy> response) {
+                                      listView.setDerivedVisible (true);
+                                      
+                                      listView.appendDerivedGraphics (derivedRangeType, response);
+                                   }
+                                   
+                                   @Override
+                                   public void onFailure (ServerFailure serverFailure) {
+                                      eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Derived Observation"), serverFailure));
+                                   }
+                                });
+    }
 
    private void getDerivedText (final DerivedRangeType derivedRangeType, IObservationRequestContext observationRequestContext, final EventBus eventBus) {
-      observationRequestContext.getDerivedInRange (derivedRangeType, listView.getExactDate (), null)
-            .with ("station", "derivedVariables", "derivedVariables.variable")
-            .to (new Receiver <IDerivedRangeProxy> () {
-         @Override
-         public void onSuccess (IDerivedRangeProxy response) {
-            listView.setDerivedVisible (true);
-            listView.appendDerived (derivedRangeType, response);
-         }
-         
-         @Override
-         public void onFailure (ServerFailure serverFailure) {
-            eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Derived Observation"), serverFailure));
-         }
-      });
+      GlassPanel.toDistraction (panel,
+                                listView.asWidget (), 
+                                observationRequestContext.getDerivedInRange (derivedRangeType, listView.getExactDate (), null)
+                                                         .with ("station", "derivedVariables", "derivedVariables.stationVariable", "derivedVariables.stationVariable.variable"),
+                                new Receiver <IDerivedRangeProxy> () {
+                                   @Override
+                                   public void onSuccess (IDerivedRangeProxy response) {
+                                      listView.setDerivedVisible (true);
+                                      listView.appendDerived (derivedRangeType, response);
+                                   }
+                                   
+                                   @Override
+                                   public void onFailure (ServerFailure serverFailure) {
+                                      eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, MessageChangeEvent.getTextMessages ().listError ("Derived Observation"), serverFailure));
+                                   }
+                                });
    }
 
    private String getVariableIdList (List <IVariableProxy> variables) {

@@ -33,7 +33,8 @@ public class StationSetupActivity extends AbstractBaseActivity {
       // detail of the station
       GlassPanel.fireDistraction (panel,
                                   editView.asWidget (), 
-                                  stationContext.getOwnStation (),
+                                  stationContext.getOwnStation ()
+                                                .with ("stationModel", "variables", "parameters"),
                                   new Receiver <IStationProxy> () {
                                      @Override
                                      public void onSuccess (IStationProxy response) {

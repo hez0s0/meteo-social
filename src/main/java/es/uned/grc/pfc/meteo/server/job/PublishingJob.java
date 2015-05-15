@@ -60,8 +60,6 @@ public class PublishingJob {
    @Autowired
    private IVariablePersistence variablePersistence = null;
    
-   private static final String CONSUMER_KEY = "K9wUgKoXzqSBKZXPa4GV5wyWJ";
-   private static final String CONSUMER_SECRET = "bwGGzxhNJ77Lgkr1pdFa70Aei5VyyCI4SN7qIcfHuuQGZ0VO1a";
    private static final String APP_KEY = "471222984-nM0Yfg6xvTIALv6ORAnsKODKuRD71BWPhimwc33f";
    private static final String APP_SECRET = "4PMTzMtf8HPJ0usqeZTw4RRzVf2UVjMaOIIqRtnWtzO8v";
 
@@ -81,13 +79,17 @@ public class PublishingJob {
          synchronized (IJobConstants.STATION_ACCESS) {
             List <Station> stations = stationPersistence.findAll ();
             for (Station station : stations) {
-               variablesToPublish = new ArrayList <Variable> (VARIABLES_TO_PUBLISH.length);
-               for (String acronym : VARIABLES_TO_PUBLISH) {
-                  variablesToPublish.add (variablePersistence.getByAcronym (acronym));
+               if (station.getUser ().isEnableTwitter ()) {
+                  variablesToPublish = new ArrayList <Variable> (VARIABLES_TO_PUBLISH.length);
+                  for (String acronym : VARIABLES_TO_PUBLISH) {
+                     variablesToPublish.add (variablePersistence.getByAcronym (acronym));
+                  }
+                  comments = generate (station, variablesToPublish, new Date ());
+      
+                  logger.info ("{} comments published for station", comments, station.getId ());
+               } else {
+                  logger.info ("Station {} ignore, since its owner '{}' did not enable Twitter", station.getId (), station.getUser ().getUsername ());
                }
-               comments = generate (station, variablesToPublish, new Date ());
-   
-               logger.info ("{} comments published for station", comments, station.getId ());
             }
          }
       } catch (Exception e) {
@@ -101,7 +103,7 @@ public class PublishingJob {
       Collection <Comment> comments = getComments (observations);
 
       for (Comment comment : comments) {
-         publishComment (comment);
+         publishComment (comment, station.getUser ().getConsumerKey (), station.getUser ().getConsumerSecret ());
          logger.info ("Successfully updated the status to [" + comment.toString () + "]");
       }
       
@@ -164,8 +166,8 @@ public class PublishingJob {
       return new SimpleDateFormat ("MMM").format (date);
    }
 
-   private void publishComment (Comment comment) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthCommunicationException, ClientProtocolException, IOException {
-      OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer (CONSUMER_KEY, CONSUMER_SECRET);
+   private void publishComment (Comment comment, String consumerKey, String consumerSecret) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthCommunicationException, ClientProtocolException, IOException {
+      OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer (consumerKey, consumerSecret);
       oAuthConsumer.setTokenWithSecret (APP_KEY, APP_SECRET);
 
       HttpPost httpPost = new HttpPost (String.format (POST_TWEET_URL, URLEncoder.encode (comment.toString (), StandardCharsets.UTF_8.toString())));

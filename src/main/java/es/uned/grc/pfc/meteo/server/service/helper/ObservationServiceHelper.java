@@ -27,9 +27,11 @@ import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.RequestParam;
 import es.uned.grc.pfc.meteo.server.model.RequestParamFilter;
 import es.uned.grc.pfc.meteo.server.model.Station;
+import es.uned.grc.pfc.meteo.server.model.StationVariable;
 import es.uned.grc.pfc.meteo.server.model.Variable;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
+import es.uned.grc.pfc.meteo.server.persistence.IStationVariablePersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IVariablePersistence;
 import es.uned.grc.pfc.meteo.server.util.AuthInfo;
 import es.uned.grc.pfc.meteo.server.util.IServerConstants;
@@ -51,6 +53,8 @@ public class ObservationServiceHelper {
    private IStationPersistence stationPersistence = null;
    @Autowired
    private IVariablePersistence variablePersistence = null;
+   @Autowired
+   private IStationVariablePersistence stationVariablePersistence = null;
    @Autowired
    private AuthInfo authInfo = null;
    
@@ -229,7 +233,7 @@ public class ObservationServiceHelper {
          
          result.add (block);
          
-         Collections.sort (block.getObservations (), new ObservationComparator ());
+         Collections.sort (block.getObservations (), new ObservationComparator (block.getStation ()));
       }
 
       Collections.sort (result, new ObservationBlockComparator ());
@@ -257,14 +261,13 @@ public class ObservationServiceHelper {
          observationsMap.get (observation.getVariable ()).add (observation);
       }
       for (Map.Entry <Variable, List <Observation>> entry : observationsMap.entrySet ()) {
-         Collections.sort (entry.getValue (), new ObservationComparator ());
+         Collections.sort (entry.getValue (), new ObservationComparator (station));
       }
       
       variableObservations = new ArrayList <VariableObservationsDTO> (observationsMap.size ());
       for (Map.Entry <Variable, List <Observation>> entry : observationsMap.entrySet ()) {
          variableObservation = new VariableObservationsDTO ();
-         variableObservation.setStation (station);
-         variableObservation.setVariable (entry.getKey ());
+         variableObservation.setStationVariable (stationVariablePersistence.findStationVariable (station.getId (), entry.getKey ().getId (), station.getStationVariables ()));
          variableObservation.setObservations (entry.getValue ());
          variableObservations.add (variableObservation);
       }
@@ -276,7 +279,7 @@ public class ObservationServiceHelper {
    private class VariableObservationsComparator implements Comparator <VariableObservationsDTO> {
       @Override
       public int compare (VariableObservationsDTO o1, VariableObservationsDTO o2) {
-         return Integer.valueOf (o1.getVariable ().getPosition ()).compareTo (Integer.valueOf (o2.getVariable ().getPosition ()));
+         return Integer.valueOf (o1.getStationVariable ().getPosition ()).compareTo (Integer.valueOf (o2.getStationVariable ().getPosition ()));
       }
    }
    
@@ -288,9 +291,15 @@ public class ObservationServiceHelper {
    }
 
    private class ObservationComparator implements Comparator <Observation> {
+      private Station station = null;
+      private ObservationComparator (Station station) {
+         this.station = station;
+      }
       @Override
       public int compare (Observation o1, Observation o2) {
-         return new Integer (o1.getVariable ().getPosition ()).compareTo (new Integer (o2.getVariable ().getPosition ()));
+         StationVariable sv1 = stationVariablePersistence.findStationVariable (station.getId (), o1.getVariable ().getId (), station.getStationVariables ());
+         StationVariable sv2 = stationVariablePersistence.findStationVariable (station.getId (), o2.getVariable ().getId (), station.getStationVariables ());
+         return new Integer (sv1.getPosition ()).compareTo (new Integer (sv2.getPosition ()));
       }
    }
    
@@ -309,7 +318,7 @@ public class ObservationServiceHelper {
       derivedVariableDTOs = new ArrayList <DerivedVariableDTO> (stationVariables.size ());
       for (Variable variable : stationVariables) {
          derivedVariableDTO = new DerivedVariableDTO ();
-         derivedVariableDTO.setVariable (variable);
+         derivedVariableDTO.setStationVariable (stationVariablePersistence.findStationVariable (station.getId (), variable.getId (), station.getStationVariables ()));
          derivedVariableDTO.setMinimum (getDerivedObservation (range, station, observations, variable, minimum).getValue ());
          derivedVariableDTO.setMinimumDeriveBase (getDerivedObservation (range, station, observations, variable, minimum).getDeriveBase ());
          derivedVariableDTO.setMinimumDeriveIgnored (getDerivedObservation (range, station, observations, variable, minimum).getDeriveIgnored ());

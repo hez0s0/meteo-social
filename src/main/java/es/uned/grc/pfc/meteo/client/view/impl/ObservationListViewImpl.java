@@ -195,21 +195,21 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
             for (IVariableObservationsProxy variableObservation : variableObservations) {
                Widget chart = null;
                AbstractDataTable data = createDataTable (variableObservation.getObservations ());
-               switch (variableObservation.getVariable ().getGraphType ()) {
+               switch (variableObservation.getStationVariable ().getGraphType ()) {
                   case AREA:
-                     AreaChart.Options areaOptions = ChartUtils.createAreaOptions (variableObservation.getVariable ());
+                     AreaChart.Options areaOptions = ChartUtils.createAreaOptions (variableObservation.getStationVariable ().getVariable ());
                      chart = new AreaChart (data, areaOptions);
                      break;
                   case BAR:
-                     BarChart.Options barOptions = ChartUtils.createBarOptions (variableObservation.getVariable ());
+                     BarChart.Options barOptions = ChartUtils.createBarOptions (variableObservation.getStationVariable ().getVariable ());
                      chart = new BarChart (data, barOptions);
                      break;
                   case COLUMN:
-                     ColumnChart.Options columnOptions = ChartUtils.createColumnOptions (variableObservation.getVariable ());
+                     ColumnChart.Options columnOptions = ChartUtils.createColumnOptions (variableObservation.getStationVariable ().getVariable ());
                      chart = new ColumnChart (data, columnOptions);
                      break;
                   case LINE:
-                     LineChart.Options lineOptions = ChartUtils.createLineOptions (variableObservation.getVariable ());
+                     LineChart.Options lineOptions = ChartUtils.createLineOptions (variableObservation.getStationVariable ().getVariable ());
                      chart = new LineChart (data, lineOptions);
                      break;
                   case NONE:

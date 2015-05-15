@@ -123,7 +123,7 @@ public class StationPersistence extends AbstractPersistence <Integer, Station> i
       criteria.createCriteria ("user").add (Restrictions.idEq (userId));
       if (!includeLastObservations) {
          criteria.setFetchMode ("parameters", FetchMode.JOIN);
-         criteria.setFetchMode ("variables", FetchMode.JOIN);
+         criteria.setFetchMode ("stationVariables", FetchMode.JOIN);
       }
       Station station = (Station) criteria.uniqueResult ();
       if (includeLastObservations) {

@@ -42,8 +42,16 @@ public class GlassPanel extends Composite implements NativePreviewHandler {
       event.cancel ();
    }
    
+   public static <V> void fireDistraction (final AcceptsOneWidget parent, final IsWidget finalChild, final Request <V> request, final Receiver <?> receiver) {
+      fireDistraction (parent, finalChild, request, receiver, true);
+   }
+
+   public static <V> void toDistraction (final AcceptsOneWidget parent, final IsWidget finalChild, final Request <V> request, final Receiver <?> receiver) {
+      fireDistraction (parent, finalChild, request, receiver, false);
+   }
+   
    @SuppressWarnings ({ "rawtypes", "unchecked" })
-   public static <V> void fireDistraction (final AcceptsOneWidget parent, final IsWidget finalChild, final Request <V> request, final Receiver receiver) {
+   private static <V> void fireDistraction (final AcceptsOneWidget parent, final IsWidget finalChild, final Request <V> request, final Receiver receiver, boolean fire) {
       final GlassPanel glassPanel = new GlassPanel ();
       parent.setWidget (glassPanel);
 
@@ -51,7 +59,7 @@ public class GlassPanel extends Composite implements NativePreviewHandler {
          AlertDialogBox.showWarning ("FIRING REQUEST: " + request);
       }
       final long init = new Date ().getTime ();
-      request.fire (new Receiver <V> () {
+      request.to (new Receiver <V> () {
          @Override
          public void onSuccess (V response) {
             parent.setWidget (finalChild);
@@ -76,5 +84,8 @@ public class GlassPanel extends Composite implements NativePreviewHandler {
             receiver.onConstraintViolation (violations);
          }
       });
+      if (fire) {
+         request.fire ();
+      }
    }
 }

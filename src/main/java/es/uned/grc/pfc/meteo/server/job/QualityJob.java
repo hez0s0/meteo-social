@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.Station;
+import es.uned.grc.pfc.meteo.server.model.StationVariable;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
+import es.uned.grc.pfc.meteo.server.persistence.IStationVariablePersistence;
 import es.uned.grc.pfc.meteo.server.util.IServerConstants;
 import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 
@@ -28,6 +30,8 @@ public class QualityJob {
 
    @Autowired
    private IStationPersistence stationPersistence = null;
+   @Autowired
+   private IStationVariablePersistence stationVariablePersistence = null;
    @Autowired
    private IObservationPersistence observationPersistence = null;
 
@@ -62,6 +66,7 @@ public class QualityJob {
       boolean ok = false;
       StringBuffer warning = null;
       Date now = new Date ();
+      StationVariable stationVariable = null;
       
       try {
          logger.info ("Quality to be checked on {} observations", observations.size ());
@@ -69,31 +74,32 @@ public class QualityJob {
          for (Observation observation : observations) {
             ok = false;
             warning = new StringBuffer ();
+            stationVariable = stationVariablePersistence.findStationVariable (station.getId (), observation.getVariable ().getId (), station.getStationVariables ());
             
             if (!StringUtils.isEmpty (observation.getValue ())) {
-               if (observation.getVariable ().getMaximum () != null || observation.getVariable ().getMinimum () != null) {
+               if (stationVariable.getMaximum () != null || stationVariable.getMinimum () != null) {
                   //use provided config for control
                   ok = processQuality (observation.getValue (), 
-                                       observation.getVariable ().getMinimum (), 
-                                       observation.getVariable ().getMaximum (),
-                                       observation.getVariable ().getPhysicalMinimum (), 
-                                       observation.getVariable ().getPhysicalMaximum (),
+                                       stationVariable.getMinimum (), 
+                                       stationVariable.getMaximum (),
+                                       stationVariable.getPhysicalMinimum (), 
+                                       stationVariable.getPhysicalMaximum (),
                                        warning);
-               } else if (observation.getVariable ().getDefaultMaximum () != null || observation.getVariable ().getDefaultMinimum () != null) {
+               } else if (stationVariable.getDefaultMaximum () != null || stationVariable.getDefaultMinimum () != null) {
                   //use the default values
                   ok = processQuality (observation.getValue (), 
-                                       observation.getVariable ().getDefaultMinimum (), 
-                                       observation.getVariable ().getDefaultMaximum (),
-                                       observation.getVariable ().getPhysicalMinimum (), 
-                                       observation.getVariable ().getPhysicalMaximum (),
+                                       stationVariable.getDefaultMinimum (), 
+                                       stationVariable.getDefaultMaximum (),
+                                       stationVariable.getPhysicalMinimum (), 
+                                       stationVariable.getPhysicalMaximum (),
                                        warning);
-               } else if (observation.getVariable ().getPhysicalMaximum () != null || observation.getVariable ().getPhysicalMinimum () != null) {
+               } else if (stationVariable.getPhysicalMaximum () != null || stationVariable.getPhysicalMinimum () != null) {
                   //use the physical values only
                   ok = processQuality (observation.getValue (), 
                                        null, 
                                        null,
-                                       observation.getVariable ().getPhysicalMinimum (), 
-                                       observation.getVariable ().getPhysicalMaximum (),
+                                       stationVariable.getPhysicalMinimum (), 
+                                       stationVariable.getPhysicalMaximum (),
                                        warning);
                } else {
                   //nothing configured, the variable simply requires no quality control

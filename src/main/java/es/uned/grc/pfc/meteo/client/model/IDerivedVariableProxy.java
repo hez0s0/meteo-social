@@ -11,8 +11,8 @@ import es.uned.grc.pfc.meteo.server.dto.DerivedVariableDTO;
 public interface IDerivedVariableProxy extends ValueProxy {
    Date getDisplayDate ();
    void setDisplayDate (Date displayDate);
-   IVariableProxy getVariable ();
-   void setVariable (IVariableProxy variable);
+   IStationVariableProxy getStationVariable ();
+   void setStationVariable (IStationVariableProxy stationVariable);
    String getMinimum ();
    void setMinimum (String minimum);
    String getMaximum ();

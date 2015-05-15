@@ -149,7 +149,7 @@ public class DerivedTableBuilder extends AbstractCellTableBuilder <IDerivedVaria
       variableColumn = new ColumnAppender <String, IDerivedVariableProxy> ().addColumn (derivedCellTable, new TextCell (), TEXT_CONSTANTS.variableColumn (), null, new ColumnAppender.GetValue <String, IDerivedVariableProxy> () {
          @Override
          public String getValue (IDerivedVariableProxy o) {
-            return o.getVariable ().getName ();
+            return o.getStationVariable ().getVariable ().getName ();
          }
       }, null, false, 40);
       // minimum value

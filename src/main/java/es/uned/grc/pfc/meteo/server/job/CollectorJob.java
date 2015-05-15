@@ -23,6 +23,7 @@ import es.uned.grc.pfc.meteo.server.job.station.RawObservation;
 import es.uned.grc.pfc.meteo.server.model.Observation;
 import es.uned.grc.pfc.meteo.server.model.Parameter;
 import es.uned.grc.pfc.meteo.server.model.Station;
+import es.uned.grc.pfc.meteo.server.model.StationVariable;
 import es.uned.grc.pfc.meteo.server.model.Variable;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IParameterPersistence;
@@ -171,15 +172,15 @@ public class CollectorJob {
       observation.setReceived (now);
       observation.setStation (station);
       observation.setValue (rawObservation.getValue ());
-      observation.setVariable (findByAcronyn (rawObservation.getVariableName (), station.getVariables ()));
+      observation.setVariable (findByAcronyn (rawObservation.getVariableName (), station.getStationVariables ()));
       
       return observation;
    }
 
-   private Variable findByAcronyn (String acronym, Set <Variable> variables) {
-      for (Variable variable : variables) {
-         if (variable.getAcronym ().equalsIgnoreCase (acronym)) {
-            return variable;
+   private Variable findByAcronyn (String acronym, Set <StationVariable> stationVariables) {
+      for (StationVariable stationVariable : stationVariables) {
+         if (stationVariable.getVariable ().getAcronym ().equalsIgnoreCase (acronym)) {
+            return stationVariable.getVariable ();
          }
       }
       throw new RuntimeException (String.format ("Variable '%s' not found in the station", acronym));

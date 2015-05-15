@@ -21,8 +21,8 @@ public interface IStationProxy extends IEntityProxy {
    Set <IParameterProxy> getParameters ();
    void setParameters (Set <IParameterProxy> parameters);
    
-   Set <IVariableProxy> getVariables ();
-   void setVariables (Set <IVariableProxy> variables);
+   Set <IStationVariableProxy> getStationVariables ();
+   void setStationVariables (Set <IStationVariableProxy> stationVariables);
    
    IStationModelProxy getStationModel ();
    void setStationModel (IStationModelProxy stationModel);
