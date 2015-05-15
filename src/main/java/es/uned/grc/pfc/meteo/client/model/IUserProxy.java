@@ -19,7 +19,9 @@ public interface IUserProxy extends IEntityProxy {
    @Size (min = 1, max = 64)
    String getUsername ();
    void setUsername (String usernname);
-   
+
+   @NotNull (groups = Default.class)
+   @Size (min = 4, max = 64)
    String getPassword ();
    void setPassword (String password);
 
