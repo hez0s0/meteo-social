@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.Label;
 
 import es.uned.grc.pfc.meteo.client.model.IDerivedRangeProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
@@ -30,4 +31,5 @@ public interface IObservationListView extends IAsyncCellTableView <IObservationB
    void appendDerivedGraphics (DerivedRangeType derivedRangeType, List <IDerivedRangeProxy> observations);
    void clear ();
    void setDerived (boolean derived);
+   Label getNoResultsLabel ();
 }

@@ -71,4 +71,6 @@ public interface ISharedConstants {
    
    /** the type of derived variables that we want to seek, when searching for a range */
    enum DerivedRangeType {MONTH, DAY, NIGHT, MORNING, AFTERNOON, EVENING};
+   
+   String SAMPLE_PASSWORD = "###@@@|||¡¡¡###@@@|||¡¡¡";
 }

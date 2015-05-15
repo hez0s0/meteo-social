@@ -46,10 +46,11 @@
             </g:cell>
          </g:HorizontalPanel>
       </g:HTMLPanel>
-      <g:HorizontalPanel ui:field="textPanel" width="100%">
+      <g:VerticalPanel ui:field="textPanel" width="100%">
          <c:CellTable ui:field="observationCellTable" pageSize="1000" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false"  width="100%"/>
-      </g:HorizontalPanel>
+      </g:VerticalPanel>
       <g:VerticalPanel ui:field="graphPanel" width="100%"/>
       <g:VerticalPanel ui:field="derivedPanel" width="100%"/>
+      <g:Label ui:field="noResultsLabel" styleName="meteo-noresult" visible="false"><ui:msg meaning="no results" description="label for no results">No hay resultados</ui:msg></g:Label>
    </g:HTMLPanel>
 </ui:UiBinder>

@@ -84,6 +84,8 @@ public class DerivedRangePanel extends Composite {
    protected HorizontalPanel tablePanel = null;
    @UiField
    protected VerticalPanel graphPanel = null;
+   @UiField
+   protected Label noResultsLabel = null;
    
    private DerivedRangeType derivedRangeType = null;
    private IDerivedRangeProxy derivedRange = null;
@@ -115,6 +117,8 @@ public class DerivedRangePanel extends Composite {
       derivedCellTable.setRowCount (0);
       derivedCellTable.setRowCount (derivedRange.getDerivedVariables ().size ());
       derivedCellTable.setRowData (0, derivedRange.getDerivedVariables ());
+      
+      noResultsLabel.setVisible (derivedRange.getDerivedVariables ().isEmpty ());
    }
 
    public void setInput (DerivedRangeType derivedRangeType, final List <IDerivedRangeProxy> derivedRanges) {
@@ -124,7 +128,8 @@ public class DerivedRangePanel extends Composite {
       
       DateTimeFormat df = DateTimeFormat.getFormat (PredefinedFormat.DATE_TIME_SHORT);
       titleLabel.setText (getLabel (derivedRangeType) + " (" + df.format (derivedRanges.get (0).getIni ()) + "-" + df.format (derivedRanges.get (derivedRanges.size () - 1).getEnd ()) + ")");
-      
+
+      noResultsLabel.setVisible (derivedRanges.isEmpty ());
       Runnable onLoadCallback = new Runnable () {
          public void run () {
             int i = 0;

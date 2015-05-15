@@ -174,6 +174,7 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
                                               listView.getDataTable ().setRowCount (0);
                                               listView.getDataTable ().setRowCount (response.size ());
                                               listView.getDataTable ().setRowData (0, response);
+                                              listView.getNoResultsLabel ().setVisible (response.isEmpty ());
                                            }
                                   
                                            @Override

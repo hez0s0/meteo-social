@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import es.uned.grc.pfc.meteo.server.model.base.AbstractVersionable;
 
@@ -26,6 +27,9 @@ public class User extends AbstractVersionable <Integer> {
    private boolean enableTwitter = true;
    private String consumerKey = null;
    private String consumerSecret = null;
+   
+   private String transientRepeatPassword = null;
+   private String transientOldPassword = null;
    
    @Id
    @GeneratedValue (strategy = GenerationType.AUTO, generator = "metUserID_gen")
@@ -108,5 +112,21 @@ public class User extends AbstractVersionable <Integer> {
    }
    public void setConsumerSecret (String consumerSecret) {
       this.consumerSecret = consumerSecret;
+   }
+   
+   @Transient
+   public String getTransientRepeatPassword () {
+      return transientRepeatPassword;
+   }
+   public void setTransientRepeatPassword (String transientRepeatPassword) {
+      this.transientRepeatPassword = transientRepeatPassword;
+   }
+   
+   @Transient
+   public String getTransientOldPassword () {
+      return transientOldPassword;
+   }
+   public void setTransientOldPassword (String transientOldPassword) {
+      this.transientOldPassword = transientOldPassword;
    }
 }

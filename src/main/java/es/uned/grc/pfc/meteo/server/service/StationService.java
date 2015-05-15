@@ -2,6 +2,7 @@ package es.uned.grc.pfc.meteo.server.service;
 
 import java.util.List;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,11 @@ public class StationService {
     */
    public User saveUser (User user) {
       try {
+         if (user.getPassword ().equals (ISharedConstants.SAMPLE_PASSWORD)) {
+            user.setPassword (user.getTransientOldPassword ());
+         } else {
+            user.setPassword (DigestUtils.md5Hex (user.getPassword ()));
+         }
          return userPersistence.saveOrMerge (user);
       } catch (Exception e) {
          logger.error ("Error saving user", e);

@@ -25,7 +25,6 @@ import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 import es.uned.grc.pfc.meteo.client.event.MessageChangeEvent;
-import es.uned.grc.pfc.meteo.client.event.UserSetupEvent;
 import es.uned.grc.pfc.meteo.client.model.IUserProxy;
 import es.uned.grc.pfc.meteo.client.place.UserSetupPlace;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
@@ -129,17 +128,11 @@ public class UserSetupViewImpl extends AbstractFormView <IUserProxy> implements 
 
    @Override
    protected Receiver <?> getSaveReceiver () {
-      return new Receiver <List <String>> () {
+      return new Receiver <IUserProxy> () {
          @Override
-         public void onSuccess (List <String> response) {
-            if (response.isEmpty ()) {
-               // fire config event and forward to success place
-               placeController.goTo (new UserSetupPlace ());
-            } else {
-               // display the errors and reset element (because it will not be saveable after error due to RequestFactory restrictions!!)
-               eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, response, (Exception) null));
-               eventBus.fireEvent (new UserSetupEvent ());
-            }
+         public void onSuccess (IUserProxy response) {
+            // fire config event and forward to success place
+            placeController.goTo (new UserSetupPlace ());
          }
 
          @Override

@@ -1,6 +1,8 @@
 package es.uned.grc.pfc.meteo.client.model;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 
 import com.google.web.bindery.requestfactory.shared.ProxyFor;
 
@@ -13,25 +15,44 @@ public interface IUserProxy extends IEntityProxy {
    Integer getId ();
    void setId (Integer id);
    
-   @NotNull
+   @NotNull (groups = Default.class)
+   @Size (min = 1, max = 64)
    String getUsername ();
    void setUsername (String usernname);
    
    String getPassword ();
    void setPassword (String password);
 
-   @NotNull
+   @NotNull (groups = Default.class)
+   @Size (min = 1, max = 1024)
    String getFirstName ();
    void setFirstName (String firstName);
 
-   @NotNull
+   @NotNull (groups = Default.class)
+   @Size (min = 1, max = 1024)
    String getFamilyName ();
    void setFamilyName (String familyName);
 
-   @NotNull
+   @NotNull (groups = Default.class)
+   @Size (min = 1, max = 1024)
    String getEmail ();
    void setEmail (String email);
    
    boolean isEnabled ();
    void setEnabled (boolean enabled);
+  
+   boolean isEnableTwitter ();
+   void setEnableTwitter (boolean twitter);
+   
+   void setConsumerKey (String consumerKey);
+   String getConsumerKey ();
+
+   void setConsumerSecret (String consumerSecret);
+   String getConsumerSecret ();
+   
+   String getTransientRepeatPassword ();
+   void setTransientRepeatPassword (String transientRepeatPassword);
+   
+   String getTransientOldPassword ();
+   void setTransientOldPassword (String transientOldPassword);
 }

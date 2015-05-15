@@ -17,6 +17,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -91,6 +92,8 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    protected Panel observedFilterPanel = null;
    @UiField
    protected Panel derivedFilterPanel = null;
+   @UiField
+   protected Label noResultsLabel = null;
 
    public static final ProvidesKey <IObservationBlockProxy> keyProvider = new ProvidesKey <IObservationBlockProxy> () {
       @Override
@@ -187,6 +190,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @Override
    public void generateGraphics (final List <IVariableObservationsProxy> variableObservations) {
       graphPanel.clear ();
+      noResultsLabel.setVisible (variableObservations == null || variableObservations.isEmpty ());
 
       Runnable onLoadCallback = new Runnable () {
          public void run () {
@@ -310,5 +314,10 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    public void setDerived (boolean derived) {
       observedFilterPanel.setVisible (!derived);
       derivedFilterPanel.setVisible (derived);
+   }
+
+   @Override
+   public Label getNoResultsLabel () {
+      return noResultsLabel;
    }
 }

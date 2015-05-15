@@ -34,6 +34,69 @@
           </div>
         </td>
       </tr>
+      <tr>
+        <td>
+          <div><ui:msg meaning="the user field" description="Label for pwd in a form">Password</ui:msg></div>
+        </td>
+        <td width="80%">
+          <div class="validatableField">
+            <g:PasswordTextBox ui:field="passwordTextBox" styleName="meteo-expandable-input" />
+            <span ui:field="passwordSpan" />
+          </div>
+        </td>
+      </tr>
+<!--       <tr> -->
+<!--         <td> -->
+<!--           <div><ui:msg meaning="the user field" description="Label for repeat pwd in a form">Repetir password</ui:msg></div> -->
+<!--         </td> -->
+<!--         <td width="80%"> -->
+<!--           <div class="validatableField"> -->
+<!--             <g:PasswordTextBox ui:field="repeatPasswordTextBox" styleName="meteo-expandable-input" /> -->
+<!--             <span ui:field="repeatPasswordSpan" /> -->
+<!--           </div> -->
+<!--         </td> -->
+<!--       </tr> -->
+      <tr>
+        <td>
+          <div><ui:msg meaning="the user field" description="Label for email in a form">Correo electrónico</ui:msg></div>
+        </td>
+        <td>
+          <div class="validatableField">
+            <meteo-widget:ExtendedTextBox ui:field="emailTextBox" styleName="meteo-expandable-input" />
+            <span ui:field="emailSpan" />
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div><ui:msg meaning="the user field" description="Label for user Twitter in a form">Usar Twitter</ui:msg></div>
+        </td>
+        <td>
+           <g:CheckBox ui:field="twitterCheckBox" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div><ui:msg meaning="the user field" description="Label for consumer key in a form">Consumer Key</ui:msg></div>
+        </td>
+        <td>
+          <div class="validatableField">
+            <meteo-widget:ExtendedTextBox ui:field="consumerKeyTextBox" styleName="meteo-expandable-input" />
+            <span ui:field="consumerKeySpan" />
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div><ui:msg meaning="the user field" description="Label for consumer secret in a form">Consumer Secret</ui:msg></div>
+        </td>
+        <td>
+          <div class="validatableField">
+            <meteo-widget:ExtendedTextBox ui:field="consumerSecretTextBox" styleName="meteo-expandable-input" />
+            <span ui:field="consumerSecretSpan" />
+          </div>
+        </td>
+      </tr>
     </table>
   </g:HTMLPanel>
 </ui:UiBinder>

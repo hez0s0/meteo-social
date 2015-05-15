@@ -1122,3 +1122,8 @@ hr.style-one {
 	margin: 0 0 0px 0;
 	small;
 }
+
+.meteo-noresult {
+	text-align: center;
+	font-weight: bold;
+}
