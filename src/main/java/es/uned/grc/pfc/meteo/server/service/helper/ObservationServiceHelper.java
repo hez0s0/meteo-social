@@ -76,7 +76,7 @@ public class ObservationServiceHelper {
          observationPeriod = (stationPlugin != null) ? stationPlugin.getObservationPeriod () : 10; 
          long stationPeriod = (observationPeriod * IServerConstants.ONE_MINUTE);
          
-         for (long observed = startDate.getTime (); observed <= endDate.getTime (); observed += stationPeriod) {
+         for (long observed = startDate.getTime (); observed < endDate.getTime (); observed += stationPeriod) {
             for (Variable variable : variables) {
                if (!variable.getInternal ()) {
                   observation = findObservation (observations, observed, variable.getId ());

@@ -39,6 +39,7 @@ import com.google.inject.Inject;
 import es.uned.grc.pfc.meteo.client.model.IDerivedRangeProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationProxy;
+import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableObservationsProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableProxy;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
@@ -64,6 +65,10 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
       String observedColumn ();
       @DefaultStringValue ("Valor") @Meaning ("Observation column")
       String valueColumn ();
+      @DefaultStringValue ("º") @Meaning ("Latitude/longitude unit")
+      String latlongUnit ();
+      @DefaultStringValue ("m.") @Meaning ("Height unit")
+      String heightUnit ();
    }
    public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);
    
@@ -87,6 +92,8 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @UiField
    protected Panel graphPanel = null;
    @UiField
+   protected Panel stationDetailPanel = null;
+   @UiField
    protected VerticalPanel derivedPanel = null;
    @UiField
    protected Panel observedFilterPanel = null;
@@ -94,6 +101,16 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    protected Panel derivedFilterPanel = null;
    @UiField
    protected Label noResultsLabel = null;
+   @UiField
+   protected Label titleLabel = null;
+   @UiField
+   protected Label modelLabel = null;
+   @UiField
+   protected Label latitudeLabel = null;
+   @UiField
+   protected Label longitudeLabel = null;
+   @UiField
+   protected Label heightLabel = null;
 
    public static final ProvidesKey <IObservationBlockProxy> keyProvider = new ProvidesKey <IObservationBlockProxy> () {
       @Override
@@ -109,6 +126,21 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @Override
    public AbstractCellTable <IObservationBlockProxy> getDataTable () {
       return observationCellTable;
+   }
+   
+   @Override
+   public void setStation (IStationProxy station) {
+      if (station != null) {
+         titleLabel.setText (station.getName ());
+         modelLabel.setText (station.getStationModel () != null ? station.getStationModel ().getName () : IClientConstants.TEXT_CONSTANTS.emptyValue ());
+         
+         latitudeLabel.setText (String.valueOf (station.getLatitude ()) + TEXT_CONSTANTS.latlongUnit ());
+         longitudeLabel.setText (String.valueOf (station.getLongitude ()) + TEXT_CONSTANTS.latlongUnit ());
+         heightLabel.setText (String.valueOf (station.getHeight ()) + TEXT_CONSTANTS.heightUnit ());
+         stationDetailPanel.setVisible (true);
+      } else {
+         stationDetailPanel.setVisible (false);
+      }
    }
 
    /**

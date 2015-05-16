@@ -21,6 +21,7 @@ import es.uned.grc.pfc.meteo.client.model.IDerivedRangeProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamFilterProxy;
 import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
+import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableObservationsProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableProxy;
 import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
@@ -47,6 +48,7 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
    public void start (final AcceptsOneWidget panel, final EventBus eventBus) {
       this.panel = panel;
       listView.setDerived (listPlace.getObservationType ().equals (ObservationType.DERIVED));
+      listView.setStation (null);
       getRequestFactory (eventBus).getObservationContext ().getTodayStart ().fire (new Receiver <Date> () {
 
          @Override
@@ -58,6 +60,23 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
             ObservationListActivity.super.start (panel, eventBus);
          }
       });
+      if (listPlace.getStationId () == null) {
+         //load own station
+         getRequestFactory (eventBus).getStationContext ().getOwnStation ().fire (new Receiver <IStationProxy> () {
+            @Override
+            public void onSuccess (IStationProxy response) {
+               listView.setStation (response);
+            }
+         });
+      } else {
+         //load a given station
+         getRequestFactory (eventBus).getStationContext ().getStationById (listPlace.getStationId ()).fire (new Receiver <IStationProxy> () {
+            @Override
+            public void onSuccess (IStationProxy response) {
+               listView.setStation (response);
+            }
+         });
+      }
    }
    
    @Override

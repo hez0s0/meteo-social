@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Label;
 
 import es.uned.grc.pfc.meteo.client.model.IDerivedRangeProxy;
 import es.uned.grc.pfc.meteo.client.model.IObservationBlockProxy;
+import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableObservationsProxy;
 import es.uned.grc.pfc.meteo.client.model.IVariableProxy;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
@@ -32,4 +33,5 @@ public interface IObservationListView extends IAsyncCellTableView <IObservationB
    void clear ();
    void setDerived (boolean derived);
    Label getNoResultsLabel ();
+   void setStation (IStationProxy station);
 }

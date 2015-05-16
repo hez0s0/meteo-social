@@ -46,6 +46,9 @@ public class ObservationListActionsActivity extends AbstractBaseActivity {
          observationListActionsView.getDerivedGraphicsPanel ().setVisible (!observationListPlace.getRepresentation ().equals (ObservationListPlace.Representation.GRAPHIC));
          observationListActionsView.getTablePanel ().setVisible (true);
       }
+
+      observationListActionsView.getStationFormPanel ().setVisible (false);
+      observationListActionsView.setInput (getRequestFactory (eventBus), observationListPlace);
       bind (eventBus);
    }
 
@@ -53,11 +56,25 @@ public class ObservationListActionsActivity extends AbstractBaseActivity {
     * Binds the event handlers.
     */
    private synchronized void bind (final EventBus eventBus) {
+      /** handle click on station search */ 
+      registerHandler (observationListActionsView.getStationSearchHandler (), new IActionHandler () {
+         @Override
+         public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
+            observationListActionsView.getStationFormPanel ().setVisible (!observationListActionsView.getStationFormPanel ().isVisible ());
+            observationListActionsView.setCellVisible (false);
+            observationListActionsView.clearSearchFields ();
+            source.setCompleted ();
+         }
+      });
       /** handle click on view table */ 
       registerHandler (observationListActionsView.getTableHandler (), new IActionHandler () {
          @Override
          public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
-            placeController.goTo (new ObservationListPlace (ObservationListPlace.ObservationType.NORMAL, ObservationListPlace.Representation.TEXT));
+            ObservationListPlace place = new ObservationListPlace (ObservationListPlace.ObservationType.NORMAL, ObservationListPlace.Representation.TEXT);
+            if (observationListPlace.getStationId () != null) {
+               place.setStationId (observationListPlace.getStationId ());
+            }
+            placeController.goTo (place);
             source.setCompleted ();
          }
       });
@@ -65,7 +82,11 @@ public class ObservationListActionsActivity extends AbstractBaseActivity {
       registerHandler (observationListActionsView.getGraphicsHandler (), new IActionHandler () {
          @Override
          public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
-            placeController.goTo (new ObservationListPlace (ObservationListPlace.ObservationType.NORMAL, ObservationListPlace.Representation.GRAPHIC));
+            ObservationListPlace place = new ObservationListPlace (ObservationListPlace.ObservationType.NORMAL, ObservationListPlace.Representation.GRAPHIC);
+            if (observationListPlace.getStationId () != null) {
+               place.setStationId (observationListPlace.getStationId ());
+            }
+            placeController.goTo (place);
             source.setCompleted ();
          }
       });
@@ -73,7 +94,11 @@ public class ObservationListActionsActivity extends AbstractBaseActivity {
       registerHandler (observationListActionsView.getDerivedHandler (), new IActionHandler () {
          @Override
          public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
-            placeController.goTo (new ObservationListPlace (ObservationListPlace.ObservationType.DERIVED, ObservationListPlace.Representation.TEXT));
+            ObservationListPlace place = new ObservationListPlace (ObservationListPlace.ObservationType.DERIVED, ObservationListPlace.Representation.TEXT);
+            if (observationListPlace.getStationId () != null) {
+               place.setStationId (observationListPlace.getStationId ());
+            }
+            placeController.goTo (place);
             source.setCompleted ();
          }
       });
@@ -81,7 +106,11 @@ public class ObservationListActionsActivity extends AbstractBaseActivity {
       registerHandler (observationListActionsView.getDerivedGraphicsHandler (), new IActionHandler () {
          @Override
          public void onAction (DomEvent <?> event, final IHasActionHandlers source) {
-            placeController.goTo (new ObservationListPlace (ObservationListPlace.ObservationType.DERIVED, ObservationListPlace.Representation.GRAPHIC));
+            ObservationListPlace place = new ObservationListPlace (ObservationListPlace.ObservationType.DERIVED, ObservationListPlace.Representation.GRAPHIC);
+            if (observationListPlace.getStationId () != null) {
+               place.setStationId (observationListPlace.getStationId ());
+            }
+            placeController.goTo (place);
             source.setCompleted ();
          }
       });

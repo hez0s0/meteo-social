@@ -2,6 +2,8 @@ package es.uned.grc.pfc.meteo.client.view.action;
 
 import com.google.gwt.user.client.ui.UIObject;
 
+import es.uned.grc.pfc.meteo.client.place.ObservationListPlace;
+import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
 import es.uned.grc.pfc.meteo.client.view.base.IHasActionHandlers;
 import es.uned.grc.pfc.meteo.client.view.base.IView;
 
@@ -22,4 +24,10 @@ public interface IObservationListActionsView extends IView {
    UIObject getDerivedPanel ();
    UIObject getDerivedGraphicsPanel ();
    UIObject getMapPanel ();
+   void setInput (IRequestFactory requestFactory, ObservationListPlace observationListPlace);
+   UIObject getStationSearchPanel ();
+   UIObject getStationFormPanel ();
+   IHasActionHandlers getStationSearchHandler ();
+   void clearSearchFields ();
+   void setCellVisible (boolean visible);
 }

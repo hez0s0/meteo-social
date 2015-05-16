@@ -1,6 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' 
   xmlns:g='urn:import:com.google.gwt.user.client.ui' 
+  xmlns:c="urn:import:com.google.gwt.user.cellview.client"
   xmlns:meteo-widget="urn:import:es.uned.grc.pfc.meteo.client.view.widget"
+  xmlns:meteo-suggest="urn:import:es.uned.grc.pfc.meteo.client.view.widget.suggest.impl"
   ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat' 
   ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
   ui:generateLocales="default">
@@ -56,5 +58,40 @@
         <ui:msg description="Detail text to view the station map">Pulse para geolocalizar las estaciones dadas de alta en el sistema sobre un mapa</ui:msg>
       </p>
     </g:HTMLPanel>
+    <g:HTMLPanel ui:field="stationSearchPanel" styleName="right_articles">
+       <p>
+         <b>
+           <meteo-widget:ImageLabel ui:field="stationSearch" imageUrl="images/icons/find.png">
+             <ui:msg meaning="the station map action" description="Title to search for stations">Mostrar/ocultar búsqueda de estaciones</ui:msg>
+           </meteo-widget:ImageLabel>
+         </b>
+         <ui:msg description="Detail text to search for stations">Pulse para mostrar/ocultar el formulario de búsqueda de estaciones</ui:msg>
+       </p>
+     </g:HTMLPanel>
+     <g:VerticalPanel ui:field="stationFormPanel" styleName="right_articles">
+         <g:Label><ui:msg meaning="station filter" description="label for city filter">Ciudad</ui:msg></g:Label>
+         <meteo-suggest:CitySuggestInputListBox ui:field="citySuggestBox"/>
+         
+         <g:Label><ui:msg meaning="station filter" description="label for zip filter">Código postal</ui:msg></g:Label>
+         <meteo-widget:ExtendedTextBox ui:field="zipSuggestBox"/>
+         
+         <g:Label><ui:msg meaning="station filter" description="label for country filter">País</ui:msg></g:Label>
+         <meteo-suggest:CountrySuggestInputListBox ui:field="countrySuggestBox"/>
+         
+         <g:Label><ui:msg meaning="station filter" description="label for latitude filter">Latitud</ui:msg></g:Label>
+         <meteo-widget:NumberTextBox ui:field="latTextBox"/>
+         
+         <g:Label><ui:msg meaning="station filter" description="label for longitude filter">Longitud</ui:msg></g:Label>
+         <meteo-widget:NumberTextBox ui:field="lonTextBox"/>
+         
+         <g:Label><ui:msg meaning="station filter" description="label for radius filter">Radio</ui:msg></g:Label>
+         <meteo-widget:NumberTextBox ui:field="radiusTextBox"/>
+         
+         <g:Button ui:field="searchButton"><ui:msg meaning="station filter button" description="label for search button">Buscar</ui:msg></g:Button>
+         
+         <meteo-widget:LimitedSimplePager ui:field="pagerTop"/>
+         <c:CellList ui:field="stationCellList"/>
+         <meteo-widget:LimitedSimplePager ui:field="pagerBottom"/>
+     </g:VerticalPanel>
   </g:HTMLPanel>
 </ui:UiBinder>
