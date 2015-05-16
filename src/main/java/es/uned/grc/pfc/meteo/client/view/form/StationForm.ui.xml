@@ -14,6 +14,16 @@
     <table>
       <tr>
         <td>
+          <div><ui:msg meaning="the station field" description="Label for model in a form">Modelo de estación</ui:msg></div>
+        </td>
+        <td width="80%">
+          <div class="validatableField">
+              <meteo-widget:ExtendedValueListBox ui:field="stationModelListBox" />
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
           <div><ui:msg meaning="the station field" description="Label for name in a form">Nombre</ui:msg></div>
         </td>
         <td width="80%">
@@ -21,6 +31,99 @@
             <meteo-widget:ExtendedTextBox ui:field="nameTextBox" styleName="meteo-expandable-input" />
             <span ui:field="nameSpan" />
           </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div><ui:msg meaning="the station field" description="Label for latitude in a form">Latitud</ui:msg></div>
+        </td>
+        <td width="80%">
+          <div class="validatableField">
+            <meteo-widget:NumberTextBox ui:field="latitudeNumberTextBox" styleName="meteo-small-input" />
+            <span ui:field="latitudeSpan" />
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div><ui:msg meaning="the station field" description="Label for longitude in a form">Longitud</ui:msg></div>
+        </td>
+        <td width="80%">
+          <div class="validatableField">
+            <meteo-widget:NumberTextBox ui:field="longitudeNumberTextBox" styleName="meteo-small-input" />
+            <span ui:field="longitudeSpan" />
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div><ui:msg meaning="the station field" description="Label for height in a form">Altitud</ui:msg></div>
+        </td>
+        <td width="80%">
+          <div class="validatableField">
+            <meteo-widget:NumberTextBox ui:field="heightNumberTextBox" styleName="meteo-small-input" />
+            <span ui:field="heightSpan" />
+          </div>
+        </td>
+      </tr>
+      
+      <tr>
+        <td>
+          <div><ui:msg meaning="the station field" description="Label for street in a form">Calle</ui:msg></div>
+        </td>
+        <td width="80%">
+          <div class="validatableField">
+            <meteo-widget:ExtendedTextBox ui:field="streetTextBox" styleName="meteo-expandable-input" />
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div><ui:msg meaning="the station field" description="Label for zip in a form">C.P.</ui:msg></div>
+        </td>
+        <td width="80%">
+          <div class="validatableField">
+            <meteo-widget:ExtendedTextBox ui:field="zipTextBox" styleName="meteo-small-input" />
+            <span ui:field="zipSpan" />
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div><ui:msg meaning="the station field" description="Label for city in a form">Ciudad</ui:msg></div>
+        </td>
+        <td width="80%">
+          <div class="validatableField">
+            <meteo-widget:ExtendedTextBox ui:field="cityTextBox" styleName="meteo-expandable-input" />
+            <span ui:field="citySpan" />
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div><ui:msg meaning="the station field" description="Label for country in a form">País</ui:msg></div>
+        </td>
+        <td width="80%">
+          <div class="validatableField">
+            <meteo-widget:ExtendedTextBox ui:field="countryTextBox" styleName="meteo-expandable-input" />
+            <span ui:field="countrySpan" />
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div><ui:msg meaning="the station field" description="Label for parameters in a form">Parámetros</ui:msg></div>
+        </td>
+        <td width="80%">
+          <c:CellTable ui:field="parameterCellTable" pageSize="1000" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false"  width="100%"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div><ui:msg meaning="the station field" description="Label for stationVariables in a form">Variables</ui:msg></div>
+        </td>
+        <td width="80%">
+          <c:CellTable ui:field="variableCellTable" pageSize="1000" autoFooterRefreshDisabled="false" autoHeaderRefreshDisabled="false"  width="100%"/>
         </td>
       </tr>
     </table>

@@ -60,7 +60,7 @@ public class MainActivityMapper implements ActivityMapper {
       String stationMapPlace ();
       @DefaultStringValue ("Configuración de perfil") @Meaning ("Detail region title")
       String userSetupPlace ();
-      @DefaultStringValue ("Configuración de usuario") @Meaning ("Detail region title")
+      @DefaultStringValue ("Configuración de estación") @Meaning ("Detail region title")
       String stationSetupPlace ();
    }
    public static TextConstants TEXT_CONSTANTS = GWT.create (TextConstants.class);

@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 import es.uned.grc.pfc.meteo.server.model.RequestParam;
 import es.uned.grc.pfc.meteo.server.model.Station;
+import es.uned.grc.pfc.meteo.server.model.StationModel;
 import es.uned.grc.pfc.meteo.server.model.User;
 import es.uned.grc.pfc.meteo.server.model.paged.StationPagedList;
 import es.uned.grc.pfc.meteo.server.model.paged.StringPagedList;
 import es.uned.grc.pfc.meteo.server.persistence.IObservationPersistence;
+import es.uned.grc.pfc.meteo.server.persistence.IStationModelPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IStationPersistence;
 import es.uned.grc.pfc.meteo.server.persistence.IUserPersistence;
 import es.uned.grc.pfc.meteo.server.service.helper.StationServiceHelper;
@@ -31,6 +33,8 @@ public class StationService {
    
    @Autowired
    private IStationPersistence stationPersistence = null;
+   @Autowired
+   private IStationModelPersistence stationModelPersistence = null;
    @Autowired
    private IObservationPersistence observationPersistence = null;
    @Autowired
@@ -67,6 +71,18 @@ public class StationService {
       } catch (Exception e) {
          logger.error ("Error saving user", e);
          throw new RuntimeException ("Could not save user. See server logs.");
+      }
+   }
+   
+   /**
+    * Persists a station
+    */
+   public Station saveStation (Station station) {
+      try {
+         return stationPersistence.saveOrMerge (station);
+      } catch (Exception e) {
+         logger.error ("Error saving station", e);
+         throw new RuntimeException ("Could not save station. See server logs.");
       }
    }
    
@@ -135,6 +151,18 @@ public class StationService {
       } catch (Exception e) {
          logger.error ("Error listing stations", e);
          throw new RuntimeException ("Could not list stations. See server logs.");
+      }
+   }
+   
+   /**
+    * Obtains a list of stationModels
+    */
+   public List <StationModel> getStationModels () {
+      try {
+         return stationModelPersistence.findAll ();
+      } catch (Exception e) {
+         logger.error ("Error listing station models", e);
+         throw new RuntimeException ("Could not list station models. See server logs.");
       }
    }
    

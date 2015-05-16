@@ -12,7 +12,6 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,15 +50,15 @@ public class DummyGeneratorJob {
    /**
     * To be executed periodically
     */
-   @Scheduled (fixedRate = 60000)
+//   @Scheduled (fixedRate = 60000)
    public synchronized void timeout () {
-//      logger.info ("Executing task {}", getClass ().getSimpleName ());
-//      try {
-//         generate ();
-//         logger.info ("Observations generated");
-//      } catch (Exception e) {
-//         logger.error ("Error collecting observations", e);
-//      }
+      logger.info ("Executing task {}", getClass ().getSimpleName ());
+      try {
+         generate ();
+         logger.info ("Observations generated");
+      } catch (Exception e) {
+         logger.error ("Error collecting observations", e);
+      }
    }
    
    /**
@@ -132,50 +131,50 @@ public class DummyGeneratorJob {
             status.index = getNextIndex (fullTAValues, status.index);
          }
          status.monthType = monthType;
-         logger.info ("Creating file {} starting at index {}", filename, status.index);
-         
+         logger.info ("Creating file {} starting at index {} and timestamp {}", filename, status.index, date);
+
          while (sdf.format (date).equals (day)) {
-            for (int i = 0; i < 24; i ++) {
+            for (int i = 0; i < 144; i ++) {
                line = new StringBuilder ();
                line.append (sdfLine.format (date));
                line.append (ISharedConstants.WORD_LIST_SEPARATOR);
                
                line.append (IDummyConstants.TEMPERATURE_ACRONYM.toUpperCase ());
                line.append ("=");
-               status.ta = getNext (i, fullTAValues, date, status.index, status.ta, stationGenerationInfo.taFactor);
+               status.ta = getNext (i, fullTAValues, status.index, status.ta, stationGenerationInfo.taFactor);
                line.append (df.format (status.ta));
                line.append (ISharedConstants.WORD_LIST_SEPARATOR);
                
                line.append (IDummyConstants.PRESSURE_ACRONYM.toUpperCase ());
                line.append ("=");
-               status.pres = getNext (i, fullPRESValues, date, status.index, status.pres, stationGenerationInfo.presFactor);
+               status.pres = getNext (i, fullPRESValues, status.index, status.pres, stationGenerationInfo.presFactor);
                line.append (df.format (status.pres));
                line.append (ISharedConstants.WORD_LIST_SEPARATOR);
                
                line.append (IDummyConstants.HUMIDITY_ACRONYM.toUpperCase ());
                line.append ("=");
-               status.hum = getNext (i, fullHUMValues, date, status.index, status.hum, stationGenerationInfo.humFactor);
+               status.hum = getNext (i, fullHUMValues, status.index, status.hum, stationGenerationInfo.humFactor);
                line.append (df.format (status.hum));
                line.append (ISharedConstants.WORD_LIST_SEPARATOR);
                
                line.append (IDummyConstants.WIND_SPEED_ACRONYM.toUpperCase ());
                line.append ("=");
-               status.winds = getNext (i, fullWINDSValues, date, status.index, status.winds, stationGenerationInfo.windsFactor);
+               status.winds = getNext (i, fullWINDSValues, status.index, status.winds, stationGenerationInfo.windsFactor);
                line.append (df.format (status.winds));
                line.append (ISharedConstants.WORD_LIST_SEPARATOR);
                
                line.append (IDummyConstants.WIND_DIRECTION_ACRONYM.toUpperCase ());
                line.append ("=");
-               status.windd = getNext (i, fullWINDDValues, date, status.index, status.windd, stationGenerationInfo.winddFactor);
+               status.windd = getNext (i, fullWINDDValues, status.index, status.windd, stationGenerationInfo.winddFactor);
                line.append (df.format (status.windd));
                
-               logger.info ("Adding row " + line.toString ());
+//               logger.debug ("Adding row " + line.toString ());
                
                line.append ("\n");
                
                fos.write (line.toString ().getBytes ());
                
-               date.setTime (date.getTime () + (stationPlugin.getObservationPeriod () * IServerConstants.ONE_MINUTE));
+               date.setTime (date.getTime () + (10 * IServerConstants.ONE_MINUTE));
             }
          }
       } finally {
@@ -185,7 +184,7 @@ public class DummyGeneratorJob {
       }
    }
 
-   private Double getNext (int i, Double [][] fullValues, Date date, int index, Double last, Double factor) {
+   private Double getNext (int i, Double [][] fullValues, int index, Double last, Double factor) {
       Double result = null;
       Double target = null;
       Integer steps = null;
@@ -197,35 +196,35 @@ public class DummyGeneratorJob {
       if (i == 0) {
          //just take the 00h column
          result = row [0];
-      } else if (i == 6) {
+      } else if (i == 6*6) {
          //just take the 06h column
          result = row [1];
-      } else if (i == 12) {
+      } else if (i == 12*6) {
          //just take the 12h column
          result = row [2];
-      } else if (i == 18) {
+      } else if (i == 18*6) {
          //just take the 18h column
          result = row [3];
-      } else if (i < 6) {
+      } else if (i < 6*6) {
          //somewhere between 00h and 06h, calculate according to the last value
          target = row [1];
-         steps = 6 - i;
-      } else if (i < 12) {
+         steps = 6*6 - i;
+      } else if (i < 12*6) {
          //somewhere between 06h and 12h, calculate according to the last value
          target = row [2];
-         steps = 12 - i;
-      } else if (i < 18) {
+         steps = 12*6 - i;
+      } else if (i < 18*6) {
          //somewhere between 12h and 18h, calculate according to the last value
          target = row [3];
-         steps = 18 - i;
+         steps = 18*6 - i;
       } else {
          //somewhere between 18h and 00h, calculate according to the last value
          target = nextRow [0];
-         steps = 24 - i;
+         steps = 24*6 - i;
       }
       
       if (result == null) {
-         averageStep = (target - last) / (steps * 6);
+         averageStep = (target - last) / (steps);
          currentStep = getRandomDouble (averageStep - averageStep * 0.25, averageStep + averageStep * 0.25);
          result = last + currentStep;
       }

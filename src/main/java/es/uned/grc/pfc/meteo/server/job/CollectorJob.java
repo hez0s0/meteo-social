@@ -33,7 +33,7 @@ import es.uned.grc.pfc.meteo.server.util.IServerConstants;
 @Component
 public class CollectorJob {
    
-   private static final long TOO_OLD_MINUTES = 7 * 24 * 60 * IServerConstants.ONE_MINUTE;
+   private static final long TOO_OLD_MINUTES = 15 * 24 * 60 * IServerConstants.ONE_MINUTE;
 
    protected static Logger logger = LoggerFactory.getLogger (CollectorJob.class);
    
@@ -204,6 +204,7 @@ public class CollectorJob {
    
    private boolean isTooOld (Date lastCollectedPeriod) {
       return (new Date ().getTime () - lastCollectedPeriod.getTime () > TOO_OLD_MINUTES);
+//      return false;
    }
 
    @Transactional (propagation = Propagation.REQUIRED)

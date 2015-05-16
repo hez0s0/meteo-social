@@ -1,6 +1,6 @@
 package es.uned.grc.pfc.meteo.client.view.table;
 
-import com.google.gwt.cell.client.EditTextCell;
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.cellview.client.Column;
@@ -22,7 +22,7 @@ public class IndexedObservationColumn extends Column <IObservationBlockProxy, St
    private final int index;
 
    public IndexedObservationColumn (int index) {
-      super (new EditTextCell ());
+      super (new TextCell ());
       this.index = index;
    }
 

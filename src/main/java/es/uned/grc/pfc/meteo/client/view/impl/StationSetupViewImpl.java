@@ -25,7 +25,6 @@ import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 import es.uned.grc.pfc.meteo.client.event.MessageChangeEvent;
-import es.uned.grc.pfc.meteo.client.event.StationSetupEvent;
 import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.place.StationSetupPlace;
 import es.uned.grc.pfc.meteo.client.request.IRequestFactory;
@@ -124,23 +123,16 @@ public class StationSetupViewImpl extends AbstractFormView <IStationProxy> imple
    
    @Override
    protected Request <?> getSaveRequest (IStationProxy entityProxy) {
-//      return ((IStationRequestContext) getRequestContext ()).saveStation (entityProxy); //TODO
-      return null;
+      return ((IStationRequestContext) getRequestContext ()).saveStation (entityProxy);
    }
 
    @Override
    protected Receiver <?> getSaveReceiver () {
-      return new Receiver <List <String>> () {
+      return new Receiver <IStationProxy> () {
          @Override
-         public void onSuccess (List <String> response) {
-            if (response.isEmpty ()) {
-               // fire config event and forward to success place
-               placeController.goTo (new StationSetupPlace ());
-            } else {
-               // display the errors and reset element (because it will not be saveable after error due to RequestFactory restrictions!!)
-               eventBus.fireEvent (new MessageChangeEvent (MessageChangeEvent.Level.ERROR, response, (Exception) null));
-               eventBus.fireEvent (new StationSetupEvent ());
-            }
+         public void onSuccess (IStationProxy response) {
+            // fire config event and forward to success place
+            placeController.goTo (new StationSetupPlace ());
          }
 
          @Override

@@ -7,6 +7,7 @@ import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.Service;
 
 import es.uned.grc.pfc.meteo.client.model.IRequestParamProxy;
+import es.uned.grc.pfc.meteo.client.model.IStationModelProxy;
 import es.uned.grc.pfc.meteo.client.model.IStationProxy;
 import es.uned.grc.pfc.meteo.client.model.IUserProxy;
 import es.uned.grc.pfc.meteo.client.model.paged.IStationPagedListProxy;
@@ -27,6 +28,10 @@ public interface IStationRequestContext extends RequestContext {
     * Persists an user
     */
    Request <IUserProxy> saveUser (IUserProxy user);
+   /**
+    * Persists a station
+    */
+   Request <IStationProxy> saveStation (IStationProxy station);
    /**
     * Obtain the own station
     */
@@ -55,4 +60,8 @@ public interface IStationRequestContext extends RequestContext {
     * Obtains a list of countries for the given filter
     */
    Request <IStringPagedListProxy> getCountries (String filter);
+   /**
+    * Obtained the list of stationModels
+    */
+   Request <List <IStationModelProxy>> getStationModels ();
 }

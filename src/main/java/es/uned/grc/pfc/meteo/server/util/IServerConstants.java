@@ -16,16 +16,16 @@ public interface IServerConstants {
    int ONE_DAY_HOURS = 24;
    
    /** time between executions of the collector, in milliseconds */
-   long COLLECTION_POLLING_TIME = 60000;
+   long COLLECTION_POLLING_TIME = 10000;
    
    /** time between executions of the quality control, in milliseconds */
-   long QUALITY_POLLING_TIME = 60000;
+   long QUALITY_POLLING_TIME = 10000;
 
    /** time between executions of the derived calculation job, in milliseconds */
-   long DERIVED_POLLING_TIME = 60000;
+   long DERIVED_POLLING_TIME = 10000;
 
    /** time between executions of the publishing job, in milliseconds */
-   long PUBLISHING_POLLING_TIME = 60000;
+   long PUBLISHING_POLLING_TIME = 10000;
 
    /** start hour of the night period */
    int NIGHT_START_HOUR = 0;
