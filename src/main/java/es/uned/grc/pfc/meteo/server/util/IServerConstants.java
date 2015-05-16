@@ -80,9 +80,4 @@ public interface IServerConstants {
    String MONTH_AVERAGE = "MonthAvg";
    /** derived variable: maximum in the month */
    String MONTH_MAXIMUM = "MonthMax";
-   
-   /** the parameter that contains the twitter username configuration */
-   String TWITTER_USERNAME_PARAM = "twitter_username";
-   /** the parameter that contains the twitter password configuration */
-   String TWITTER_PASSWORD_PARAM = "twitter_password";
 }
