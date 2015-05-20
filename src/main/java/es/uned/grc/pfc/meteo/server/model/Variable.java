@@ -14,6 +14,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.BatchSize;
+
 import es.uned.grc.pfc.meteo.server.model.base.AbstractVersionable;
 
 @Entity
@@ -83,6 +85,7 @@ public class Variable extends AbstractVersionable <Integer> {
    }
    
    @OneToMany (mappedBy = "variable", cascade = {CascadeType.ALL}, orphanRemoval = true)
+   @BatchSize (size = 20)
    public Set <StationVariable> getStationVariables () {
       return stationVariables;
    }

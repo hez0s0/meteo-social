@@ -80,8 +80,6 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @UiField (provided = true)
    protected CellTable <IObservationBlockProxy> observationCellTable = new CellTable <IObservationBlockProxy> (Integer.MAX_VALUE);
    @UiField
-   protected DateBox startDateBox = null;
-   @UiField
    protected DateBox exactDateBox = null;
    @UiField
    protected VariableSuggestInputListBox variableSuggestInputListBox = null;
@@ -96,9 +94,9 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    @UiField
    protected VerticalPanel derivedPanel = null;
    @UiField
-   protected Panel observedFilterPanel = null;
+   protected Panel filterPanel = null;
    @UiField
-   protected Panel derivedFilterPanel = null;
+   protected Panel variablesPanel = null;
    @UiField
    protected Label noResultsLabel = null;
    @UiField
@@ -153,7 +151,6 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
       initWidget (uiBinder.createAndBindUi (this));
       
       // set date formats
-      startDateBox.setFormat (new DateBox.DefaultFormat (DateTimeFormat.getFormat (IClientConstants.DISPLAY_SHORT_DATE)));
       exactDateBox.setFormat (new DateBox.DefaultFormat (DateTimeFormat.getFormat (IClientConstants.DISPLAY_SHORT_DATE)));
       
       // Add a selection model so we can select cells
@@ -180,18 +177,10 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
    }
 
    @Override
-   public Date getStartDate () {
-      return startDateBox.getValue ();
-   }
-
-   @Override
-   public void setStartDate (Date date) {
-      startDateBox.setValue (date);
-   }
-
-   @Override
-   public void setExactDate (Date date) {
-      exactDateBox.setValue (date);
+   public void setExactDate (Date date, boolean force) {
+      if (exactDateBox.getValue () == null || force) {
+         exactDateBox.setValue (date);
+      }
    }
 
    @Override
@@ -344,8 +333,7 @@ public class ObservationListViewImpl extends AbstractPage implements IObservatio
 
    @Override
    public void setDerived (boolean derived) {
-      observedFilterPanel.setVisible (!derived);
-      derivedFilterPanel.setVisible (derived);
+      variablesPanel.setVisible (!derived);
    }
 
    @Override

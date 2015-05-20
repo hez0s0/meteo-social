@@ -30,7 +30,7 @@ import es.uned.grc.pfc.meteo.shared.ISharedConstants;
 @Component
 public class DummyGeneratorJob {
 
-   private static final Integer STATION_ID = 1;
+   private static final Integer STATION_ID = 4;
    
    protected static Logger logger = LoggerFactory.getLogger (DummyGeneratorJob.class);
 
@@ -45,12 +45,12 @@ public class DummyGeneratorJob {
    @Autowired
    private IStationPlugin stationPlugin = null;
   
-   private StationGenerationInfo stationGenerationInfo = new StationGenerationInfo (1.0, 1.0, 1.0, 1.0, 1.0);
+   private StationGenerationInfo stationGenerationInfo = new StationGenerationInfo (0.8, 0.8, 0.8, 0.8, 0.8);
 
    /**
     * To be executed periodically
     */
-//   @Scheduled (fixedRate = 60000)
+//   @Scheduled (fixedRate = 600000)
    public synchronized void timeout () {
       logger.info ("Executing task {}", getClass ().getSimpleName ());
       try {

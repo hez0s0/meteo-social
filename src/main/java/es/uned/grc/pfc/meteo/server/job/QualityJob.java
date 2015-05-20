@@ -77,34 +77,15 @@ public class QualityJob {
             stationVariable = stationVariablePersistence.findStationVariable (station.getId (), observation.getVariable ().getId (), station.getStationVariables ());
             
             if (!StringUtils.isEmpty (observation.getValue ())) {
-               if (stationVariable.getMaximum () != null || stationVariable.getMinimum () != null) {
-                  //use provided config for control
-                  ok = processQuality (observation.getValue (), 
-                                       stationVariable.getMinimum (), 
-                                       stationVariable.getMaximum (),
-                                       stationVariable.getPhysicalMinimum (), 
-                                       stationVariable.getPhysicalMaximum (),
-                                       warning);
-               } else if (stationVariable.getDefaultMaximum () != null || stationVariable.getDefaultMinimum () != null) {
-                  //use the default values
-                  ok = processQuality (observation.getValue (), 
-                                       stationVariable.getDefaultMinimum (), 
-                                       stationVariable.getDefaultMaximum (),
-                                       stationVariable.getPhysicalMinimum (), 
-                                       stationVariable.getPhysicalMaximum (),
-                                       warning);
-               } else if (stationVariable.getPhysicalMaximum () != null || stationVariable.getPhysicalMinimum () != null) {
-                  //use the physical values only
-                  ok = processQuality (observation.getValue (), 
-                                       null, 
-                                       null,
-                                       stationVariable.getPhysicalMinimum (), 
-                                       stationVariable.getPhysicalMaximum (),
-                                       warning);
-               } else {
-                  //nothing configured, the variable simply requires no quality control
-                  ok = true;
-               }
+               Double maximum = stationVariable.getMaximum () != null ? stationVariable.getMaximum () : stationVariable.getDefaultMaximum ();
+               Double minimum = stationVariable.getMinimum () != null ? stationVariable.getMinimum () : stationVariable.getDefaultMinimum ();
+               //use provided config for control
+               ok = processQuality (observation.getValue (), 
+                                    minimum, 
+                                    maximum,
+                                    stationVariable.getPhysicalMinimum (), 
+                                    stationVariable.getPhysicalMaximum (),
+                                    warning);
             } else {
                //empty observations are suspicious (sensor errors)
                ok = false;

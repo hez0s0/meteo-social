@@ -22,6 +22,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.BatchSize;
+
 import es.uned.grc.pfc.meteo.server.model.base.AbstractVersionable;
 
 @Entity
@@ -73,6 +75,7 @@ public class Station extends AbstractVersionable <Integer> {
    }
 
    @OneToMany (mappedBy = "station", cascade = {CascadeType.ALL}, orphanRemoval = true)
+   @BatchSize (size = 20)
    public Set <Parameter> getParameters () {
       return parameters;
    }
@@ -81,6 +84,7 @@ public class Station extends AbstractVersionable <Integer> {
    }
 
    @OneToMany (mappedBy = "station", cascade = {CascadeType.ALL}, orphanRemoval = true)
+   @BatchSize (size = 20)
    public Set <StationVariable> getStationVariables () {
       return stationVariables;
    }
@@ -88,7 +92,7 @@ public class Station extends AbstractVersionable <Integer> {
       this.stationVariables = stationVariables;
    }
 
-   @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
+   @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY ) 
    @JoinColumn (name = "stationModelId",
                 foreignKey = @ForeignKey (name = "fk1Station"))
    public StationModel getStationModel () {
@@ -170,7 +174,7 @@ public class Station extends AbstractVersionable <Integer> {
       this.transientLastObservations = transientLastObservations;
    }
    
-   @OneToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
+   @OneToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY ) 
    @JoinColumn (name = "userId",
                 foreignKey = @ForeignKey (name = "fk2Station"))
    public User getUser () {

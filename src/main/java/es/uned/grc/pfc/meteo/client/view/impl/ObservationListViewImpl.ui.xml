@@ -15,27 +15,21 @@
          <g:HorizontalPanel width="100%">
             <g:cell width="85%">
                <g:VerticalPanel>
-                  <g:VerticalPanel ui:field="observedFilterPanel" width="100%">
+                  <g:VerticalPanel ui:field="filterPanel" width="100%">
                      <g:HorizontalPanel>
                         <g:VerticalPanel>
                            <g:Label>
-                              <ui:msg meaning="init date filter" description="label for observations filter">Fecha</ui:msg>
+                              <ui:msg meaning="exact date filter" description="label for observations filter">Fecha</ui:msg>
                            </g:Label>
-                           <dp:DateBox ui:field="startDateBox" />
+                           <dp:DateBox ui:field="exactDateBox" />
                         </g:VerticalPanel>
-                        <g:VerticalPanel>
+                        <g:VerticalPanel ui:field="variablesPanel">
                            <g:Label>
                               <ui:msg meaning="variable filter" description="label for observations filter">Variables</ui:msg>
                            </g:Label>
                            <meteo-suggest:VariableSuggestInputListBox ui:field="variableSuggestInputListBox" />
                         </g:VerticalPanel>
                      </g:HorizontalPanel>
-                  </g:VerticalPanel>
-                  <g:VerticalPanel ui:field="derivedFilterPanel" width="100%">
-                     <g:Label>
-                        <ui:msg meaning="exact date filter" description="label for observations filter">Fecha</ui:msg>
-                     </g:Label>
-                     <dp:DateBox ui:field="exactDateBox" />
                   </g:VerticalPanel>
                </g:VerticalPanel>
             </g:cell>

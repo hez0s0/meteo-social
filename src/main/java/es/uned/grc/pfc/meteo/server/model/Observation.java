@@ -28,7 +28,6 @@ import es.uned.grc.pfc.meteo.server.model.base.AbstractVersionable;
                    @Index (name = "ix6Observation", columnList = "rangeIni"),
                    @Index (name = "ix7Observation", columnList = "rangeEnd")})
 public class Observation extends AbstractVersionable <Integer> {
-
    private Integer id = null;
    private Variable variable = null;
    private Station station = null;
@@ -69,7 +68,7 @@ public class Observation extends AbstractVersionable <Integer> {
       this.variable = variable;
    }
 
-   @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
+   @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY ) 
    @JoinColumn (name = "stationId",
                 foreignKey = @ForeignKey (name = "fk2Observation"),
                 nullable = false)
@@ -144,7 +143,7 @@ public class Observation extends AbstractVersionable <Integer> {
       this.derived = derived;
    }
 
-   @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER ) 
+   @ManyToOne (cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY ) 
    @JoinColumn (name = "derivedVariableId",
                 foreignKey = @ForeignKey (name = "fk3Observation"))
    public Variable getDerivedVariable () {

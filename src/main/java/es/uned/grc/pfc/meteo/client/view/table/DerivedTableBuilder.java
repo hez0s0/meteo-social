@@ -223,7 +223,7 @@ public class DerivedTableBuilder extends AbstractCellTableBuilder <IDerivedVaria
    private String getTooltip (Integer base, Integer ignored, Integer expected) {
       StringBuilder tooltip = new StringBuilder ();
       tooltip.append (TEXT_MESSAGES.used (String.valueOf (base), String.valueOf (expected), getPctg (base, expected)));
-      tooltip.append ("<br/>"); //TODO multiline not picked
+      tooltip.append ("; "); //TODO multiline not picked
       tooltip.append (TEXT_MESSAGES.ignored (String.valueOf (ignored), getPctg (ignored, expected)));
       return tooltip.toString ();
    }

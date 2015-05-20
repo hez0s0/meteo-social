@@ -104,7 +104,7 @@ public class CollectorJob {
                if (collect (station, nextObservationPeriod, configuredParameters, collector, parser, result)) {
                   logger.debug ("Block of observations appended. Aggregated results {}", result.size ());
                   
-                  station.setLastCollectedPeriod (nextObservationPeriod);
+                  station.setLastCollectedPeriod (new Date (nextObservationPeriod.getTime ()));
                   station = stationPersistence.merge (station);
                }
                

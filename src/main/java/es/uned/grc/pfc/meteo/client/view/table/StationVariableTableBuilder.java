@@ -137,14 +137,14 @@ public class StationVariableTableBuilder extends AbstractCellTableBuilder <IStat
       minimumColumn = new ColumnAppender <String, IStationVariableProxy> ().addColumn (cellTable, new EditTextCell (), TEXT_CONSTANTS.minimumColumn (), null, new ColumnAppender.GetValue <String, IStationVariableProxy> () {
          @Override
          public String getValue (IStationVariableProxy o) {
-            return o.getMinimum () != null ? "" + o.getMinimum () : "";
+            return o.getMinimum () != null ? "" + o.getMinimum () : "" + o.getDefaultMinimum ();
          }
       }, null, false, 20);
       // maximum value
       maximumColumn = new ColumnAppender <String, IStationVariableProxy> ().addColumn (cellTable, new EditTextCell (), TEXT_CONSTANTS.maximumColumn (), null, new ColumnAppender.GetValue <String, IStationVariableProxy> () {
          @Override
          public String getValue (IStationVariableProxy o) {
-            return o.getMaximum () != null ? "" + o.getMaximum () : "";
+            return o.getMaximum () != null ? "" + o.getMaximum () : "" + o.getDefaultMaximum ();
          }
       }, null, false, 20);
       // physical minimum value

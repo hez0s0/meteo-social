@@ -54,8 +54,7 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
          @Override
          public void onSuccess (Date response) {
             //set default interval between 00 and 24 of today
-            listView.setStartDate (response);
-            listView.setExactDate (response);
+            listView.setExactDate (response, listPlace.isEmptyParams ());
             
             ObservationListActivity.super.start (panel, eventBus);
          }
@@ -130,16 +129,16 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
       }
 
       if (!listPlace.getObservationType ().equals (ObservationType.DERIVED)) {
-         //start date filter, if present
-         if (listView.getStartDate () != null) {
+         //exact date filter, if present
+         if (listView.getExactDate () != null) {
             paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
             paramFilter.setParam (ISharedConstants.ObservationFilter.START_DATE.toString ());
-            paramFilter.setValue (dateTimeFormat.format (listView.getStartDate ()));
+            paramFilter.setValue (dateTimeFormat.format (listView.getExactDate ()));
             requestParamProxy.getFilters ().add (paramFilter);
             
             paramFilter = observationRequestContext.create (IRequestParamFilterProxy.class);
             paramFilter.setParam (ISharedConstants.ObservationFilter.END_DATE.toString ());
-            paramFilter.setValue (dateTimeFormat.format (new Date (listView.getStartDate ().getTime () + ISharedConstants.ONE_DAY_MILLIS)));
+            paramFilter.setValue (dateTimeFormat.format (new Date (listView.getExactDate ().getTime () + ISharedConstants.ONE_DAY_MILLIS)));
             requestParamProxy.getFilters ().add (paramFilter);
          }
          //variable list filter, if present
@@ -166,14 +165,14 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
             //search for derived variables
             listView.clear ();
             for (DerivedRangeType derivedRangeType : DerivedRangeType.values ()) {
-               getDerivedText (derivedRangeType, observationRequestContext, eventBus);
+               getDerivedText (derivedRangeType, listPlace.getStationId (), observationRequestContext, eventBus);
             }
             observationRequestContext.fire ();
          } else {
             //search for derived variables
             listView.clear ();
             for (final DerivedRangeType derivedRangeType : DerivedRangeType.values ()) {
-               getDerivedGraphic (derivedRangeType, observationRequestContext, eventBus);
+               getDerivedGraphic (derivedRangeType, listPlace.getStationId (), observationRequestContext, eventBus);
             }
             observationRequestContext.fire ();
          }
@@ -225,10 +224,10 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
       }
    }
 
-   private void getDerivedGraphic (final DerivedRangeType derivedRangeType, IObservationRequestContext observationRequestContext, final EventBus eventBus) {
+   private void getDerivedGraphic (final DerivedRangeType derivedRangeType, final Integer stationId, IObservationRequestContext observationRequestContext, final EventBus eventBus) {
       GlassPanel.toDistraction (panel,
                                 listView.asWidget (), 
-                                observationRequestContext.getDerivedInRangeForGraphics (derivedRangeType, listView.getExactDate (), null)
+                                observationRequestContext.getDerivedInRangeForGraphics (derivedRangeType, listView.getExactDate (), stationId)
                                                          .with ("station", "derivedVariables", "derivedVariables.stationVariable", "derivedVariables.stationVariable.variable"),
                                 new Receiver <List <IDerivedRangeProxy>> () {
                                    @Override
@@ -245,10 +244,10 @@ public class ObservationListActivity extends AbstractAsyncDataActivity <IObserva
                                 });
     }
 
-   private void getDerivedText (final DerivedRangeType derivedRangeType, IObservationRequestContext observationRequestContext, final EventBus eventBus) {
+   private void getDerivedText (final DerivedRangeType derivedRangeType, final Integer stationId, IObservationRequestContext observationRequestContext, final EventBus eventBus) {
       GlassPanel.toDistraction (panel,
                                 listView.asWidget (), 
-                                observationRequestContext.getDerivedInRange (derivedRangeType, listView.getExactDate (), null)
+                                observationRequestContext.getDerivedInRange (derivedRangeType, listView.getExactDate (), stationId)
                                                          .with ("station", "derivedVariables", "derivedVariables.stationVariable", "derivedVariables.stationVariable.variable"),
                                 new Receiver <IDerivedRangeProxy> () {
                                    @Override

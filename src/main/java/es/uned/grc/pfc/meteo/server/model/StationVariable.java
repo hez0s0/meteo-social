@@ -119,7 +119,7 @@ public class StationVariable extends AbstractVersionable <Integer> {
       this.graphType = graphType;
    }
 
-   @ManyToOne (cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER)
+   @ManyToOne (cascade = { CascadeType.REFRESH }, fetch = FetchType.LAZY)
    @JoinColumn (name = "stationId",            
                 foreignKey = @ForeignKey (name = "fk1StationVariable"))
    public Station getStation () {

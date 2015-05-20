@@ -13,13 +13,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import es.uned.grc.pfc.meteo.server.model.base.AbstractVersionable;
 
 @Entity
 @Table (name = "metParameter",
-        uniqueConstraints = {@UniqueConstraint (name = "uk1Parameter", columnNames = {"name"})},
         indexes = {@Index (name = "ix1Parameter", columnList = "name")})
 public class Parameter extends AbstractVersionable <Integer> {
 

@@ -410,4 +410,14 @@ public class ObservationServiceHelper {
       }
       return range;
    }
+
+   public List <Variable> getVariables (Station station) {
+      List <Variable> result = new ArrayList <Variable> (station.getStationVariables ().size ());
+      for (StationVariable stationVariable : station.getStationVariables ()) {
+         if (!stationVariable.getVariable ().getInternal ()) {
+            result.add (stationVariable.getVariable ());
+         }
+      }
+      return result;
+   }
 }

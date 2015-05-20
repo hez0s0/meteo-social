@@ -22,9 +22,10 @@ public class ObservationListPlace extends AbstractPlace {
    private Integer stationId = null;
    private ObservationType observationType = null;
    private Representation representation = null;
+   private boolean emptyParams = false;
 
    public ObservationListPlace () {
-      this (ObservationType.NORMAL, Representation.TEXT);
+      this (ObservationType.NORMAL, Representation.TEXT, null, true);
    }
    
    public ObservationListPlace (Representation representation) {
@@ -32,14 +33,18 @@ public class ObservationListPlace extends AbstractPlace {
    }
    
    public ObservationListPlace (ObservationType observationType, Representation representation) {
-      this.observationType = observationType;
-      this.representation = representation;
+      this (observationType, representation, null, false);
    }
    
    public ObservationListPlace (ObservationType observationType, Representation representation, Integer stationId) {
+      this (observationType, representation, stationId, false);
+   }
+   
+   public ObservationListPlace (ObservationType observationType, Representation representation, Integer stationId, boolean emptyParams) {
       this.observationType = observationType;
       this.representation = representation;
       this.stationId = stationId;
+      this.emptyParams = emptyParams;
    }
    
    /**
@@ -132,5 +137,13 @@ public class ObservationListPlace extends AbstractPlace {
 
    public void setStationId (Integer stationId) {
       this.stationId = stationId;
+   }
+
+   public boolean isEmptyParams () {
+      return emptyParams;
+   }
+
+   public void setEmptyParams (boolean emptyParams) {
+      this.emptyParams = emptyParams;
    }
 }

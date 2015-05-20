@@ -49,6 +49,10 @@ public class ObservationService {
    private ObservationServiceHelper observationServiceHelper = null;
    @Autowired
    private AuthInfo authInfo = null;
+   
+   Station cachedStation = null;
+   Station cachedOwnStation = null;
+   Long cachedStationTimeStamp = null;
 
    /**
     * Get the variables that a given station is able to measure.
@@ -197,9 +201,26 @@ public class ObservationService {
       Calendar current = null;
       Date [] wideRange = new Date [2];
       List <DerivedRangeDTO> result = new ArrayList <DerivedRangeDTO> ();
+      long now = new Date ().getTime ();
       
       try {
-         station = stationId == null ? stationPersistence.getOwnStation (authInfo.getLoggedUserId ()) : stationPersistence.findById (stationId);
+         if (stationId == null) {
+            if (cachedOwnStation != null && (now - cachedStationTimeStamp) <= 10000) {
+               station = cachedOwnStation;
+            } else {
+               station = stationPersistence.getOwnStation (authInfo.getLoggedUserId ());
+               cachedOwnStation = station;
+               cachedStationTimeStamp = now;
+            }
+         } else {
+            if (cachedStation != null && cachedStation.getId ().intValue () == stationId && (now - cachedStationTimeStamp) <= 10000) {
+               station = cachedStation;
+            } else {
+               station = stationPersistence.findById (stationId);
+               cachedStation = station;
+               cachedStationTimeStamp = now;
+            }
+         }
          
          wideRange = observationServiceHelper.getWideRange (derivedRangeType, searched);
          logger.info ("Wide range for {}: {}-{}: ", derivedRangeType, wideRange [0], wideRange [1]);
@@ -241,10 +262,19 @@ public class ObservationService {
          
          rangeBottom = observationServiceHelper.getRange (derivedRangeType, wideRange [0]);
          rangeTop = observationServiceHelper.getRange (derivedRangeType, wideRange [1]);
+         
+//         long ini = new Date ().getTime ();
+            
          observations = observationPersistence.getDerivedInRange (station.getId (), rangeBottom [0], rangeTop [1], minimum, average, maximum);
-
+         
+//         logger.info ("Query observations {}", (new Date ().getTime () - ini));
+//         ini = new Date ().getTime ();
+         
          //find all the observed variables
-         stationVariables = new ArrayList <Variable> (variablePersistence.getStationVariables (null, station.getId (), true, false));
+         stationVariables = observationServiceHelper.getVariables (station);
+
+//         logger.info ("Got variables {}", (new Date ().getTime () - ini));
+//         ini = new Date ().getTime ();
          
          while (current.getTimeInMillis () < wideRange [1].getTime ()) {
             result.add (observationServiceHelper.fillAndGroupAsRange (station, 
@@ -255,13 +285,16 @@ public class ObservationService {
                                                                       maximum,
                                                                       stationVariables));
 
-            logger.info ("Obtained derived for: " + current.getTime ());
+            logger.debug ("Obtained derived for: " + current.getTime ());
             if (derivedRangeType.equals (DerivedRangeType.MONTH)) {
                current.add (Calendar.MONTH, 1);
             } else {
                current.add (Calendar.DAY_OF_YEAR, 1);
             }
          }
+//
+//         logger.info ("filled and grouped {}", (new Date ().getTime () - ini));
+//         ini = new Date ().getTime ();
       } catch (Exception e) {
          logger.error ("Error listing derived observations in range", e);
          throw new RuntimeException ("Could not list derived observations in range. See server logs.");

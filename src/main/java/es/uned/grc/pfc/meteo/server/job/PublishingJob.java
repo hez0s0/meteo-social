@@ -86,7 +86,7 @@ public class PublishingJob {
                   }
                   comments = generate (station, variablesToPublish, new Date ());
       
-                  logger.info ("{} comments published for station", comments, station.getId ());
+                  logger.info ("{} comments published for station {}", comments, station.getId ());
                } else {
                   logger.info ("Station {} ignore, since its owner '{}' did not enable Twitter", station.getId (), station.getUser ().getUsername ());
                }
